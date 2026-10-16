@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.runtime.json
+outputs/
+assets/*.glb
+*.blend1
+*.log
