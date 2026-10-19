@@ -1,0 +1,492 @@
+{
+  "date": "2026-10-17",
+  "scope": "First visual-front-end optimization on identical synthetic RGB; not complete robot acceptance",
+  "research": "docs/vision_research_2026-10-17.md",
+  "profile": {
+    "model_kind": "hybrid",
+    "mode": "performance",
+    "detector": "default",
+    "detector_postprocess": "cpu",
+    "batch": true,
+    "state_config": "config/vision_state.json"
+  },
+  "frames": 96,
+  "images": 384,
+  "input_sha256": {
+    "frames.jsonl": "2d898abded7270c0966113a53bb66ece5c159f99bfd9a1020177901058dacde3",
+    "cameras.json": "e15164ce2754fdb556fa5ef9aa13b7ee50d0fdcf336d254b71a5283787f1a177",
+    "config.json": "2e5c90a3c1e96f75c9e14582a39bf39cefb69adda03e6e1390cfc13bdc96b9f5"
+  },
+  "rgb_sequence_sha256": "57c10709a3d4204ec6a3ebe719834bf155f805c9d19f4695fe3314c501052444",
+  "baseline": {
+    "frames": 96,
+    "body12_coverage": 0.9939236111111112,
+    "proxy_error_mm": {
+      "mean": 60.87043569714733,
+      "p95": 131.53693946398536,
+      "maximum": 986.3781143056756
+    },
+    "proxy_current_observation_error_mm": {
+      "mean": 60.87043569714733,
+      "p95": 131.53693946398536,
+      "maximum": 986.3781143056756
+    },
+    "proxy_coverage": 0.9939236111111112,
+    "bone_length_cv": {
+      "left_shoulder--left_elbow": 0.18514346509969995,
+      "left_elbow--left_wrist": 0.34956206808518286,
+      "left_hip--left_knee": 0.06974475705598362,
+      "left_knee--left_ankle": 0.08339864162605641,
+      "right_shoulder--right_elbow": 0.29608100789720043,
+      "right_elbow--right_wrist": 0.28873695762198126,
+      "right_hip--right_knee": 0.07312921306266511,
+      "right_knee--right_ankle": 0.20767877847632266
+    },
+    "body_step_speed_m_s": {
+      "mean": 1.5475760351245615,
+      "p95": 3.8278600805589202,
+      "maximum": 24.185693190189927
+    },
+    "joint_state_counts": {},
+    "rejection_reasons": {},
+    "orientation_frame_counts": {},
+    "contact_frame_counts": {}
+  },
+  "optimized_raw": {
+    "frames": 96,
+    "body12_coverage": 0.9939236111111112,
+    "proxy_error_mm": {
+      "mean": 60.87043512726132,
+      "p95": 131.53693601424004,
+      "maximum": 986.3781939427606
+    },
+    "proxy_current_observation_error_mm": {
+      "mean": 60.87043512726132,
+      "p95": 131.53693601424004,
+      "maximum": 986.3781939427606
+    },
+    "proxy_coverage": 0.9939236111111112,
+    "bone_length_cv": {
+      "left_shoulder--left_elbow": 0.18514344084487186,
+      "left_elbow--left_wrist": 0.3495620653332536,
+      "left_hip--left_knee": 0.06974475264004348,
+      "left_knee--left_ankle": 0.08339863669202283,
+      "right_shoulder--right_elbow": 0.29608102816484044,
+      "right_elbow--right_wrist": 0.28873697000121445,
+      "right_hip--right_knee": 0.07312920206331547,
+      "right_knee--right_ankle": 0.2076787759565566
+    },
+    "body_step_speed_m_s": {
+      "mean": 1.5475760081890484,
+      "p95": 3.827860040255013,
+      "maximum": 24.185694979491164
+    },
+    "joint_state_counts": {},
+    "body12_state_counts": {},
+    "rejection_reasons": {},
+    "orientation_frame_counts": {},
+    "contact_frame_counts": {}
+  },
+  "optimized_state": {
+    "frames": 96,
+    "body12_coverage": 0.9947916666666666,
+    "proxy_error_mm": {
+      "mean": 47.62701490658759,
+      "p95": 113.39170538981983,
+      "maximum": 305.36312441349844
+    },
+    "proxy_current_observation_error_mm": {
+      "mean": 46.95546589454869,
+      "p95": 113.19939398191343,
+      "maximum": 189.40216505549986
+    },
+    "proxy_coverage": 0.9947916666666666,
+    "bone_length_cv": {
+      "left_shoulder--left_elbow": 0.02493207103260532,
+      "left_elbow--left_wrist": 0.019806564447059277,
+      "left_hip--left_knee": 0.023916773617032344,
+      "left_knee--left_ankle": 0.014899469882966074,
+      "right_shoulder--right_elbow": 0.016383556529231555,
+      "right_elbow--right_wrist": 0.011769663009233489,
+      "right_hip--right_knee": 0.019612255237187844,
+      "right_knee--right_ankle": 0.013234622883543724
+    },
+    "body_step_speed_m_s": {
+      "mean": 1.0645462110189856,
+      "p95": 2.4337021708469413,
+      "maximum": 7.362796955951723
+    },
+    "joint_state_counts": {
+      "missing": 13,
+      "filtered": 3048,
+      "predicted": 107
+    },
+    "body12_state_counts": {
+      "filtered": 1106,
+      "predicted": 40,
+      "missing": 6
+    },
+    "rejection_reasons": {
+      "missing triangulation": 43,
+      "temporal innovation outlier": 18,
+      "bone length outlier": 32,
+      "unreliable triangulation": 27
+    },
+    "orientation_frame_counts": {
+      "left_foot": 95,
+      "left_palm": 65,
+      "right_foot": 96,
+      "right_palm": 82
+    },
+    "contact_frame_counts": {
+      "left": 0,
+      "right": 0
+    }
+  },
+  "baseline_timing_ms": {
+    "image_group": 92.23871562274628,
+    "triangulation": 37.440703123744846
+  },
+  "optimized_timing_ms": {
+    "image_group": 82.0810791680439,
+    "image_group_p95": 84.1386749962112,
+    "triangulation": 26.763823956571287,
+    "state": 4.5904989583505085,
+    "processing_sum": 113.4354020829657
+  },
+  "processing_groups_per_second": 8.815590033071055,
+  "realtime_24fps_passed": false,
+  "body_raw_parity": {
+    "max_difference_mm": 0.0001369626499631774,
+    "mean_difference_mm": 2.1871798722319544e-05
+  },
+  "gpu_evidence": {
+    "det_model": {
+      "file": "profiles/det_model_2026-10-17_17-25-07.json",
+      "node_events_by_provider": {
+        "CUDAExecutionProvider": 3212
+      }
+    },
+    "pose_model": {
+      "file": "profiles/pose_model_2026-10-17_17-25-07.json",
+      "node_events_by_provider": {
+        "CUDAExecutionProvider": 1670,
+        "CPUExecutionProvider": 20
+      }
+    },
+    "body_pose_model": {
+      "file": "profiles/body_pose_model_2026-10-17_17-25-07.json",
+      "node_events_by_provider": {
+        "CUDAExecutionProvider": 2035,
+        "CPUExecutionProvider": 22
+      }
+    }
+  },
+  "tests": {
+    ".runtime.json": [
+      "Ran 77 tests in 2.631s",
+      "OK (skipped=6)"
+    ],
+    ".robot-runtime.json": [
+      "Ran 77 tests in 4.481s",
+      "OK"
+    ]
+  },
+  "ablations": {
+    "body17_batch": {
+      "image_group_ms": 90.99520520885562,
+      "stage_ms": {
+        "image_io": 5.904795833885146,
+        "detection": 74.43055208568694,
+        "pose": 10.403748960319112
+      },
+      "raw_proxy_error_mm": {
+        "mean": 60.86386573006315,
+        "p95": 131.53686979494987,
+        "maximum": 986.3781138069459
+      },
+      "state_proxy_error_mm": {
+        "mean": 47.64619105182934,
+        "p95": 113.43575899664053,
+        "maximum": 305.35522927320477
+      },
+      "raw_body12_coverage": 0.9939236111111112,
+      "models": {
+        "det_model": "3dea6513388889f0fff4b77bf7a26013600321b9eb9ceb0e9a400a82572f5f23",
+        "pose_model": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c"
+      }
+    },
+    "body17_fp16": {
+      "image_group_ms": 110.90637500061955,
+      "stage_ms": {
+        "image_io": 5.981850000959336,
+        "detection": 83.50251145687555,
+        "pose": 21.17222708299475
+      },
+      "raw_proxy_error_mm": {
+        "mean": 58.41788551469078,
+        "p95": 125.46597589983428,
+        "maximum": 972.1545670908948
+      },
+      "state_proxy_error_mm": {
+        "mean": 48.00441261845879,
+        "p95": 113.33980388342765,
+        "maximum": 304.4613340860507
+      },
+      "raw_body12_coverage": 0.9947916666666666,
+      "models": {
+        "det_model": "48e60b3cce9593a169f902eb0583ac52909d94d3ba86ba62457179390b0ebc1d",
+        "pose_model": "4da0adc94963eb23dfdbd4bd4a7ae7b9555f4e71dd1aed89625d48b562db8ff6"
+      }
+    },
+    "body17_serial": {
+      "image_group_ms": 92.23871562274628,
+      "stage_ms": {
+        "image_io": 5.961002084707919,
+        "detection": 70.50748125038808,
+        "pose": 15.609482289619336
+      },
+      "raw_proxy_error_mm": {
+        "mean": 60.87043569714733,
+        "p95": 131.53693946398536,
+        "maximum": 986.3781143056756
+      },
+      "state_proxy_error_mm": {
+        "mean": 47.62701508252963,
+        "p95": 113.39169699808139,
+        "maximum": 305.36308470160833
+      },
+      "raw_body12_coverage": 0.9939236111111112,
+      "models": {
+        "det_model": "3dea6513388889f0fff4b77bf7a26013600321b9eb9ceb0e9a400a82572f5f23",
+        "pose_model": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c"
+      }
+    },
+    "final": {
+      "image_group_ms": 67.59387083244899,
+      "stage_ms": {
+        "image_io": 6.099503125066501,
+        "detection": 34.3405645820288,
+        "pose": 26.869935416774144
+      },
+      "raw_proxy_error_mm": {
+        "mean": 53.57128577186363,
+        "p95": 152.1116593477158,
+        "maximum": 463.3342384181879
+      },
+      "state_proxy_error_mm": {
+        "mean": 44.94820666182017,
+        "p95": 109.84756759449395,
+        "maximum": 283.8428215318294
+      },
+      "raw_body12_coverage": 0.9800347222222222,
+      "models": {
+        "det_model": "bf59d72aa718ed65b127d6c70048dccfd9d48df34e48136212e5d962c8b897d0",
+        "pose_model": "bd033156e5104c4f5d2edfe0453e02661e30a2f3da453ec93c8764d561b83054"
+      }
+    },
+    "hybrid": {
+      "image_group_ms": 77.38632499967935,
+      "stage_ms": {
+        "image_io": 5.961100001513842,
+        "detection": 34.40776354242795,
+        "pose": 36.75016145916743
+      },
+      "raw_proxy_error_mm": {
+        "mean": 60.86386524273399,
+        "p95": 131.53686658519544,
+        "maximum": 986.3781933106936
+      },
+      "state_proxy_error_mm": {
+        "mean": 47.646190885572956,
+        "p95": 113.43576573975733,
+        "maximum": 305.3552690970687
+      },
+      "raw_body12_coverage": 0.9939236111111112,
+      "models": {
+        "det_model": "bf59d72aa718ed65b127d6c70048dccfd9d48df34e48136212e5d962c8b897d0",
+        "pose_model": "bd033156e5104c4f5d2edfe0453e02661e30a2f3da453ec93c8764d561b83054",
+        "body_pose_model": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c"
+      }
+    },
+    "wholebody": {
+      "image_group_ms": 80.82597916745726,
+      "stage_ms": {
+        "image_io": 6.009885417673407,
+        "detection": 34.22628437753398,
+        "pose": 40.33601562362795
+      },
+      "raw_proxy_error_mm": null,
+      "state_proxy_error_mm": null,
+      "raw_body12_coverage": null,
+      "models": {
+        "det_model": "ceb11c07298f95c50d7c5abeb906d03340c85f23aa79e3e66966e7fb6c307250",
+        "pose_model": "bd033156e5104c4f5d2edfe0453e02661e30a2f3da453ec93c8764d561b83054"
+      }
+    },
+    "wholebody_default": {
+      "image_group_ms": 107.41641458207596,
+      "stage_ms": {
+        "image_io": 5.960648957928545,
+        "detection": 73.51481562212332,
+        "pose": 27.66321458299596
+      },
+      "raw_proxy_error_mm": {
+        "mean": 53.57128577186363,
+        "p95": 152.1116593477158,
+        "maximum": 463.3342384181879
+      },
+      "state_proxy_error_mm": {
+        "mean": 44.94820666182017,
+        "p95": 109.84756759449395,
+        "maximum": 283.8428215318294
+      },
+      "raw_body12_coverage": 0.9800347222222222,
+      "models": {
+        "det_model": "3dea6513388889f0fff4b77bf7a26013600321b9eb9ceb0e9a400a82572f5f23",
+        "pose_model": "bd033156e5104c4f5d2edfe0453e02661e30a2f3da453ec93c8764d561b83054"
+      }
+    },
+    "wholebody_fp16": {
+      "image_group_ms": 146.763126039635,
+      "stage_ms": {
+        "image_io": 5.9668541674303315,
+        "detection": 85.83866353577226,
+        "pose": 54.677572915655524
+      },
+      "raw_proxy_error_mm": {
+        "mean": 53.25737936932351,
+        "p95": 148.89646519199653,
+        "maximum": 465.6768757320956
+      },
+      "state_proxy_error_mm": {
+        "mean": 45.23870242385985,
+        "p95": 112.62582273213782,
+        "maximum": 260.7569671308767
+      },
+      "raw_body12_coverage": 0.9791666666666666,
+      "models": {
+        "det_model": "48e60b3cce9593a169f902eb0583ac52909d94d3ba86ba62457179390b0ebc1d",
+        "pose_model": "3ece466a65485b0e1820a97f763f3d84e22e2ad5faa5215f0477ce185839387a"
+      }
+    }
+  },
+  "decisions": [
+    "Preserve RTMPose body observations and append RTMW foot/palm landmarks.",
+    "CPU person-class NMS removes dominant GPU suppression overhead; neural models remain CUDA.",
+    "FP16 and tiny detector experiments not promoted; unused generated model files removed.",
+    "Raw triangulation and bounded causal state are separate artifacts.",
+    "G1 default consumes raw current body observations; predicted state and foot orientation require separate controller validation.",
+    "RTMPose body uses batch 1 to preserve baseline numerics and G1 references; only the RTMW foot/palm network is batched in the selected hybrid profile."
+  ],
+  "limitations": [
+    "Proxy rig centres differ from anatomical landmarks; no real-human accuracy claim.",
+    "Estimated and predicted coverage is separate from current image observations.",
+    "No ground truth for hands, feet orientation or contact; availability is not accuracy.",
+    "Offline processing durations exclude camera capture and robot execution.",
+    "Only one synthetic walking sequence; multi-action and real-camera evaluation pending.",
+    "Body filtered positions contain 40 predicted point-times; maximum raw-truth proxy error remains about 305 mm.",
+    "Ground plane unspecified; contacts remain unknown. Landmark orientations have no accuracy ground truth.",
+    "No Sapiens2/SAM3DBody deployment or learned cross-view association in this iteration.",
+    "G1 root-path tracking and physical hardware acceptance remain incomplete."
+  ],
+  "artifacts": {
+    "current": "outputs/vision_optimized",
+    "baseline": "outputs/vision_optimization/body17_serial",
+    "video": "outputs/vision_optimized/comparison.mp4",
+    "plot": "outputs/vision_optimized/comparison.png"
+  },
+  "source_sha256": {
+    "pose_sim/__init__.py": "30261f49a3828c3b9dd628bfe1b7a7905730ad2ee26b067bf71e2ba175049fb9",
+    "pose_sim/evaluate.py": "874be0614d757df6ec3c748074b54acf7dbf7fc500a7f8a2062060f61614dbdb",
+    "pose_sim/geometry.py": "b10280a6741694b9819774a581243c86151ad026c98ccd9caba444963ecdfdd6",
+    "pose_sim/human_state.py": "667cd2a0075f759acc47e7e1e9f933f33914f28a9479f1ad7b3cee747013e37d",
+    "pose_sim/inference.py": "a72339fff001455f20978188d9fb8ce604377229bd7a4c60e6b5f2f254c304e7",
+    "pose_sim/landmarks.py": "33e2946d5ef9bfbff6a2b187194c372b33bc1c5daf39f9cfa5c8e2f3c5cff1b7",
+    "pose_sim/markerless.py": "ac975b6d559ab9ced67794d6beec1f478062011ea564dca49a6191495165fcc9",
+    "pose_sim/mujoco_camera.py": "12c9880f4a205986c470636f196f2810f990d46dc34e8af26191187db91fb9a5",
+    "pose_sim/pipeline.py": "1f57dcdc182b10264bd3a92ab9237cbb5f751390d681b43c652cef274b627ab3",
+    "pose_sim/preview.py": "a84c9903b4033cc90963f2a5ef05a12baf5e148519b36a188843c5dfd4c1911e",
+    "pose_sim/robot_assets.py": "a4ac080c0e575180492ad6556c73d1d5d5585718bd6aa6de7a6d4722c9e63437",
+    "pose_sim/robot_preview.py": "5332debed3aae7b86e05f94f844d05d2b8fc0b81f1a95f7f27752f3ea4b8213a",
+    "pose_sim/robot_source.py": "3ad91254b133c0fed495834c3d8e4d00d3222162c2b522447467979c9365e7e5",
+    "pose_sim/runtime.py": "bdcaeacc4cd8d6d9953f038293461f7d0c4a3ea347bcfa6a6f360c1fd596c97c",
+    "pose_sim/sensors.py": "1189dee491e15e00c9379d34b4600a1bce2663e4c10f6b491baa9016167011d2",
+    "pose_sim/uncertainty.py": "99cd1c6d7158f9da7e828ce25c0c10b30c3107818ab40fd817d74c773543291e",
+    "pose_sim/vision_metrics.py": "0212845d73a32b8a4a18d6b0b37ea74ec4fad599f86f8075a4c1b9123dd1191e"
+  },
+  "g1_kinematic_reference_check": {
+    "accepted_frames": 86,
+    "total_frames": 96,
+    "reasons": {
+      "Implausible human limb length": 1,
+      "Missing right_knee": 1,
+      "Unreliable left_hip": 1,
+      "Missing left_ankle": 1,
+      "Unobservable pelvis heading": 1,
+      "Leg bone length discontinuity": 5
+    },
+    "physics_rerun": false,
+    "hardware_enabled": false,
+    "common_accepted_max_joint_change_rad": 4.920839005162492e-07
+  },
+  "rejected_body_batching_trial": {
+    "body_parity": {
+      "max_difference_mm": 77.58622593245885,
+      "mean_difference_mm": 0.2754770916852767,
+      "validity_mismatches": 0,
+      "differences_above_10mm": [
+        [
+          17,
+          "left_elbow",
+          67.84218005396954
+        ],
+        [
+          24,
+          "right_wrist",
+          54.25533800026877
+        ],
+        [
+          63,
+          "left_wrist",
+          17.074298624206882
+        ],
+        [
+          72,
+          "right_elbow",
+          30.41849548029214
+        ],
+        [
+          84,
+          "right_hip",
+          77.58622593245885
+        ]
+      ],
+      "note": "Batched floating-point inference can change SimCC argmax and pair selection at ambiguous points; not bitwise equivalence."
+    },
+    "controller_reference": {
+      "accepted_frames": 86,
+      "total_frames": 96,
+      "reasons": {
+        "Implausible human limb length": 1,
+        "Missing right_knee": 1,
+        "Unreliable left_hip": 1,
+        "Missing left_ankle": 1,
+        "Unobservable pelvis heading": 1,
+        "Leg bone length discontinuity": 5
+      },
+      "physics_rerun": false,
+      "hardware_enabled": false,
+      "common_accepted_max_joint_change_rad": 0.42815607058424077
+    }
+  },
+  "cleanup": {
+    "unused_generated_model_bytes": 212882481,
+    "discarded_experiment_bytes": 34672668,
+    "retained": [
+      "outputs/human_walk_g1",
+      "outputs/vision_optimization/body17_serial",
+      "outputs/vision_optimized"
+    ]
+  }
+}

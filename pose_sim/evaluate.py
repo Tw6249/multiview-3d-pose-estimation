@@ -37,7 +37,7 @@ def main():
     reproj = [q['mean_reprojection_px'] for r in preds.values() for q in r['quality'] if q]
     result = {
         'frames': len(preds), 'camera_count': len(cams),
-        'detected_joint_reconstruction_rate': valid_all/(17*len(preds)),
+        'detected_joint_reconstruction_rate': valid_all/sum(len(r['joints_world_m']) for r in preds.values()),
         'body12_proxy_coverage': len(errors)/total if total else 0,
         'body12_proxy_mpjpe_mm': float(np.mean(errors)) if errors else None,
         'body12_proxy_median_mm': float(np.median(errors)) if errors else None,

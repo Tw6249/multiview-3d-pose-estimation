@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-17",
+  "requirement": "源机器人必须无标记；源机器人与目标 G1 EDU 分别建模。",
+  "status": "interfaces_and_geometric_regressions_verified_source_model_pending",
+  "markerless_robot_image_inference_validated": false,
+  "markerless_robot_model_weights_configured": false,
+  "g1_hardware_execution_validated": false,
+  "g1_whole_body_controller_implemented": false,
+  "tests": {
+    "cuda": {
+      "passed": true,
+      "test_count": 54,
+      "elapsed_s": 2.51,
+      "log": "outputs/tests-current.log",
+      "log_sha256": "c6b34759cafde43df5e5ba6e65ef1aab15c6ed4e0052a2aa4b99f6180e8f3ffa"
+    },
+    "cpu": {
+      "passed": true,
+      "test_count": 54,
+      "elapsed_s": 3.151,
+      "log": "outputs/tests-cpu-current.log",
+      "log_sha256": "ac284033bc5d17fab3403a8cae8b07a512f4b78e695a0d4fe6fe6e3b29d309e5"
+    }
+  },
+  "validation_scope": [
+    "54 tests include legacy CPU/CUDA human baseline plus markerless adapter and geometry contracts.",
+    "ONNX robot adapter uses a mocked runtime in tests; no robot-specific pretrained model was executed.",
+    "Projected natural landmarks test reconstruction -> rigid link fitting -> task mapping -> offline G1 requests; not image recognition.",
+    "Occlusion, symmetry, collinearity, small feature spacing, correspondence residual, source/model binding and CUDA fallback rejection covered.",
+    "G1 outputs remain offline requests with zero network calls, not physical full-body or walking validation."
+  ],
+  "source_profile_check": {
+    "expected_exit_code": 2,
+    "actual_exit_code": 2,
+    "message": "SOURCE NOT READY: Source profile incomplete: supply actual source_id; see docs/source_robot_to_g1.md"
+  },
+  "remaining_inputs": [
+    "First source robot identity and available URDF/CAD or measured geometry.",
+    "Synchronized multi-camera RGB or RGB-D data and calibration.",
+    "Source-specific trained/exported visual model and real-data evaluation."
+  ],
+  "cleanup": {
+    "removed": [
+      "pose_sim/fiducials.py",
+      "config/source_robot_markers.json",
+      "scripts/demo_robot_transfer.py",
+      "reports/source-to-g1-2026-10-17.json",
+      "outputs/source_robot_to_g1",
+      "outputs/source-to-g1.log"
+    ],
+    "generated_bytes_removed": 471496,
+    "human_gpu_and_control_baselines_retained": true,
+    "locked_environments_unchanged": true
+  },
+  "source_sha256": {
+    "AGENTS.md": "4eff0d05fbe083c96343032a28913c5af9b31db35497ac639e428820ff275e8b",
+    "README.md": "4a31384ec46012b80c9d629c8962695e6ecf2b03bced43ddfbfedc792322f8fe",
+    "run.ps1": "76bf1a9b61e7b465f9fdf48db3e07189ae4a77f04d80fe1df139620be924acb9",
+    "pose_sim/geometry.py": "d114870745fe31a0be2e1ef3b98fb738d17c28f56e06554bfcec8ee0ad6cc216",
+    "pose_sim/pipeline.py": "f480003674f3b411c43ed47aa393b8b2a5d9a67c898dec1ec4affdd3ee31bbcd",
+    "pose_sim/markerless.py": "ac975b6d559ab9ced67794d6beec1f478062011ea564dca49a6191495165fcc9",
+    "pose_sim/robot_source.py": "3ad91254b133c0fed495834c3d8e4d00d3222162c2b522447467979c9365e7e5",
+    "pose_sim/robot_preview.py": "5332debed3aae7b86e05f94f844d05d2b8fc0b81f1a95f7f27752f3ea4b8213a",
+    "motion_control/transfer.py": "3d6e2a6770a4f5ad5da1750930c13fb6e8aa05f631fb6f14bf1bed7dc04c8d03",
+    "config/source_robot.json": "7eacc654abaaf1b192c8492e83aa60bf733b47b32a51ca19af5bcc966ffc160e",
+    "config/transfer_source_to_g1.json": "7ec76401120cb11961bc4350d5fb5238988dccff7a0660e48e31c13b0d2df820",
+    "tests/test_markerless.py": "1a28bd4ef50b0b2d15f4a87e7743b8152bc54ab22a19f2200672625a6b7aab45",
+    "tests/test_robot_transfer.py": "277fa22274b073aae7cdd63299ca7ef5fc5b12d713c4adf3fbf2ef3496d86a94",
+    "docs/source_robot_to_g1.md": "a45d0c76acf29aa621d63650bc9f3aa43907169b765fd6e8b02a934dad29e9eb"
+  }
+}

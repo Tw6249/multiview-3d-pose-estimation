@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "association": true,
+  "structured_reprojection": false,
+  "auxiliary_association": true,
+  "association_history": false,
+  "observation_consistency": true,
+  "state": {
+    "measurement_floor_m": 0.018,
+    "acceleration_noise_m_s2": 10.0,
+    "innovation_gate": 25.0,
+    "max_prediction_ms": 100.0,
+    "reset_gap_ms": 500.0,
+    "bone_sigma_m": 0.006,
+    "ground_height_m": null,
+    "auxiliary_consistency": true,
+    "state_reacquisition": false
+  },
+  "online": {
+    "detector_workers": 4,
+    "pose_workers": 4,
+    "selection_reason": "Local RTX 4090/i9 replay: identical detections on 144 frames; measured 4/4 workers reduce stage latency. This does not certify 24 Hz or physical camera deadlines.",
+    "max_start_age_ms": 100.0,
+    "max_output_age_ms": 150.0
+  },
+  "selection_reason": "Current-image observation consistency passed development, rendered RGB and preselected S4/S6 subject-held-out checks on 2026-10-18. Independent state reacquisition reduced large errors but lost all-target success, so remains disabled. Image-path association history also remains experimental. RGB uncertainty and G1 hardware are unvalidated."
+}

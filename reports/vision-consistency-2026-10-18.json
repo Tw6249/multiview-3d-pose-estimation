@@ -1,0 +1,1335 @@
+{
+  "date": "2026-10-18",
+  "decision": "Enable observation_consistency; state_reacquisition and association_history remain disabled.",
+  "research_log": "docs/research_log.md",
+  "heldout_freeze": {
+    "implementation_sha256": "b87fc24323406afd42624c6f72a41b7c5db4f402403a4a7d0ac90762171108b5",
+    "selected_method": "consistency",
+    "observation_consistency": true,
+    "state_reacquisition": false,
+    "decision": "Selected using development results before held-out scoring; recovery remains experimental",
+    "acceptance": {
+      "common_error_not_worse": true,
+      "all_target_success_not_worse": true,
+      "coverage_max_drop_fraction": 0.001,
+      "large_error_count_not_worse": true
+    },
+    "pre_scoring_note": "Corrected transform direction in module docstring before held-out scoring; algorithm unchanged."
+  },
+  "acceptance": {
+    "common_error": true,
+    "all_target_success": true,
+    "coverage": true,
+    "large_errors": true
+  },
+  "implementation_sha256": "b87fc24323406afd42624c6f72a41b7c5db4f402403a4a7d0ac90762171108b5",
+  "selected_config_sha256": "c7fa3d4e1909cf0250166acef7610363cd4bfafb9772c9ca98b2051780140ca5",
+  "development": {
+    "targets": 10800,
+    "methods": {
+      "baseline": {
+        "available": 10692,
+        "current_observations": 10470,
+        "predictions": 222,
+        "transitions": 0,
+        "coverage": 0.99,
+        "all_target_success": 0.8533333333333334,
+        "current_all_target_success": 0.8441666666666666,
+        "common_position_error_mm": {
+          "mean": 66.31085501203168,
+          "p95": 132.40778512306105,
+          "maximum": 1206.1480987346783,
+          "count": 10687
+        },
+        "common_current_error_mm": {
+          "mean": 63.637026182799765,
+          "p95": 126.27761557628563,
+          "maximum": 963.3409495172442,
+          "count": 10457
+        }
+      },
+      "consistency": {
+        "available": 10688,
+        "current_observations": 10471,
+        "predictions": 217,
+        "transitions": 0,
+        "coverage": 0.9896296296296296,
+        "all_target_success": 0.8543518518518518,
+        "current_all_target_success": 0.8450925925925926,
+        "common_position_error_mm": {
+          "mean": 65.608065534134,
+          "p95": 130.85820409880859,
+          "maximum": 1002.4373570028231,
+          "count": 10687
+        },
+        "common_current_error_mm": {
+          "mean": 63.44189422496435,
+          "p95": 126.15855355857292,
+          "maximum": 963.3409495172442,
+          "count": 10457
+        }
+      }
+    },
+    "failures": {
+      "baseline": {
+        "outputs_over_500mm": 31,
+        "current_observations_over_500mm": 11,
+        "current_over_500mm_while_raw_under_150mm": 6
+      },
+      "consistency": {
+        "outputs_over_500mm": 23,
+        "current_observations_over_500mm": 8,
+        "current_over_500mm_while_raw_under_150mm": 3
+      }
+    },
+    "clips": [
+      {
+        "id": "s1_walk",
+        "comparison": {
+          "baseline": {
+            "coverage": 0.9966666666666667,
+            "all_target_success": 0.8438888888888889,
+            "common_position_error_mm": {
+              "mean": 67.6870615946415,
+              "p95": 139.42119054208538,
+              "maximum": 664.8824430743234,
+              "count": 1794
+            }
+          },
+          "consistency": {
+            "coverage": 0.9972222222222222,
+            "all_target_success": 0.8494444444444444,
+            "common_position_error_mm": {
+              "mean": 65.60098243456429,
+              "p95": 135.1081322066863,
+              "maximum": 555.1541200949558,
+              "count": 1794
+            }
+          }
+        },
+        "transitions": {
+          "baseline": {
+            "recovery_excess_step_mm": {
+              "mean": 163.0465998450682,
+              "p95": 450.47812980762376,
+              "maximum": 629.5423001138216,
+              "count": 22
+            },
+            "recovery_step_mm": {
+              "mean": 204.40641284153835,
+              "p95": 526.0569580695045,
+              "maximum": 594.5787969171482,
+              "count": 22
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 374.9590946310554,
+              "p95": 512.1409175958795,
+              "maximum": 528.3664420242277,
+              "count": 3
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          },
+          "consistency": {
+            "recovery_excess_step_mm": {
+              "mean": 167.4065246780026,
+              "p95": 452.37730674737855,
+              "maximum": 531.0694623809136,
+              "count": 21
+            },
+            "recovery_step_mm": {
+              "mean": 214.72507519622974,
+              "p95": 530.70771854589,
+              "maximum": 530.9634753480224,
+              "count": 21
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 298.2554209344694,
+              "p95": 359.32562006011767,
+              "maximum": 366.11119774074524,
+              "count": 2
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          }
+        }
+      },
+      {
+        "id": "s1_exercise",
+        "comparison": {
+          "baseline": {
+            "coverage": 1.0,
+            "all_target_success": 0.9044444444444445,
+            "common_position_error_mm": {
+              "mean": 46.923849287659365,
+              "p95": 112.90047038272395,
+              "maximum": 172.4286730836857,
+              "count": 1800
+            }
+          },
+          "consistency": {
+            "coverage": 1.0,
+            "all_target_success": 0.9044444444444445,
+            "common_position_error_mm": {
+              "mean": 46.923849287659365,
+              "p95": 112.90047038272395,
+              "maximum": 172.4286730836857,
+              "count": 1800
+            }
+          }
+        },
+        "transitions": {
+          "baseline": {
+            "recovery_excess_step_mm": {
+              "mean": 35.325192658489115,
+              "p95": 48.64005311910858,
+              "maximum": 49.302863119261986,
+              "count": 3
+            },
+            "recovery_step_mm": {
+              "mean": 40.28393297777537,
+              "p95": 58.66836389830116,
+              "maximum": 60.28483130286502,
+              "count": 3
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": null,
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          },
+          "consistency": {
+            "recovery_excess_step_mm": {
+              "mean": 35.325192658489115,
+              "p95": 48.64005311910858,
+              "maximum": 49.302863119261986,
+              "count": 3
+            },
+            "recovery_step_mm": {
+              "mean": 40.28393297777537,
+              "p95": 58.66836389830116,
+              "maximum": 60.28483130286502,
+              "count": 3
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": null,
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          }
+        }
+      },
+      {
+        "id": "s1_crouch",
+        "comparison": {
+          "baseline": {
+            "coverage": 0.9627777777777777,
+            "all_target_success": 0.7144444444444444,
+            "common_position_error_mm": {
+              "mean": 83.35012326715349,
+              "p95": 157.64741229598792,
+              "maximum": 1206.1480987346783,
+              "count": 1728
+            }
+          },
+          "consistency": {
+            "coverage": 0.96,
+            "all_target_success": 0.715,
+            "common_position_error_mm": {
+              "mean": 81.1730546323601,
+              "p95": 151.25289797126175,
+              "maximum": 1002.4373570028231,
+              "count": 1728
+            }
+          }
+        },
+        "transitions": {
+          "baseline": {
+            "recovery_excess_step_mm": {
+              "mean": 266.9677225508013,
+              "p95": 831.5460557459035,
+              "maximum": 1305.3734339711875,
+              "count": 34
+            },
+            "recovery_step_mm": {
+              "mean": 275.7001394413148,
+              "p95": 839.664003462855,
+              "maximum": 1311.2145567968814,
+              "count": 34
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 252.9137457788934,
+              "p95": 812.9616187138602,
+              "maximum": 1120.4243093692955,
+              "count": 12
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          },
+          "consistency": {
+            "recovery_excess_step_mm": {
+              "mean": 190.95625819567246,
+              "p95": 733.7571351488155,
+              "maximum": 756.4706364972236,
+              "count": 33
+            },
+            "recovery_step_mm": {
+              "mean": 199.58728543272073,
+              "p95": 748.20101267415,
+              "maximum": 770.1873812210442,
+              "count": 33
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 330.1278641933441,
+              "p95": 1113.1031621185466,
+              "maximum": 1120.4243093692955,
+              "count": 12
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          }
+        }
+      },
+      {
+        "id": "s2_floor",
+        "comparison": {
+          "baseline": {
+            "coverage": 0.9844444444444445,
+            "all_target_success": 0.8538888888888889,
+            "common_position_error_mm": {
+              "mean": 70.4624545179781,
+              "p95": 127.40932586331068,
+              "maximum": 320.76665971738356,
+              "count": 1772
+            }
+          },
+          "consistency": {
+            "coverage": 0.9844444444444445,
+            "all_target_success": 0.8538888888888889,
+            "common_position_error_mm": {
+              "mean": 70.44688877209222,
+              "p95": 127.40932586324473,
+              "maximum": 320.76665971738356,
+              "count": 1772
+            }
+          }
+        },
+        "transitions": {
+          "baseline": {
+            "recovery_excess_step_mm": {
+              "mean": 57.67847299392413,
+              "p95": 124.75463775267893,
+              "maximum": 152.72830975718165,
+              "count": 34
+            },
+            "recovery_step_mm": {
+              "mean": 62.71913370767796,
+              "p95": 120.73653944325106,
+              "maximum": 153.42537090817305,
+              "count": 34
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 86.71666506075557,
+              "p95": 183.80415801240022,
+              "maximum": 194.9435832091793,
+              "count": 7
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          },
+          "consistency": {
+            "recovery_excess_step_mm": {
+              "mean": 57.8132714504662,
+              "p95": 124.75463775267895,
+              "maximum": 152.72830975718165,
+              "count": 34
+            },
+            "recovery_step_mm": {
+              "mean": 62.90278717862047,
+              "p95": 120.73653944325108,
+              "maximum": 153.42537090817305,
+              "count": 34
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 86.68613321087643,
+              "p95": 183.740041522486,
+              "maximum": 194.9435832091793,
+              "count": 7
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          }
+        }
+      },
+      {
+        "id": "s2_sports",
+        "comparison": {
+          "baseline": {
+            "coverage": 0.9994444444444445,
+            "all_target_success": 0.8683333333333333,
+            "common_position_error_mm": {
+              "mean": 69.03652934848364,
+              "p95": 132.7456085192712,
+              "maximum": 488.78601914183565,
+              "count": 1799
+            }
+          },
+          "consistency": {
+            "coverage": 0.9994444444444445,
+            "all_target_success": 0.8683333333333333,
+            "common_position_error_mm": {
+              "mean": 69.0483536761762,
+              "p95": 132.7456085192712,
+              "maximum": 488.78601914183565,
+              "count": 1799
+            }
+          }
+        },
+        "transitions": {
+          "baseline": {
+            "recovery_excess_step_mm": {
+              "mean": 173.89700813008332,
+              "p95": 424.34758024293114,
+              "maximum": 477.24786175109585,
+              "count": 18
+            },
+            "recovery_step_mm": {
+              "mean": 293.03233740090445,
+              "p95": 696.9258788326373,
+              "maximum": 726.9981060841118,
+              "count": 18
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 220.51031893771602,
+              "p95": 220.51031893771602,
+              "maximum": 220.51031893771602,
+              "count": 1
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          },
+          "consistency": {
+            "recovery_excess_step_mm": {
+              "mean": 168.15525725165665,
+              "p95": 421.33588272793577,
+              "maximum": 478.24869925300436,
+              "count": 19
+            },
+            "recovery_step_mm": {
+              "mean": 281.36571847107604,
+              "p95": 695.156924288433,
+              "maximum": 726.9981060841118,
+              "count": 19
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 220.51031893771602,
+              "p95": 220.51031893771602,
+              "maximum": 220.51031893771602,
+              "count": 1
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          }
+        }
+      },
+      {
+        "id": "s2_misc",
+        "comparison": {
+          "baseline": {
+            "coverage": 0.9966666666666667,
+            "all_target_success": 0.935,
+            "common_position_error_mm": {
+              "mean": 61.14012908895665,
+              "p95": 104.49650343251129,
+              "maximum": 281.76249309761664,
+              "count": 1794
+            }
+          },
+          "consistency": {
+            "coverage": 0.9966666666666667,
+            "all_target_success": 0.935,
+            "common_position_error_mm": {
+              "mean": 61.14012908895665,
+              "p95": 104.49650343251129,
+              "maximum": 281.76249309761664,
+              "count": 1794
+            }
+          }
+        },
+        "transitions": {
+          "baseline": {
+            "recovery_excess_step_mm": {
+              "mean": 100.74003933340134,
+              "p95": 254.4361074200737,
+              "maximum": 285.7010531073483,
+              "count": 8
+            },
+            "recovery_step_mm": {
+              "mean": 105.96131083497536,
+              "p95": 280.4741893677487,
+              "maximum": 329.5316535252372,
+              "count": 8
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 65.02670215590462,
+              "p95": 84.79656192766393,
+              "maximum": 86.99321301341496,
+              "count": 2
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          },
+          "consistency": {
+            "recovery_excess_step_mm": {
+              "mean": 100.74003933340134,
+              "p95": 254.4361074200737,
+              "maximum": 285.7010531073483,
+              "count": 8
+            },
+            "recovery_step_mm": {
+              "mean": 105.96131083497536,
+              "p95": 280.4741893677487,
+              "maximum": 329.5316535252372,
+              "count": 8
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 65.02670215590462,
+              "p95": 84.79656192766393,
+              "maximum": 86.99321301341496,
+              "count": 2
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          }
+        }
+      }
+    ]
+  },
+  "heldout": {
+    "targets": 10800,
+    "methods": {
+      "baseline": {
+        "available": 10757,
+        "current_observations": 10586,
+        "predictions": 171,
+        "transitions": 0,
+        "coverage": 0.9960185185185185,
+        "all_target_success": 0.9212962962962963,
+        "current_all_target_success": 0.9113888888888889,
+        "common_position_error_mm": {
+          "mean": 54.276579455574876,
+          "p95": 109.90373137285333,
+          "maximum": 437.56634934136105,
+          "count": 10757
+        },
+        "common_current_error_mm": {
+          "mean": 53.58718143291673,
+          "p95": 107.61044214704111,
+          "maximum": 338.38476302129044,
+          "count": 10586
+        }
+      },
+      "consistency": {
+        "available": 10757,
+        "current_observations": 10587,
+        "predictions": 170,
+        "transitions": 0,
+        "coverage": 0.9960185185185185,
+        "all_target_success": 0.9212962962962963,
+        "current_all_target_success": 0.9113888888888889,
+        "common_position_error_mm": {
+          "mean": 54.27551924706203,
+          "p95": 109.90373137285333,
+          "maximum": 437.56634934136105,
+          "count": 10757
+        },
+        "common_current_error_mm": {
+          "mean": 53.58767510486503,
+          "p95": 107.58343519193463,
+          "maximum": 338.38476302129044,
+          "count": 10586
+        }
+      }
+    },
+    "failures": {
+      "baseline": {
+        "outputs_over_500mm": 0,
+        "current_observations_over_500mm": 0,
+        "current_over_500mm_while_raw_under_150mm": 0
+      },
+      "consistency": {
+        "outputs_over_500mm": 0,
+        "current_observations_over_500mm": 0,
+        "current_over_500mm_while_raw_under_150mm": 0
+      }
+    },
+    "clips": [
+      {
+        "id": "s4_seq1_0500",
+        "comparison": {
+          "baseline": {
+            "coverage": 1.0,
+            "all_target_success": 0.9572222222222222,
+            "common_position_error_mm": {
+              "mean": 45.68668312983232,
+              "p95": 98.29864550331278,
+              "maximum": 226.23981011299784,
+              "count": 1800
+            }
+          },
+          "consistency": {
+            "coverage": 1.0,
+            "all_target_success": 0.9572222222222222,
+            "common_position_error_mm": {
+              "mean": 45.68034720595857,
+              "p95": 98.29864550331278,
+              "maximum": 226.23987192164998,
+              "count": 1800
+            }
+          }
+        },
+        "transitions": {
+          "baseline": {
+            "recovery_excess_step_mm": {
+              "mean": 53.95002783570425,
+              "p95": 139.08878977356085,
+              "maximum": 170.4312208224932,
+              "count": 14
+            },
+            "recovery_step_mm": {
+              "mean": 81.96835614442986,
+              "p95": 208.35778847153088,
+              "maximum": 224.42582106388005,
+              "count": 14
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": null,
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          },
+          "consistency": {
+            "recovery_excess_step_mm": {
+              "mean": 52.39600255368662,
+              "p95": 141.49974600809398,
+              "maximum": 170.4312208224931,
+              "count": 13
+            },
+            "recovery_step_mm": {
+              "mean": 83.25364972331188,
+              "p95": 209.5937909786346,
+              "maximum": 224.42582106387994,
+              "count": 13
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": null,
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          }
+        }
+      },
+      {
+        "id": "s4_seq1_2000",
+        "comparison": {
+          "baseline": {
+            "coverage": 1.0,
+            "all_target_success": 0.9733333333333334,
+            "common_position_error_mm": {
+              "mean": 46.57610736380003,
+              "p95": 93.10971882648647,
+              "maximum": 369.776910702192,
+              "count": 1800
+            }
+          },
+          "consistency": {
+            "coverage": 1.0,
+            "all_target_success": 0.9733333333333334,
+            "common_position_error_mm": {
+              "mean": 46.57610736380003,
+              "p95": 93.10971882648647,
+              "maximum": 369.776910702192,
+              "count": 1800
+            }
+          }
+        },
+        "transitions": {
+          "baseline": {
+            "recovery_excess_step_mm": {
+              "mean": 49.464520378337305,
+              "p95": 182.89607817304827,
+              "maximum": 362.8740647081234,
+              "count": 12
+            },
+            "recovery_step_mm": {
+              "mean": 64.05699602282124,
+              "p95": 237.27837492552533,
+              "maximum": 396.37519359903916,
+              "count": 12
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": null,
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          },
+          "consistency": {
+            "recovery_excess_step_mm": {
+              "mean": 49.464520378337305,
+              "p95": 182.89607817304827,
+              "maximum": 362.8740647081234,
+              "count": 12
+            },
+            "recovery_step_mm": {
+              "mean": 64.05699602282124,
+              "p95": 237.27837492552533,
+              "maximum": 396.37519359903916,
+              "count": 12
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": null,
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          }
+        }
+      },
+      {
+        "id": "s4_seq1_5000",
+        "comparison": {
+          "baseline": {
+            "coverage": 0.9861111111111112,
+            "all_target_success": 0.94,
+            "common_position_error_mm": {
+              "mean": 48.088448909770776,
+              "p95": 98.62263060154164,
+              "maximum": 193.5373929114766,
+              "count": 1775
+            }
+          },
+          "consistency": {
+            "coverage": 0.9861111111111112,
+            "all_target_success": 0.94,
+            "common_position_error_mm": {
+              "mean": 48.088448909770776,
+              "p95": 98.62263060154164,
+              "maximum": 193.5373929114766,
+              "count": 1775
+            }
+          }
+        },
+        "transitions": {
+          "baseline": {
+            "recovery_excess_step_mm": {
+              "mean": 23.037952934130377,
+              "p95": 78.20072920343242,
+              "maximum": 103.44568894346747,
+              "count": 8
+            },
+            "recovery_step_mm": {
+              "mean": 34.30041653530244,
+              "p95": 99.01387734754599,
+              "maximum": 123.21045301985762,
+              "count": 8
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 67.67398646753887,
+              "p95": 122.43231547411321,
+              "maximum": 132.50682707875643,
+              "count": 5
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          },
+          "consistency": {
+            "recovery_excess_step_mm": {
+              "mean": 23.037952934130377,
+              "p95": 78.20072920343242,
+              "maximum": 103.44568894346747,
+              "count": 8
+            },
+            "recovery_step_mm": {
+              "mean": 34.30041653530244,
+              "p95": 99.01387734754599,
+              "maximum": 123.21045301985762,
+              "count": 8
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 67.67398646753887,
+              "p95": 122.43231547411321,
+              "maximum": 132.50682707875643,
+              "count": 5
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          }
+        }
+      },
+      {
+        "id": "s6_seq2_0500",
+        "comparison": {
+          "baseline": {
+            "coverage": 0.9933333333333333,
+            "all_target_success": 0.8205555555555556,
+            "common_position_error_mm": {
+              "mean": 66.2997365028108,
+              "p95": 136.08958770219533,
+              "maximum": 437.56634934136105,
+              "count": 1788
+            }
+          },
+          "consistency": {
+            "coverage": 0.9933333333333333,
+            "all_target_success": 0.8205555555555556,
+            "common_position_error_mm": {
+              "mean": 66.2997365028108,
+              "p95": 136.08958770219533,
+              "maximum": 437.56634934136105,
+              "count": 1788
+            }
+          }
+        },
+        "transitions": {
+          "baseline": {
+            "recovery_excess_step_mm": {
+              "mean": 70.62452504762162,
+              "p95": 174.50268956371605,
+              "maximum": 379.88961429575915,
+              "count": 66
+            },
+            "recovery_step_mm": {
+              "mean": 76.55192967088176,
+              "p95": 189.72362596101635,
+              "maximum": 384.5884578850953,
+              "count": 66
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 118.54502229894362,
+              "p95": 256.124359685799,
+              "maximum": 277.9648921675686,
+              "count": 9
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          },
+          "consistency": {
+            "recovery_excess_step_mm": {
+              "mean": 70.62452504762162,
+              "p95": 174.50268956371605,
+              "maximum": 379.88961429575915,
+              "count": 66
+            },
+            "recovery_step_mm": {
+              "mean": 76.55192967088176,
+              "p95": 189.72362596101635,
+              "maximum": 384.5884578850953,
+              "count": 66
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 118.54502229894362,
+              "p95": 256.124359685799,
+              "maximum": 277.9648921675686,
+              "count": 9
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          }
+        }
+      },
+      {
+        "id": "s6_seq2_2000",
+        "comparison": {
+          "baseline": {
+            "coverage": 0.9966666666666667,
+            "all_target_success": 0.8627777777777778,
+            "common_position_error_mm": {
+              "mean": 67.00329953828773,
+              "p95": 142.74735304870333,
+              "maximum": 252.44261025731834,
+              "count": 1794
+            }
+          },
+          "consistency": {
+            "coverage": 0.9966666666666667,
+            "all_target_success": 0.8627777777777778,
+            "common_position_error_mm": {
+              "mean": 67.00329953828773,
+              "p95": 142.74735304870333,
+              "maximum": 252.44261025731834,
+              "count": 1794
+            }
+          }
+        },
+        "transitions": {
+          "baseline": {
+            "recovery_excess_step_mm": {
+              "mean": 40.49104888084052,
+              "p95": 74.57914204929628,
+              "maximum": 80.62538501978736,
+              "count": 7
+            },
+            "recovery_step_mm": {
+              "mean": 57.54746280302441,
+              "p95": 129.58971780157964,
+              "maximum": 148.74851414628702,
+              "count": 7
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 78.56286227457726,
+              "p95": 116.97012536980374,
+              "maximum": 123.27420059773303,
+              "count": 4
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          },
+          "consistency": {
+            "recovery_excess_step_mm": {
+              "mean": 40.49104888084052,
+              "p95": 74.57914204929628,
+              "maximum": 80.62538501978736,
+              "count": 7
+            },
+            "recovery_step_mm": {
+              "mean": 57.54746280302441,
+              "p95": 129.58971780157964,
+              "maximum": 148.74851414628702,
+              "count": 7
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": {
+              "mean": 78.56286227457726,
+              "p95": 116.97012536980374,
+              "maximum": 123.27420059773303,
+              "count": 4
+            },
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          }
+        }
+      },
+      {
+        "id": "s6_seq2_5000",
+        "comparison": {
+          "baseline": {
+            "coverage": 1.0,
+            "all_target_success": 0.9738888888888889,
+            "common_position_error_mm": {
+              "mean": 52.0418318119576,
+              "p95": 89.0901317501226,
+              "maximum": 335.2465261122515,
+              "count": 1800
+            }
+          },
+          "consistency": {
+            "coverage": 1.0,
+            "all_target_success": 0.9738888888888889,
+            "common_position_error_mm": {
+              "mean": 52.0418318119576,
+              "p95": 89.0901317501226,
+              "maximum": 335.2465261122515,
+              "count": 1800
+            }
+          }
+        },
+        "transitions": {
+          "baseline": {
+            "recovery_excess_step_mm": {
+              "mean": 150.59842392077718,
+              "p95": 273.74825725164294,
+              "maximum": 290.8374916421802,
+              "count": 3
+            },
+            "recovery_step_mm": {
+              "mean": 151.61405206393172,
+              "p95": 295.76254672254174,
+              "maximum": 316.2182847864317,
+              "count": 3
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": null,
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          },
+          "consistency": {
+            "recovery_excess_step_mm": {
+              "mean": 150.59842392077718,
+              "p95": 273.74825725164294,
+              "maximum": 290.8374916421802,
+              "count": 3
+            },
+            "recovery_step_mm": {
+              "mean": 151.61405206393172,
+              "p95": 295.76254672254174,
+              "maximum": 316.2182847864317,
+              "count": 3
+            },
+            "track_reinitializations": 0,
+            "reinitialization_displacement_mm": null,
+            "gap_reappearance_excess_step_mm": null,
+            "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+          }
+        }
+      }
+    ]
+  },
+  "rendered_regression": {
+    "baseline": {
+      "available": 10358,
+      "current_observations": 10146,
+      "predictions": 212,
+      "transitions": 0,
+      "coverage": 0.9990354938271605,
+      "all_target_success": 0.9375964506172839,
+      "current_all_target_success": 0.9232253086419753,
+      "common_position_error_mm": {
+        "mean": 47.02206476257716,
+        "p95": 105.20383926864072,
+        "maximum": 473.2625148665442,
+        "count": 10357
+      },
+      "common_current_error_mm": {
+        "mean": 46.040422492216734,
+        "p95": 102.8265314131597,
+        "maximum": 413.89555258565713,
+        "count": 10143
+      }
+    },
+    "candidate": {
+      "available": 10358,
+      "current_observations": 10171,
+      "predictions": 187,
+      "transitions": 0,
+      "coverage": 0.9990354938271605,
+      "all_target_success": 0.9396219135802469,
+      "current_all_target_success": 0.9272762345679012,
+      "common_position_error_mm": {
+        "mean": 46.68473883785987,
+        "p95": 104.10550097651375,
+        "maximum": 473.2625148665444,
+        "count": 10357
+      },
+      "common_current_error_mm": {
+        "mean": 45.74131495530962,
+        "p95": 102.033875562487,
+        "maximum": 413.89555258565724,
+        "count": 10143
+      }
+    }
+  },
+  "synthetic_regression": {
+    "joint": {
+      "mean_sequence_position_error_mm": 14.840441510117847,
+      "mean_coverage": 0.9988425925925926,
+      "mean_processing_ms": 29.573315763951133
+    },
+    "consistency": {
+      "mean_sequence_position_error_mm": 14.840441510117847,
+      "mean_coverage": 0.9988425925925926,
+      "mean_processing_ms": 30.259324999759784
+    }
+  },
+  "isolated_timing": [
+    {
+      "clip": "s1_crouch",
+      "processing_ms": {
+        "baseline": {
+          "mean": 23.537187142106372,
+          "p95": 26.305850001517683,
+          "maximum": 44.70020000007935,
+          "count": 140
+        },
+        "selected": {
+          "mean": 24.47304714171748,
+          "p95": 27.188939979532734,
+          "maximum": 34.491099999286234,
+          "count": 140
+        }
+      },
+      "warmup_excluded": 10
+    },
+    {
+      "clip": "s4_seq1_0500",
+      "processing_ms": {
+        "baseline": {
+          "mean": 29.92027499775369,
+          "p95": 34.46871499327244,
+          "maximum": 49.84880000120029,
+          "count": 140
+        },
+        "selected": {
+          "mean": 30.456329286555825,
+          "p95": 34.70015001366846,
+          "maximum": 49.4386000209488,
+          "count": 140
+        }
+      },
+      "warmup_excluded": 10
+    }
+  ],
+  "counterexamples": [
+    {
+      "frame": 5095,
+      "joint": "right_wrist",
+      "baseline": {
+        "error_mm": null,
+        "status": "missing"
+      },
+      "selected": {
+        "error_mm": null,
+        "status": "missing"
+      }
+    },
+    {
+      "frame": 5096,
+      "joint": "right_wrist",
+      "baseline": {
+        "error_mm": 1151.183921814126,
+        "status": "filtered"
+      },
+      "selected": {
+        "error_mm": null,
+        "status": "missing"
+      }
+    },
+    {
+      "frame": 5097,
+      "joint": "right_wrist",
+      "baseline": {
+        "error_mm": 1172.6657144192445,
+        "status": "filtered"
+      },
+      "selected": {
+        "error_mm": null,
+        "status": "missing"
+      }
+    },
+    {
+      "frame": 5098,
+      "joint": "right_wrist",
+      "baseline": {
+        "error_mm": 1191.2932438166345,
+        "status": "predicted"
+      },
+      "selected": {
+        "error_mm": null,
+        "status": "missing"
+      }
+    },
+    {
+      "frame": 5099,
+      "joint": "right_wrist",
+      "baseline": {
+        "error_mm": 1206.1480987346783,
+        "status": "predicted"
+      },
+      "selected": {
+        "error_mm": 125.79065295479724,
+        "status": "filtered"
+      }
+    },
+    {
+      "frame": 5100,
+      "joint": "right_wrist",
+      "baseline": {
+        "error_mm": 140.3505632515323,
+        "status": "filtered"
+      },
+      "selected": {
+        "error_mm": 141.7007893612099,
+        "status": "filtered"
+      }
+    },
+    {
+      "frame": 5101,
+      "joint": "right_wrist",
+      "baseline": {
+        "error_mm": 77.63469086290966,
+        "status": "filtered"
+      },
+      "selected": {
+        "error_mm": 79.77737546368135,
+        "status": "filtered"
+      }
+    },
+    {
+      "frame": 5102,
+      "joint": "right_wrist",
+      "baseline": {
+        "error_mm": 141.00894095006353,
+        "status": "filtered"
+      },
+      "selected": {
+        "error_mm": 136.50203390274413,
+        "status": "filtered"
+      }
+    },
+    {
+      "frame": 5103,
+      "joint": "right_wrist",
+      "baseline": {
+        "error_mm": 203.8194371390799,
+        "status": "filtered"
+      },
+      "selected": {
+        "error_mm": 197.48030755409184,
+        "status": "filtered"
+      }
+    }
+  ],
+  "rejected_recovery": {
+    "development_all_target_success": 0.85,
+    "development_coverage": 0.9798148148148148,
+    "heldout_all_target_success": 0.9185185185185185,
+    "heldout_coverage": 0.9881481481481481
+  },
+  "tests": {
+    "vision": {
+      "run": 129,
+      "passed": 123,
+      "skipped_robot_only": 6
+    },
+    "robot": {
+      "run": 129,
+      "passed": 129
+    },
+    "post_default_change_targeted": {
+      "run": 36,
+      "passed": 36
+    },
+    "default_offline_integration_smoke": "passed",
+    "git_diff_check": "passed; preexisting lockfile line-ending warning"
+  },
+  "gpu": {
+    "device": "cuda",
+    "providers": {
+      "det_model": [
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ],
+      "pose_model": [
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ],
+      "body_pose_model": [
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ]
+    },
+    "models": {
+      "det_model": "bf59d72aa718ed65b127d6c70048dccfd9d48df34e48136212e5d962c8b897d0",
+      "pose_model": "bd033156e5104c4f5d2edfe0453e02661e30a2f3da453ec93c8764d561b83054",
+      "body_pose_model": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c"
+    },
+    "mean_detector_pose_ms": 83.0625306662599
+  },
+  "cleanup": {
+    "reason": "Rejected combined recovery variants superseded by selected consistency states and reports. Preserve baseline input, reports, freeze records, and final held-out states.",
+    "root": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets",
+    "files": [
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v1\\s1_crouch\\candidate.jsonl",
+        "bytes": 8766310
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v1\\s1_exercise\\candidate.jsonl",
+        "bytes": 9751879
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v1\\s1_walk\\candidate.jsonl",
+        "bytes": 9317618
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v1\\s2_floor\\candidate.jsonl",
+        "bytes": 9187202
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v1\\s2_misc\\candidate.jsonl",
+        "bytes": 9679619
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v1\\s2_sports\\candidate.jsonl",
+        "bytes": 9472878
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v2\\s1_crouch\\candidate.jsonl",
+        "bytes": 7745471
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v2\\s1_exercise\\candidate.jsonl",
+        "bytes": 9746299
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v2\\s1_walk\\candidate.jsonl",
+        "bytes": 9089178
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v2\\s2_floor\\candidate.jsonl",
+        "bytes": 8435190
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v2\\s2_misc\\candidate.jsonl",
+        "bytes": 9542736
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v2\\s2_sports\\candidate.jsonl",
+        "bytes": 9448206
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v3\\s1_crouch\\candidate.jsonl",
+        "bytes": 8151502
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v3\\s1_exercise\\candidate.jsonl",
+        "bytes": 9752040
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v3\\s1_walk\\candidate.jsonl",
+        "bytes": 9111506
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v3\\s2_floor\\candidate.jsonl",
+        "bytes": 8820550
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v3\\s2_misc\\candidate.jsonl",
+        "bytes": 9595717
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\recovery_development_v3\\s2_sports\\candidate.jsonl",
+        "bytes": 9458417
+      }
+    ],
+    "total_bytes": 165072318,
+    "deleted": true
+  },
+  "evidence": {
+    "mpi_heldout/manifest.json": "be4c33e0c8ff741e6947ffb44724190894a6e3a2073752986b17f49d41a560b8",
+    "mpi_heldout_baseline/inference.json": "c4fd31964aba06ed7bc1a7189f40040b811bc7f4f4fb5a4905ad2d2109996763",
+    "recovery_holdout_freeze.json": "ea0a31e47a275969522134b2d5c830358e3f77c50074dde5039b7c5865710b3a",
+    "recovery_heldout/report.json": "b3cf68e2d9de7d5fdc28f1f4d692d78e541d520dc2110092f8edb857ad754d11",
+    "recovery_development_v1/report.json": "6ce1ddec9856273c74674a9208e6ef3b87837bba2435fe1a3eaa64e9f09eef56",
+    "recovery_development_v2/report.json": "ee30a699da6000b431fe4146173a1b3fc13886d86983d22534b954ae5b0ecb01",
+    "recovery_development_v3/report.json": "f8368d3914f3d13b238f7cd349374f92b4f4653e42d70dc9b7614fa9ba492d29",
+    "consistency_rendered_final.json": "500ce7345fc042b2dc960d7eaed320ce366e41fa1696265d305cd5ade886d2bb",
+    "consistency_synthetic_final/report.json": "e9b3134f96076f4bf9ba80f0bdff3d2fbb12f1cd9a47a34db31c0f02b7c334fc",
+    "consistency_isolated_timing.json": "1cc2a8cd5df8fd0045870c4f6cd09eb28303a9466f2cd5467c329f31a483d328",
+    "recovery_cleanup.json": "28983b68bd0bd28da0d052866b6ac5e90bbb85b2d8af5319ee9912fd2f247494"
+  },
+  "limitations": [
+    "MPI-INF-3DHP reference is markerless multiview capture, not independent Vicon ground truth.",
+    "Subject-held-out subset of official training data; pretrained model overlap unknown.",
+    "Held-out differences are negligible; these clips do not establish strong occlusion recovery.",
+    "Development still has 23 joint outputs over 500 mm; correspondence and uncertainty remain unsolved.",
+    "Full anatomical rotations, foot contact, foot slip, physical exposure latency and G1 hardware remain unvalidated."
+  ]
+}

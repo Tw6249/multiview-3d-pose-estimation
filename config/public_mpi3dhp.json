@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "dataset": "MPI-INF-3DHP",
+  "source_base": "https://vcai.mpi-inf.mpg.de/3dhp-dataset/",
+  "camera_ids": [0, 2, 5, 7],
+  "width": 1024,
+  "height": 1024,
+  "fps": 25,
+  "frames_per_clip": 150,
+  "clips": [
+    {"id": "s1_walk", "sequence": "S1/Seq1", "start_frame": 500, "activity_block": "walking/standing"},
+    {"id": "s1_exercise", "sequence": "S1/Seq1", "start_frame": 2000, "activity_block": "exercise"},
+    {"id": "s1_crouch", "sequence": "S1/Seq1", "start_frame": 5000, "activity_block": "crouch/reach"},
+    {"id": "s2_floor", "sequence": "S2/Seq2", "start_frame": 500, "activity_block": "on the floor"},
+    {"id": "s2_sports", "sequence": "S2/Seq2", "start_frame": 2000, "activity_block": "sports"},
+    {"id": "s2_misc", "sequence": "S2/Seq2", "start_frame": 5000, "activity_block": "miscellaneous"}
+  ],
+  "protocol": "Exploratory frozen-config real-RGB evaluation on a subset of the official training partition; not an official test benchmark.",
+  "selection": "Two subjects, both action sequences, three fixed time windows chosen before accuracy evaluation. Activity labels are approximate publisher block descriptions, not frame-level labels. No algorithm tuning in this run.",
+  "reference": "annot3 markerless multiview motion-capture reference, not independent marker-based Vicon; 12 corresponding body joints only; do not use univ_annot3.",
+  "license": "Local non-commercial research only; do not redistribute videos, labels, or derivatives. See official license in research/mpi_license.txt."
+}

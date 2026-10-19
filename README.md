@@ -1,147 +1,67 @@
-# 多视角 RGB → 全身三维关节点仿真
+# 多相机无标记人体动作 → 宇树 G1 全身模仿
 
-本项目将 **Blender 虚拟相机**与 **真实图像可复用的姿态估计管线**分开。
-目标是先在本机跑通单人、固定多相机环境，再用真实图像及标定文件替换数据源。
-
-本次交付的正式结果在 **`outputs/session01`**。`outputs/demo` 与 `outputs/verified`
-是被后续修正替代的调试输出，不能用于验收；各目录已放置 `DEBUG_ONLY.txt`。
-
-验收结果（2026-10-16）：4 视角 × 12 帧 = 48 张图像；实际检测后重建
-201/204 个 COCO17 点（98.53%）。12 个身体骨骼代理点的有效覆盖率 99.31%，
-平均代理误差 54.77 mm、中位数 38.94 mm、P95 142.61 mm；平均内点重投影误差
-2.95 px。这不是人体真实标注精度，见下方代理真值限制。
-相机导出与 Blender 投影最大差异 0.000054 px；6 项测试通过，包含无真值文件的
-真实输入格式、空场景拒绝、畸变、异常视角、低视差与同步门限。
-本机 CPU 串行推理平均 0.634 秒/图像，当前是离线原型，未达到多路实时采集处理。
+用多台同步相机无标记地观察人的行走、转身、躯干和四肢运动，重建完整人体运动状态，再按人与 G1 的尺寸及肢体比例重定向为 G1 EDU 的全身动作。左右肢体逐一对应，步态来自源的腿部与骨盆运动。项目约定见 [AGENTS.md](AGENTS.md)。
 
 ```text
-Blender：人体动画 + 4 台同步虚拟相机
-       ↓ RGB + 相机标定 + 时间戳
-YOLOX 人体检测 → RTMPose COCO17 二维关键点
-       ↓
-置信度筛选 → 多视角 RANSAC / 加权 DLT → 鲁棒重投影优化
-       ↓
-世界坐标中的 17 个关节点 + 有效性 + 质量指标
+同步 RGB → 人体检测与二维关键点 → 跨视角人物选择与观测校验 → 三维重建
+→ 因果人体状态（体型、根部运动、关节、接触、不确定性）→ 全身重定向
+→ 轨迹约束与跟踪控制 → 具名 G1 指令（目前只进入模拟接收器）
 ```
 
-**真实图像迁移时保留 YOLOX、RTMPose、三角化和结果格式。**
-Blender 仅负责生成测试输入。模型真值只由独立评测程序读取，绝不充当二维检测结果。
+## 当前状态
 
-## 当前范围
+| 环节 | 状态 | 依据 |
+|---|---|---|
+| 二维前端 | RTMPose 身体点 + RTMW 手足点，共 33 点；PMPose、RTMPose-X 为未晋升候选 | [视觉模块](docs/vision_pipeline.md) |
+| 多视角重建与观测恢复 | 跨视角人物选择已启用；所有视角一致的左右互换是主要残留错误，轨迹确认 N=3 未通过门槛 | [恢复事件验收](reports/recovery-events-2026-10-18.json) |
+| 人体状态 | 因果状态估计、可修订尺寸约束、最多 100 ms 预测及过期处理；COCO17 无法观测脚掌/手掌完整朝向 | [联合状态](docs/vision_joint_state.md) |
+| 真实数据评测 | MPI-INF-3DHP 开发集、留出集及冻结测试集（S3/S5/S7/S8，6,000 帧） | [公开数据](docs/public_real_datasets_2026-10-17.md) |
+| 在线性能 | 文件回放约 11.3 Hz，未达到 24 Hz；尚无物理曝光延迟测量 | [联合状态报告](reports/vision-joint-state-2026-10-18.json) |
+| G1 控制 | 29 自由度模型 + TWIST2 跟踪，仅仿真；已知 10 段完整模仿 0/10，骨盆路径跟踪未达标 | [G1 模仿](docs/source_robot_to_g1.md) |
+| 实机 | 未联调：DDS/CRC、反馈与里程计、机型核对、独立停止机制均未接入 | [架构与硬件迁移](docs/architecture.md) |
 
-- 单人，四台固定相机，640×640，默认 12 fps / 12 帧的短动作片段。
-- 输出 COCO17；置信度不足、视角不足或几何退化的关节写为 `null`，不填入真值或伪造坐标。
-- 实际检测渲染出来的 RGB，ONNX Runtime CPU 后端，无 CUDA 要求。
-- Blender Cycles CPU 渲染，运行时与系统 Python 隔离。
-- 真实图像与仿真图像共享 `cameras.json`、`frames.jsonl` 数据接口。
-- 示例 CesiumMan 是风格化的公开人体动画，适合功能验收，不是写实人体精度基准。
-- 示例模型仅有 12 个身体骨骼关节的评测代理值。面部 5 个点没有真值；骨骼中心与 COCO 标注定义也不完全相同。`body12_proxy_mpjpe_mm` 必须按此解释。
-- 默认理想针孔、全局快门、精确同步。重建代码支持真实 Brown-Conrady 畸变；本例不模拟卷帘快门、真实曝光、网络延迟或相机触发电路。
-- 本版不含多人跨视角身份关联、SMPL 拟合、机器人重定向或控制。
+下一步是双假设左右身份恢复：先在开发集通过同一套门槛，再对冻结测试集只评一次。TotalCapture / BioCV 获批后，为其编写独立导入器，用于检验触地相位和脚滑。
 
-## 安装与启动（Windows PowerShell）
+## 目录
 
-```powershell
-python scripts/bootstrap.py
-.\run.ps1 -Stage test
-.\run.ps1 -Stage demo -Session outputs/my_new_session -Frames 12
-```
-
-安装脚本下载校验过 SHA256 的 Blender 4.5.3 便携版、开源人体示例，并创建隔离 Python 环境。
-运行时位于 `%LOCALAPPDATA%/multiview-pose-sim`，不修改系统软件关联或基础 Python。
-首次姿态检测还会下载官方模型权重。依赖与资产来源见文件末尾。
-
-已存在的仿真 session 不会被渲染器覆盖。重复实验请换输出目录。
-也可以对已有图像单独运行：
-
-```powershell
-.\run.ps1 -Stage detect -Session outputs/session01
-.\run.ps1 -Stage reconstruct -Session outputs/session01
-.\run.ps1 -Stage evaluate -Session outputs/session01
-.\run.ps1 -Stage preview -Session outputs/session01
-.\run.ps1 -Stage open-scene -Session outputs/session01
-```
-
-可在 `config/demo.json` 修改相机方位、距离、高度、焦距、分辨率、帧数、同步容差及重建阈值。
-相机朝向统一看向人体中心。渲染器逐相机拍摄同一动画帧，期间不推进动作时间。
-
-## 结果文件
-
-| 文件 | 含义 |
+| 路径 | 内容 |
 |---|---|
-| `scene.blend` | 可编辑的人体、灯光、地面、四相机场景 |
-| `images/camXX/000000.png` | 原始虚拟相机 RGB 图像 |
-| `cameras.json` | 内参、畸变、世界到相机的外参，米制 |
-| `frames.jsonl` | 每个同步图像包及逐相机时间戳 |
-| `detections.jsonl` | 实际图像检测得到的 17 个二维点与置信度 |
-| `poses3d.jsonl` | 三维坐标、内点相机、重投影误差、三角化角度 |
-| `ground_truth.jsonl` | 只用于仿真评测的骨骼代理真值及其投影 |
-| `metrics.json` | 实际检测重建的误差、有效率；以及独立几何自检结果 |
-| `render_validation.json` | 导出相机与 Blender 投影是否一致 |
-| `inference_timing.json` | CPU 串行图像推理耗时，不等同系统实时延迟 |
-| `preview.png / .gif / .mp4` | 四视角检测结果与三维重建对照 |
+| `pose_sim/` | 视觉感知：检测推理、几何与三角化、人物选择、观测校验、人体状态、公开数据导入与评测 |
+| `motion_control/` | 重定向、参考轨迹、跟踪与平衡、停止/退出过渡、G1 指令与设备适配 |
+| `config/` | 相机、视觉、数据集切分，以及 G1 型号、限位和控制参数 |
+| `scripts/` | 环境安装、各阶段入口、基准与审计脚本；`clean_outputs.py` 清理生成产物 |
+| `tests/` | `unittest` 回归测试 |
+| `reports/` | 每轮简短验收报告（JSON） |
+| `docs/` | 研究日志、模块说明、调研记录 |
+| `assets/` | 模型校验和、机器人与人体资产及署名 |
+| `outputs/` | 公开数据、运行结果、视频和日志（Git 忽略） |
 
-灰色为骨骼代理真值，蓝色为根据 RGB 重建的三维点。指标只统计有效重建点，因此必须同时检查有效率。
-`oracle_geometry_max_error_mm` 使用理想投影点，只验证几何实现，不能作为视觉系统精度。
-
-## 迁移到真实设备
-
-1. 保持每台相机焦距、对焦和分辨率固定，完成内参及畸变标定。
-2. 联合标定外参到同一个世界坐标系。需要地面坐标时明确地面平面与 Z 轴方向。
-3. 用设备 SDK 获得图像及共同时间基准下的**曝光时间戳**。主机收到帧的时间不是曝光同步证据。
-4. 保存以下标定格式，以及 `camera_id,timestamp_ns,image` CSV 清单。
-5. 用 `scripts/import_real.py` 组包；之后运行完全相同的 detect / reconstruct / preview。
-
-示例相机（这里只示范结构，数值必须替换成真实标定结果）：
-
-```json
-{
-  "schema_version": 1,
-  "units": "metre",
-  "world_axes": "right-handed, Z-up",
-  "camera_axes": "OpenCV: X-right Y-down Z-forward",
-  "cameras": {
-    "cam00": {
-      "K": [[750,0,320],[0,750,320],[0,0,1]],
-      "R_world_to_camera": [[1,0,0],[0,1,0],[0,0,1]],
-      "t_world_to_camera_m": [0,0,0],
-      "distortion": [0,0,0,0,0],
-      "width": 640,
-      "height": 640
-    }
-  }
-}
-```
-
-`X_camera = R_world_to_camera @ X_world + t_world_to_camera_m`。
-`t` 不是相机位置；相机中心为 `-R.T @ t`。畸变系数顺序为 OpenCV 的 `k1,k2,p1,p2,k3`。
-仿真世界为右手系、Z 向上，所有长度为米。真实世界坐标可以另选，但标定文件需描述清楚且各相机一致。
-
-```csv
-camera_id,timestamp_ns,image
-cam00,1000000000,cam00/000000.png
-cam01,1000001000,cam01/000000.png
-```
-
-CSV 的图片路径相对于 CSV 文件，必须包含至少两台已标定相机。使用隔离环境：
+## 常用命令
 
 ```powershell
-$rt = Get-Content .runtime.json -Raw | ConvertFrom-Json
-& $rt.python scripts/import_real.py --csv real/frames.csv --calibration real/cameras.json --output outputs/real01 --max-skew-ms 5 --fps 30
-.\run.ps1 -Stage detect -Session outputs/real01
-.\run.ps1 -Stage reconstruct -Session outputs/real01
-.\run.ps1 -Stage preview -Session outputs/real01
+python scripts/bootstrap.py --device cuda      # 视觉环境，写入 .runtime.json
+python scripts/bootstrap_robot.py              # 机器人环境，写入 .robot-runtime.json
+.\run.ps1 -Stage test                          # 视觉环境回归
+.\run.ps1 -Stage robot-test                    # 机器人环境回归
+.\run.ps1 -Stage robot-demo -Session outputs/my_human_g1 -Device cuda
+.\run.ps1 -Stage vision-demo -InputSession outputs/human_walk_g1 -Session outputs/my_vision_run
+.\run.ps1 -Stage stream-vision -InputSession outputs/human_walk_g1 -Session outputs/my_stream -DetectorWorkers 4 -PoseWorkers 4
+.\run.ps1 -Stage refine-motion -Session outputs/my_motion
 ```
 
-导入器以第一台相机的曝光时间为锚点匹配最近帧，不重复使用同一图像。
-它不会建立硬件同步；运动越快，对时间误差要求越高。没有真实真值时跳过 evaluate。
-设备采集 SDK、触发接线和标定结果仍需在具体硬件确定后接入，当前没有宣称已验证真实设备。
+输出目录必须不存在；完整指标不通过时命令返回非零。安装细节、各阶段单独运行、结果文件格式和真实相机导入见 [安装、复现与历史结果](docs/setup_and_reproduction.md)。
 
-## 后续实验
+## 文档
 
-建议先替换更接近真人的、具有明确关节定义的人体资产，再扩展动作、体型、服装、背景和光照。
-每次扩展需保留独立真值导出及相机投影自检。可比较 2/4/6/8 相机、遮挡、失步与标定误差。
-不要仅追求重投影误差小：错误的跨视角对应也可能给出看似一致的三维结果。
+- [研究日志](docs/research_log.md)：对话约束、每轮决策与结果
+- [视觉模块与复现](docs/vision_pipeline.md)、[联合状态](docs/vision_joint_state.md)
+- 调研：[观测恢复](docs/observation_recovery_research_2026-10-18.md)、[前沿方法](docs/vision_frontier_2026-10-18.md)、[首轮视觉调研](docs/vision_research_2026-10-17.md)、[PMPose 对照](docs/pmpose_experiment.md)、[公开真实数据](docs/public_real_datasets_2026-10-17.md)
+- [人体到 G1 的模块、科学问题与硬件边界](docs/source_robot_to_g1.md)、[架构与硬件迁移](docs/architecture.md)
+- [安装、复现与历史结果](docs/setup_and_reproduction.md)
+
+## 验收报告
+
+`reports/` 按日期命名。视觉部分以 `recovery-events`、`vision-joint-state`、`pmpose-observation`、`vision-person-trajectory` 为当前基线；G1 控制以 `contact-observation`、`landing-momentum`、`stop-transition`、`recovery-rollout` 为准。`panda-g1-2026-10-17` 与 `robot-control-2026-10-17` 来自早期双臂示例，不作为全身模仿验收。
 
 ## 来源
 

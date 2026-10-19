@@ -1,0 +1,331 @@
+{
+  "date": "2026-10-17",
+  "status": "passed_markerless_to_g1_simulation_baseline",
+  "physical_hardware_connected": false,
+  "source": "Franka Panda, single robot, known geometry and calibrated fixed base",
+  "target": "G1 EDU research simulation profile: 27 active body joints; waist roll/pitch and fingers fixed",
+  "perception_mode": "markerless RGB, no artificial appearance markers; image predictions are actually inferred",
+  "mapping": "Observed hand displacement -> symmetric dual wrist position tasks; raised-hand gesture -> forward velocity. Not universal joint imitation.",
+  "dataset": {
+    "synthetic_source_frames": 200,
+    "synchronized_cameras": 4,
+    "rgb_images": 800,
+    "real_independent_images": 90,
+    "public_real_multiview_exposure_sync_available": false
+  },
+  "vision": {
+    "frames": 200,
+    "accepted_frames": 115,
+    "acceptance_rate": 0.575,
+    "hand_position_error_mean_m": 0.016733297565436206,
+    "hand_position_error_median_m": 0.016218975779369135,
+    "hand_position_error_p95_m": 0.02810816772386549,
+    "hand_position_error_max_m": 0.033973085002846556,
+    "first_six_joint_mean_absolute_error_rad": [
+      0.05270382897583394,
+      0.011405572280979964,
+      0.0476600906511881,
+      0.01230650201319849,
+      0.17802747162433263,
+      0.05872855399942611
+    ],
+    "triangulated_landmark_count": 1338,
+    "triangulation_mean_error_m": 0.019057083357814752,
+    "triangulation_p95_error_m": 0.04886960674201263,
+    "terminal_joint_and_orientation_unknown": true,
+    "scope": "Synthetic RGB geometry test, not a real-world 3D accuracy claim. Local covariance excludes model/domain/calibration bias."
+  },
+  "locally_observable_joint_fit_frames": 178,
+  "real_image_validation": {
+    "azure": {
+      "images": 30,
+      "in_frame_landmarks": 206,
+      "accepted_landmarks": 137,
+      "coverage": 0.6650485436893204,
+      "pck_10_px_all_in_frame": 0.5242718446601942,
+      "pck_20_px_all_in_frame": 0.6504854368932039,
+      "accepted_error_median_px": 5.99593379865233,
+      "accepted_error_p95_px": 15.146428378453077
+    },
+    "kinect360": {
+      "images": 30,
+      "in_frame_landmarks": 210,
+      "accepted_landmarks": 191,
+      "coverage": 0.9095238095238095,
+      "pck_10_px_all_in_frame": 0.6952380952380952,
+      "pck_20_px_all_in_frame": 0.9047619047619048,
+      "accepted_error_median_px": 6.040604212081153,
+      "accepted_error_p95_px": 14.637286757250722
+    },
+    "realsense": {
+      "images": 30,
+      "in_frame_landmarks": 210,
+      "accepted_landmarks": 204,
+      "coverage": 0.9714285714285714,
+      "pck_10_px_all_in_frame": 0.919047619047619,
+      "pck_20_px_all_in_frame": 0.9666666666666667,
+      "accepted_error_median_px": 4.546771206675898,
+      "accepted_error_p95_px": 10.17885238021238
+    }
+  },
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 4090",
+    "driver": "595.97",
+    "memory_mib": 24564,
+    "render": {
+      "source": "MuJoCo Menagerie Panda physical meshes; no artificial markers",
+      "renderer": "NVIDIA GeForce RTX 4090/PCIe/SSE2",
+      "frames": 200,
+      "fps": 10,
+      "clock": "synthetic exact exposure time",
+      "model_asset_sha256": "96ad67da03710f17f798c9478fd9e9efdf24a3bf8359f05e456dd9fb158ea273"
+    },
+    "vision": {
+      "device": "cuda",
+      "image_count": 800,
+      "batch_count": 200,
+      "mean_batch_inference_s_after_first": 0.01610845175869213,
+      "first_batch_inference_s": 0.10695560000021942,
+      "wall_processing_s": 16.636672299995553,
+      "model_sha256": "a0f41b64c3935df56a4bd5cf0dc99ef29bda21b03a5971be6efbe99d14be7142",
+      "profile": {
+        "file": "profiles/dream_2026-10-17_13-46-24.json",
+        "node_events_by_provider": {
+          "CUDAExecutionProvider": 9800
+        }
+      },
+      "scope": "Actual image inference. Single Panda scene required; confidence is not a calibrated probability."
+    },
+    "cpu_cuda_same_images": {
+      "four_actual_images": "azure/000003,kinect360/000060,realsense/000100,front/000180",
+      "maximum_heatmap_absolute_difference": 7.748603820800781e-07,
+      "mean_batch_inference_s_after_warmup": {
+        "cpu": 0.8823253666632809,
+        "cuda": 0.01800136666376299
+      },
+      "cpu_to_cuda_speedup": 49.01435447339754,
+      "runs_per_backend": 3,
+      "tolerance": {
+        "rtol": 0.001,
+        "atol": 1e-05
+      },
+      "passed": true
+    },
+    "note": "49x refers only to this 4-image/3-repeat inference comparison, not end-to-end throughput."
+  },
+  "dynamics": {
+    "simulation_only": true,
+    "model_profile": "homie_g1_rev_1_0_waist_roll_pitch_locked",
+    "unsupported_body_dofs": [
+      "waist_roll_joint",
+      "waist_pitch_joint"
+    ],
+    "source_frames": 200,
+    "control_packets": 1196,
+    "simulated_duration_s": 23.9,
+    "wall_execution_s": 4.401288699998986,
+    "perception_delay_ms": 120.0,
+    "injected_dropouts_source_s": [
+      [
+        5.0,
+        6.0
+      ],
+      [
+        13.0,
+        14.0
+      ]
+    ],
+    "source_truth_read_by_controller": false,
+    "free_floating_base": true,
+    "fell": false,
+    "minimum_base_height_m": 0.7461687522390178,
+    "maximum_roll_pitch_abs_rad": 0.1201272859053979,
+    "nonfoot_ground_contacts": [],
+    "net_displacement_after_settle_m": 0.3771507834718002,
+    "forward_command_duration_s": 2.8000000000000003,
+    "tail_mean_horizontal_speed_m_s": 4.256128536793573e-05,
+    "upper_joint_motion_range_rad": [
+      0.12163467276973836,
+      0.5194660159612638,
+      0.37910155955742125,
+      0.1621570628928149,
+      1.3374284139531987,
+      0.0015873376737829928,
+      0.18758510717941296,
+      0.035659808523938935,
+      0.5281215286063474,
+      0.437996922261784,
+      0.23682472505348517,
+      1.3690996637057702,
+      0.0016824851137744478,
+      0.1887331188658982,
+      0.032071098027934855
+    ],
+    "leg_limit_clipped_packets": 0,
+    "mean_policy_inference_ms": 0.19225434783017215,
+    "mean_ik_ms": 1.4192750001841756,
+    "watchdog_zero_velocity": true,
+    "policy_sha256": "afe6363c83c8b9ab8b1a2fed598fce7de35ff045eee1a95b336fd6720e3d3d49",
+    "target_model_sha256": "65e34b62c3e538fff5637bca537ee37f839bea6a74faccf2cf2669c4d998b99d",
+    "units": "SI",
+    "limitations": "Offline perception with causal replay; no wall-clock live capture or physical robot validation. Fingers and waist roll/pitch are fixed in this policy model.",
+    "dropout_checks": [
+      {
+        "source_interval_s": [
+          5.0,
+          6.0
+        ],
+        "was_walking_before_loss": true,
+        "maximum_horizontal_speed_before_loss_m_s": 0.08095466295982319,
+        "stale_packet_count": 43,
+        "zero_velocity_after_deadline": true
+      },
+      {
+        "source_interval_s": [
+          13.0,
+          14.0
+        ],
+        "was_walking_before_loss": false,
+        "maximum_horizontal_speed_before_loss_m_s": 0.018342508852184743,
+        "stale_packet_count": 43,
+        "zero_velocity_after_deadline": true
+      }
+    ],
+    "acceptance_minimum_displacement_m": 0.3,
+    "passed": true
+  },
+  "walking_loss_test": {
+    "simulation_only": true,
+    "model_profile": "homie_g1_rev_1_0_waist_roll_pitch_locked",
+    "unsupported_body_dofs": [
+      "waist_roll_joint",
+      "waist_pitch_joint"
+    ],
+    "source_frames": 200,
+    "control_packets": 1196,
+    "simulated_duration_s": 23.9,
+    "wall_execution_s": 1.5890815000020666,
+    "perception_delay_ms": 120.0,
+    "injected_dropouts_source_s": [
+      [
+        7.0,
+        8.0
+      ]
+    ],
+    "source_truth_read_by_controller": false,
+    "free_floating_base": true,
+    "fell": false,
+    "minimum_base_height_m": 0.7461687522390178,
+    "maximum_roll_pitch_abs_rad": 0.11492806949520928,
+    "nonfoot_ground_contacts": [],
+    "net_displacement_after_settle_m": 0.1574035484639974,
+    "forward_command_duration_s": 2.34,
+    "tail_mean_horizontal_speed_m_s": 1.0745017428679588e-05,
+    "upper_joint_motion_range_rad": [
+      0.12166129835562119,
+      0.5097300276477986,
+      0.37910155955742125,
+      0.16232750263498358,
+      1.3307324203650028,
+      0.0015720656520170722,
+      0.18758510717941296,
+      0.028831137912766976,
+      0.5262411114913498,
+      0.437996922261784,
+      0.23640724792574785,
+      1.3658056942037702,
+      0.0016941442628256996,
+      0.1887331188658982,
+      0.02896782488225525
+    ],
+    "leg_limit_clipped_packets": 0,
+    "mean_policy_inference_ms": 0.15546647137247827,
+    "mean_ik_ms": 1.5708783323740743,
+    "watchdog_zero_velocity": true,
+    "policy_sha256": "afe6363c83c8b9ab8b1a2fed598fce7de35ff045eee1a95b336fd6720e3d3d49",
+    "target_model_sha256": "65e34b62c3e538fff5637bca537ee37f839bea6a74faccf2cf2669c4d998b99d",
+    "units": "SI",
+    "limitations": "Offline perception with causal replay; no wall-clock live capture or physical robot validation. Fingers and waist roll/pitch are fixed in this policy model.",
+    "dropout_checks": [
+      {
+        "source_interval_s": [
+          7.0,
+          8.0
+        ],
+        "was_walking_before_loss": true,
+        "maximum_horizontal_speed_before_loss_m_s": 0.22167082462359902,
+        "stale_packet_count": 43,
+        "zero_velocity_after_deadline": true
+      }
+    ],
+    "acceptance_minimum_displacement_m": 0.05,
+    "passed": true
+  },
+  "stage_wall_seconds": {
+    "render_rgb": 4.7575397999899,
+    "image_inference": 17.161371499998495,
+    "triangulation": 2.5907545999943977,
+    "articulated_state": 2.0312020999990636,
+    "g1_dynamics": 5.397425999995903,
+    "g1_walking_loss": 1.7519163999968441,
+    "independent_evaluation": 0.04984209999383893
+  },
+  "tests": {
+    "robot_runtime": {
+      "run": 66,
+      "passed": 66,
+      "skipped": 0
+    },
+    "original_cuda_runtime": {
+      "run": 66,
+      "passed": 60,
+      "skipped": 6
+    },
+    "original_cpu_runtime": {
+      "run": 66,
+      "passed": 60,
+      "skipped": 6
+    },
+    "coverage": [
+      "timestamp nearest-unused matching and integer epoch",
+      "source/target/calibration binding",
+      "unobservable terminal twist",
+      "rendered camera projection",
+      "joint-slot/policy history units",
+      "stale vision and reacquisition",
+      "command expiry/order",
+      "free-base balance",
+      "trajectory limits"
+    ],
+    "export_cpu_torch_onnx_equivalence": "passed; deterministic exported SHA matches pinned manifest",
+    "hash_locked_environment_sync_and_dependency_check": "passed"
+  },
+  "fingerprints": {
+    "git_base": "c4b889e0bf4bde4411360474a6f1a6c99b220e56",
+    "uncommitted_changes": true,
+    "asset_manifest_sha256": "0cc9fbda94c9387ddc75819ecbe4bc4d0a2680c384939152cd3c529b278c3c81",
+    "robot_lock_sha256": "d293922743b3cd6498734070d2e4c76805427f26dda8f0da511e4237634c8eef",
+    "full_run_manifest_sha256": "7736249b7715996b004da909b5c63eba5ec389ea2f6cf55f78fb5b338949134e",
+    "real_evaluation_summary_sha256": "9cd80f2ca31a5911ccbfd7ee4f6e8521558e2e53b9d7391186bb7bf32b64bec4",
+    "g1_commands_sha256": "b4c3804ab79c4f7b61cf1d2783e92f8a27043725a6ff8c1665c0fcdd49f20e77",
+    "preview_mp4_sha256": "8374abe8fdd0698ca8a6a1d3a5341c05f7305296de65507ea96cd63d42402e1a"
+  },
+  "limitations": [
+    "Control-admissible hand coverage is 57.5%, not continuous reliable perception; omitted frames are excluded from error means.",
+    "Local covariance excludes calibration, timing, shape and domain bias. Source wrist twist is unobservable and stays null.",
+    "Actual RGB inference is validated on synthetic and real images; real synchronized 3D and real G1 execution are not validated.",
+    "Current source is a single known fixed-base Panda. Unknown robot types require geometry, a detector and task semantics.",
+    "The released policy locks two waist joints and fingers. The physical G1 configuration, firmware and transport remain unconfirmed.",
+    "Offline causal replay with injected delay is not a measured hardware real-time guarantee; general collision/terrain/load robustness remains unvalidated.",
+    "DREAM and OpenHomie include non-commercial license conditions."
+  ],
+  "artifacts": {
+    "session": "outputs/panda_to_g1_verified",
+    "preview": "outputs/panda_to_g1_verified/control/preview.mp4",
+    "commands": "outputs/panda_to_g1_verified/control/g1_commands.jsonl",
+    "real_preview": "outputs/panda_real_validation/real_image_evaluation.jpg",
+    "reproduce": ".\\run.ps1 -Stage robot-demo -Session outputs/new_panda_g1 -Device cuda"
+  },
+  "cleanup_policy": "Retain current accepted baselines, frozen runtime and required cached assets; remove development and replaced generated outputs. No commit or push.",
+  "superseded_scope": "Does not satisfy human/humanoid full-body imitation. Panda gesture locomotion was the wrong task; retained only as historical experiment evidence."
+}

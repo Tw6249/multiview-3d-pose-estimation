@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from pose_sim.geometry import project, triangulate
+from pose_sim.geometry import project, triangulate, CameraGeometry
 from pose_sim.pipeline import reconstruct_record
 
 
@@ -12,6 +12,16 @@ def camera(x, y=0, distortion=None):
 
 
 class GeometryTests(unittest.TestCase):
+    def test_vectorized_projection_and_jacobian_match_rotated_cameras(self):
+        from scipy.spatial.transform import Rotation
+        cs=[camera(-.7),camera(.7,distortion=[.1,-.03,.001,-.002,0])]
+        for c in cs:c['R_world_to_camera']=Rotation.from_euler('xyz',[.1,.3,-.2]).as_matrix().tolist()
+        for selected in ([cs[0]],cs):
+            g=CameraGeometry(selected);x=np.array([.2,-.1,3.])
+            np.testing.assert_allclose(g.project(x),[project(x,c)[0] for c in selected],atol=1e-8)
+            numerical=np.stack([(g.project(x+v*1e-5)-g.project(x-v*1e-5))/2e-5 for v in np.eye(3)],axis=-1)
+            np.testing.assert_allclose(g.jacobian(x),numerical,atol=1e-5)
+
     def test_exact_reconstruction_and_distortion(self):
         cs = [camera(-0.6, distortion=[0.1, -0.03, 0.001, -0.002, 0]), camera(0.6), camera(0, 0.5)]
         gt = np.array([0.13, 0.2, 3.4])
@@ -35,6 +45,20 @@ class GeometryTests(unittest.TestCase):
 
     def test_one_camera_cannot_reconstruct(self):
         self.assertIsNone(triangulate([camera(0)], [[320, 240]], [1]))
+
+    def test_fast_solver_matches_reference_under_noise_distortion_and_outliers(self):
+        rng=np.random.default_rng(17)
+        cs=[camera(-.7,distortion=[.08,-.02,.001,0,0]),camera(.7),camera(0,.6),camera(0,-.6)]
+        for i in range(35):
+            gt=np.r_[rng.uniform(-.4,.4,2),rng.uniform(2.,5.)]
+            xy=np.array([project(gt,c)[0] for c in cs])+rng.normal(0,1.8,(4,2))
+            if i%3==0:xy[-1]+=[50,-45]
+            a=triangulate(cs,xy,[.9]*4,solver='scipy');b=triangulate(cs,xy,[.9]*4,solver='newton')
+            self.assertIsNotNone(a);self.assertIsNotNone(b)
+            self.assertEqual(a['inliers'],b['inliers'])
+            np.testing.assert_allclose(a['xyz_m'],b['xyz_m'],atol=5e-5)
+        close=[camera(0),camera(.0001)]
+        self.assertIsNone(triangulate(close,[project([0,0,5],c)[0] for c in close],[1,1],solver='newton'))
 
     def test_timestamp_and_missing_detection_gate(self):
         cs = {'a': camera(-0.5), 'b': camera(0.5), 'c': camera(0, 0.5)}

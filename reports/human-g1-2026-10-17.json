@@ -1,0 +1,351 @@
+{
+  "status": "incomplete_root_path_tracking_failed",
+  "goal": "markerless multiview human/humanoid full-body imitation on Unitree G1 EDU",
+  "actual_hardware_tested": false,
+  "simulation": {
+    "kind": "markerless_human_full_body_imitation_in_simulation",
+    "hardware_tested": false,
+    "source_frames": 96,
+    "accepted_frames": 86,
+    "acceptance_fraction": 0.8958333333333334,
+    "duration_s": 3.958333333,
+    "control_frequency_hz": 50.0,
+    "physics_frequency_hz": 1000.0,
+    "perception_delay_ms": 120,
+    "dropout": null,
+    "tracking_ticks": 177,
+    "root_min_height_m": 0.6997184290940034,
+    "max_abs_roll_pitch_rad": 0.2497385852877409,
+    "end_root_displacement_m": 2.6947049531873417,
+    "root_tracking_uses": "MuJoCo world odometry; real robot requires calibrated odometry feedback",
+    "root_path_error_mean_m": 0.4925590138063899,
+    "root_path_error_p95_m": 0.7730572844487312,
+    "final_base_speed_m_s": 0.016206876650203532,
+    "initial_alignment_s": 2.0,
+    "return_and_settle_s": 4.0,
+    "source_reference_joint_rmse_rad": 0.21292011457515717,
+    "source_reference_leg_rmse_rad": 0.24012554546980583,
+    "bounded_reference_joint_rmse_rad": 0.18509194661715414,
+    "motion_correlations": {
+      "left_hip_pitch_joint": 0.9127523173550475,
+      "left_knee_joint": 0.7470086985843393,
+      "right_hip_pitch_joint": 0.8638893011896622,
+      "right_knee_joint": 0.780545588948013,
+      "left_shoulder_pitch_joint": 0.916280911700184,
+      "left_elbow_joint": 0.7787564254613327,
+      "right_shoulder_pitch_joint": 0.874787171121316,
+      "right_elbow_joint": 0.8265072750079928
+    },
+    "policy_mean_ms": 0.34514457783586977,
+    "policy_p95_ms": 0.4626050009392202,
+    "wall_seconds": 7.8034058999910485,
+    "command_count": 498,
+    "priors": [
+      "upright pelvis; torso tilt assigned to waist",
+      "heading from fused hip/shoulder lateral axes",
+      "flat foot heading",
+      "neutral wrists"
+    ],
+    "unobserved": [
+      "pelvis vs waist tilt separation",
+      "foot yaw/roll/pitch",
+      "wrist/hand orientation",
+      "finger joints"
+    ],
+    "inputs_sha256": {
+      "poses3d.jsonl": "ce6fa9bc566bec454387aae54f01021d47873538c7d44761940041b218c4cf30",
+      "humanoid_reference.jsonl": "c0856e93a34e6d0332a6b135d47606846a4ad41798a7a9d2ecbd2a64bb85dd3f"
+    },
+    "balance_passed": true,
+    "limb_imitation_passed": true,
+    "root_path_passed": false,
+    "stopping_passed": true,
+    "imitation_passed": false,
+    "passed": false
+  },
+  "fault_simulation": {
+    "kind": "markerless_human_full_body_imitation_in_simulation",
+    "hardware_tested": false,
+    "source_frames": 96,
+    "accepted_frames": 86,
+    "acceptance_fraction": 0.8958333333333334,
+    "duration_s": 3.958333333,
+    "control_frequency_hz": 50.0,
+    "physics_frequency_hz": 1000.0,
+    "perception_delay_ms": 120,
+    "dropout": [
+      1.5,
+      2.1
+    ],
+    "tracking_ticks": 145,
+    "root_min_height_m": 0.7217120262933515,
+    "max_abs_roll_pitch_rad": 0.2497385852877409,
+    "end_root_displacement_m": 2.080706540021689,
+    "root_tracking_uses": "MuJoCo world odometry; real robot requires calibrated odometry feedback",
+    "root_path_error_mean_m": 0.7898306346032598,
+    "root_path_error_p95_m": 1.46335145542111,
+    "final_base_speed_m_s": 0.013006934734482936,
+    "initial_alignment_s": 2.0,
+    "return_and_settle_s": 4.0,
+    "source_reference_joint_rmse_rad": 0.23221621158811548,
+    "source_reference_leg_rmse_rad": 0.2713455007124104,
+    "bounded_reference_joint_rmse_rad": 0.19924688750648875,
+    "motion_correlations": {
+      "left_hip_pitch_joint": 0.8556702957818072,
+      "left_knee_joint": 0.590570285124091,
+      "right_hip_pitch_joint": 0.8165638728817673,
+      "right_knee_joint": 0.7604335835033269,
+      "left_shoulder_pitch_joint": 0.8557990844846319,
+      "left_elbow_joint": 0.8106407208566191,
+      "right_shoulder_pitch_joint": 0.8459373449255149,
+      "right_elbow_joint": 0.7984811591596249
+    },
+    "policy_mean_ms": 0.17440542196490275,
+    "policy_p95_ms": 0.23001000517979261,
+    "wall_seconds": 0.6575199000071734,
+    "command_count": 498,
+    "priors": [
+      "upright pelvis; torso tilt assigned to waist",
+      "heading from fused hip/shoulder lateral axes",
+      "flat foot heading",
+      "neutral wrists"
+    ],
+    "unobserved": [
+      "pelvis vs waist tilt separation",
+      "foot yaw/roll/pitch",
+      "wrist/hand orientation",
+      "finger joints"
+    ],
+    "inputs_sha256": {
+      "poses3d.jsonl": "ce6fa9bc566bec454387aae54f01021d47873538c7d44761940041b218c4cf30",
+      "humanoid_reference.jsonl": "c0856e93a34e6d0332a6b135d47606846a4ad41798a7a9d2ecbd2a64bb85dd3f"
+    },
+    "balance_passed": true,
+    "limb_imitation_passed": false,
+    "root_path_passed": false,
+    "stopping_passed": true,
+    "imitation_passed": false,
+    "passed": false
+  },
+  "vision": {
+    "frames": 96,
+    "camera_count": 4,
+    "detected_joint_reconstruction_rate": 0.9840686274509803,
+    "body12_proxy_coverage": 0.9939236111111112,
+    "body12_proxy_mpjpe_mm": 60.87043569714733,
+    "body12_proxy_median_mm": 41.72357404198419,
+    "body12_proxy_p95_mm": 131.53693946398536,
+    "mean_inlier_reprojection_px": 2.7679455263381816,
+    "oracle_geometry_max_error_mm": 0.00031840238834274345,
+    "oracle_valid_fraction": 1.0,
+    "per_joint_proxy_error_mm": {
+      "nose": null,
+      "left_eye": null,
+      "right_eye": null,
+      "left_ear": null,
+      "right_ear": null,
+      "left_shoulder": 57.59355117536378,
+      "right_shoulder": 62.368911908737424,
+      "left_elbow": 60.55409926174183,
+      "right_elbow": 53.27994726181077,
+      "left_wrist": 91.24223324708244,
+      "right_wrist": 59.707893686459954,
+      "left_hip": 106.1937825818942,
+      "right_hip": 95.99657860543964,
+      "left_knee": 46.42353585654229,
+      "right_knee": 52.18044782147781,
+      "left_ankle": 26.52242131384189,
+      "right_ankle": 19.515377577570618
+    },
+    "limitations": [
+      "Stylized CesiumMan sample; not a real-world accuracy benchmark.",
+      "Only 12 rig joint centres have proxy ground truth; face landmarks have no GT.",
+      "COCO anatomical landmarks and rig centres differ; proxy MPJPE includes definition mismatch.",
+      "Oracle projection test only verifies geometry and never substitutes for image detections.",
+      "One person, fixed calibrated cameras, ideal global-shutter pinhole render; no real-device validation yet."
+    ]
+  },
+  "rendering": {
+    "backend": "OPTIX",
+    "blender_version": "4.5.3 LTS",
+    "devices": [
+      {
+        "name": "NVIDIA GeForce RTX 4090",
+        "type": "OPTIX"
+      }
+    ],
+    "denoiser": "OPTIX",
+    "image_count": 384,
+    "total_render_seconds": 81.49488540022867,
+    "mean_render_seconds_per_image": 0.2122262640630955,
+    "wall_seconds": 81.7433960000053
+  },
+  "inference": {
+    "backend": "onnxruntime_cuda",
+    "device": "cuda",
+    "onnxruntime_version": "1.22.0",
+    "libraries": {
+      "onnxruntime-gpu": "1.22.0",
+      "nvidia-cudnn-cu12": "9.10.2.21",
+      "nvidia-cuda-runtime-cu12": "12.9.79",
+      "nvidia-cublas-cu12": "12.9.2.10"
+    },
+    "models": {
+      "det_model": {
+        "providers": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "onnx_file": "yolox_m_8xb8-300e_humanart-c2c7a14a.onnx",
+        "sha256": "3dea6513388889f0fff4b77bf7a26013600321b9eb9ceb0e9a400a82572f5f23"
+      },
+      "pose_model": {
+        "providers": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "onnx_file": "rtmpose-m_simcc-body7_pt-body7_420e-256x192-e48f03d0_20230504.onnx",
+        "sha256": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c"
+      }
+    },
+    "intra_op_threads": 4,
+    "inter_op_threads": 1,
+    "thread_spinning": false,
+    "cuda_use_tf32": false,
+    "initialization_seconds": 0.4491810000035912,
+    "mode": "balanced",
+    "warmup_iterations": 3,
+    "warmup_seconds": 0.37677559998701327,
+    "image_count": 384,
+    "mean_seconds_per_image": 0.025719655989936047,
+    "p95_seconds_per_image": 0.035571909998543545,
+    "mean_seconds_per_packet_with_image_io": 0.12137333125004564,
+    "processing_seconds": 11.662547699990682,
+    "wall_seconds": 15.980157099984353,
+    "profiles": {
+      "det_model": {
+        "file": "profiles/det_model_2026-10-17_14-37-31.json",
+        "node_events_by_provider": {
+          "CUDAExecutionProvider": 121131,
+          "CPUExecutionProvider": 1548
+        }
+      },
+      "pose_model": {
+        "file": "profiles/pose_model_2026-10-17_14-37-31.json",
+        "node_events_by_provider": {
+          "CUDAExecutionProvider": 71595,
+          "CPUExecutionProvider": 774
+        }
+      }
+    },
+    "note": "Offline serial views, after warmup; initialization and warmup separate. No capture, reconstruction, or display latency included."
+  },
+  "tests": {
+    "robot_environment": {
+      "total": 62,
+      "passed": 62,
+      "skipped": 0
+    },
+    "vision_environment": {
+      "total": 62,
+      "passed": 56,
+      "skipped": 6
+    }
+  },
+  "scope_correction": "Panda gesture-to-G1 was the wrong task; dedicated code/config/output removed. Human limbs correspond one-to-one, with size retargeting.",
+  "unresolved": [
+    "Root path P95 error exceeds 0.25 m threshold",
+    "Foot/hand orientations and contact are not directly measured by COCO17",
+    "Physical G1 EDU model/feedback/odometry and hardware stop unverified"
+  ],
+  "cleanup": {
+    "generated_bytes_removed": 445117322,
+    "obsolete_source_files_removed": 16,
+    "external_old_asset_cache": "recursive cleanup command rejected by automatic policy; retained"
+  },
+  "experiments": [
+    {
+      "policy": "20k",
+      "frequency_hz": 50,
+      "root_correction_limit_m_s": 0.3,
+      "chosen": true
+    },
+    {
+      "policy": "20k",
+      "frequency_hz": 100,
+      "root_path_p95_m": 0.4491,
+      "balance_passed": false
+    },
+    {
+      "policy": "25k",
+      "frequency_hz": 50,
+      "root_correction_limit_m_s": 0.8,
+      "root_path_p95_m": 0.5392,
+      "right_knee_correlation": 0.554,
+      "chosen": false
+    }
+  ],
+  "artifacts": {
+    "preview": "outputs\\human_walk_g1\\imitation\\preview.mp4",
+    "commands": "outputs\\human_walk_g1\\imitation\\g1_commands.jsonl",
+    "references": "outputs\\human_walk_g1\\humanoid_reference.jsonl"
+  },
+  "source_sha256": {
+    "pose_sim/__init__.py": "30261f49a3828c3b9dd628bfe1b7a7905730ad2ee26b067bf71e2ba175049fb9",
+    "pose_sim/evaluate.py": "c1227a1522105a3f39f6ae776353c75f3979d04f1373ce694d4795923c37a855",
+    "pose_sim/geometry.py": "d114870745fe31a0be2e1ef3b98fb738d17c28f56e06554bfcec8ee0ad6cc216",
+    "pose_sim/markerless.py": "ac975b6d559ab9ced67794d6beec1f478062011ea564dca49a6191495165fcc9",
+    "pose_sim/mujoco_camera.py": "12c9880f4a205986c470636f196f2810f990d46dc34e8af26191187db91fb9a5",
+    "pose_sim/pipeline.py": "f480003674f3b411c43ed47aa393b8b2a5d9a67c898dec1ec4affdd3ee31bbcd",
+    "pose_sim/preview.py": "a84c9903b4033cc90963f2a5ef05a12baf5e148519b36a188843c5dfd4c1911e",
+    "pose_sim/robot_assets.py": "a4ac080c0e575180492ad6556c73d1d5d5585718bd6aa6de7a6d4722c9e63437",
+    "pose_sim/robot_preview.py": "5332debed3aae7b86e05f94f844d05d2b8fc0b81f1a95f7f27752f3ea4b8213a",
+    "pose_sim/robot_source.py": "3ad91254b133c0fed495834c3d8e4d00d3222162c2b522447467979c9365e7e5",
+    "pose_sim/runtime.py": "7f1fc2e37471519214e510601662ad17f61a4a416131e5de350faad487c7f35c",
+    "pose_sim/sensors.py": "1189dee491e15e00c9379d34b4600a1bce2663e4c10f6b491baa9016167011d2",
+    "pose_sim/uncertainty.py": "b629020cd788bbaa99bc81e1564ec2e878369bf7e0eaa78016472fff38770878",
+    "motion_control/__init__.py": "252f90dd097aedf0bcb5a03195ef8988cbc076281566816760a7ab036dee8567",
+    "motion_control/adapters.py": "4f0e18a5461f3573fd3838bc9f3d282d18d542678a30ebd5909a637d7e19826d",
+    "motion_control/contracts.py": "d0a9aacacf1f406a0ded01bea32c4050b333abe710cb29e58d3202a4f8794c77",
+    "motion_control/controller.py": "8a8283e202ef18bee9e70d4998c95329377967eb767bc5a30da4eb33f718d56a",
+    "motion_control/g1_command.py": "63bd88c70fc4833648a3ee4b51d9e1f3b1a5f8da6c71381b6c106f44c4d4f720",
+    "motion_control/humanoid.py": "75c79b6e0dd5f3080a1bdfe630e0807049f22fabaefd06fe81a5c481544a6285",
+    "motion_control/humanoid_replay.py": "34cc888e4c0ad27297f6623b249e6e41ee5cd78e6d7f7f785fdf9ac25d5f0772",
+    "motion_control/model.py": "2e983c1f91fac4944104b9a712be23f9a3b795f197d88863898a56e2f8849919",
+    "motion_control/pose.py": "79b9759c93d9ee70e7bfeb68a143bd8a0908f05482d04b54021fb0835f000f2f",
+    "motion_control/preview.py": "95456932efa5d83ae5d7fddaede64487325c8e4b50435063bc5ac29bba8b207b",
+    "motion_control/replay.py": "4cd1da1a15bc964ada1bc63143127d13787861a0092c3ade1d5d0582800b4bc9",
+    "motion_control/retarget.py": "e90e11c4ceb632ef16b1c9badeeb201ddb7623da1dffb04a15531be10fd057e1",
+    "motion_control/root_tracking.py": "73af858a68241a61598aa1ddd994ac0fbb194cd4d7df2082cce04062d3b66f13",
+    "motion_control/transfer.py": "3d6e2a6770a4f5ad5da1750930c13fb6e8aa05f631fb6f14bf1bed7dc04c8d03",
+    "motion_control/twist.py": "6e9ac72089bbd4dd2d49fbc7054bdb3752d7586c3e7c075b2199c13b9c75cf7d",
+    "motion_control/unitree.py": "4821bd042077944cf8fc1f85dcddf69533557d9b0b31337593ba727a6c1ce4ec",
+    "scripts/benchmark.py": "c278396b79a5ec255aa5d1760b4dbdc3179d934f78df74f8bb92a6335a2c1813",
+    "scripts/bootstrap.py": "e1b44f605ae5efc9d59b4f79bd57458aed2d0c1982ba0b88529d02d04b78dda0",
+    "scripts/bootstrap_robot.py": "4050811d028168c5b1d7600ba7171eca4caef289a9df68061a90decd9fd397e2",
+    "scripts/clean_outputs.py": "487594a102f5f0520923c047769fa43a688a8abca7391e14c85e1d166bdddbe9",
+    "scripts/fetch_robot_assets.py": "f9b519d77e1ad2bbab88afd5cddf3a17758d84b64c2a7c91b33d52560e76ff06",
+    "scripts/import_real.py": "85ed307af9d321253c05ac478cfd27dbb6a77214131b9992d3b2a122b6852ecf",
+    "scripts/inspect_scene.py": "5eedf6bc139d3b9f4538136b9c27c704ae50ccb9299d2afea1114d810bd658fd",
+    "scripts/render_scene.py": "430717604830a8b06c9396680f94d65c668496e7e272cb019ba35ec175249d9d",
+    "scripts/robot_demo.py": "602ec96ba3c701cfc8370dce5b72d67a01277bdcad12928b5348dd3d96d81e59",
+    "scripts/run_blender.py": "58069224dab0e8b3d81b17ea1bb0d4de77edfd9f1b81338039dec38a785e6161",
+    "scripts/verify_session.py": "4d181283421bfac5605b15300c6b05288045a1018a9faa70c841d9ffe1bb4847",
+    "config/demo.json": "342a123f570d410cf7e12a4767b6cb6b7d9f30f42c734f07f6e44f11106fcded",
+    "config/g1_twist.json": "36b6eaf24e4556efc3214f1795b7b0e5f08bc8f36a32f0dc05436d7d1fb82c0d",
+    "config/human_walk.json": "37bafddc672a20c7d13aff4dcda8e5d71519dce12b8948da192350b7c5b878b3",
+    "config/robot_demo.json": "e7b16cfeebbd0a97b357fc0f685b74fd6d5bc35ebbdf40a1d624e627e9d2136b",
+    "config/source_robot.json": "7eacc654abaaf1b192c8492e83aa60bf733b47b32a51ca19af5bcc966ffc160e",
+    "config/transfer_source_to_g1.json": "7ec76401120cb11961bc4350d5fb5238988dccff7a0660e48e31c13b0d2df820",
+    "tests/test_geometry.py": "0a66a1060244989697e4ee0a66989eee93638dc4a06e76fc34a7176e16aae305",
+    "tests/test_humanoid.py": "4f419455b8d73900052f6da840c58a374423fbcbceb54e641b233891cda01252",
+    "tests/test_import_real.py": "a8047748fe8b277ddd149f10e3fa37827f6d731275e5fedabdfa1a3fdd09f16f",
+    "tests/test_markerless.py": "1a28bd4ef50b0b2d15f4a87e7743b8152bc54ab22a19f2200672625a6b7aab45",
+    "tests/test_motion_control.py": "c16e6658a5988e7351121485e1e0bff9f89c7c67d2481e9ee23c4f973b130d51",
+    "tests/test_real_contract.py": "d5e3a0221acd9b977318da6011f5a89839bd9ab165192e1ebd48023e49feb117",
+    "tests/test_robot_transfer.py": "277fa22274b073aae7cdd63299ca7ef5fc5b12d713c4adf3fbf2ef3496d86a94",
+    "tests/test_runtime.py": "ee76d10b73230ce02b0a5e189d72cd896584610757642edce07de92536456c34",
+    "tests/test_sensors.py": "a4cb72a90fe949fe0a97f98b03789a42cecc3088da043d330879274c06a0a34d"
+  },
+  "asset_manifest_sha256": "042d821249f0f9eb9eb83b0b4d4fa9c3f014b710de4babf686604401af574210"
+}

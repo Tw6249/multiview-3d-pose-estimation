@@ -1,0 +1,195 @@
+{
+  "date": "2026-10-17",
+  "purpose": "Longer multi-scene markerless pose-estimation review video",
+  "video": {
+    "video": "pose_estimation_36s.mp4",
+    "duration_seconds": 36.0,
+    "fps": 24,
+    "frames": 864,
+    "width": 1920,
+    "height": 1080,
+    "codec": "h264",
+    "bytes": 7578276,
+    "source": "rendered RGB; same CesiumMan walk asset",
+    "offline": true,
+    "ground_truth_used_for_estimation_or_display": false,
+    "extra_interpolation": false,
+    "source_frame_time_alignment_verified": true,
+    "full_decode_passed": true,
+    "scenes": 6
+  },
+  "scenes": [
+    {
+      "id": "01_straight",
+      "frames": 144,
+      "rgb_images": 576,
+      "all_12_body_joints_current_frames": 124,
+      "any_body_prediction_frames": 19,
+      "any_body_missing_frames": 1,
+      "render_backend": "OPTIX",
+      "render_devices": [
+        {
+          "name": "NVIDIA GeForce RTX 4090",
+          "type": "OPTIX"
+        }
+      ],
+      "inference_device": "cuda",
+      "camera_projection_max_difference_px": 6.37709462719331e-05,
+      "camera_validation_passed": true,
+      "output_sha256": {
+        "detections": "b5f5ba04625bbe30d3365b2d78d95a9c53a234c6db0b2f765c69b74126fb57ff",
+        "assigned_detections": "9d9d894d6977a121f91650b4fb975b715e328e193fac1bb7f2e7a511b24ab92c",
+        "poses3d": "5d3d5767561cb43269b215fc134ffc8f749ab1e6571f536dfc2701924b881bfb",
+        "states3d": "48bd450bc305183c09959d1d8e668f4cff2f612f7a9b7a725e6254ea1a176aa9"
+      }
+    },
+    {
+      "id": "02_turning",
+      "frames": 144,
+      "rgb_images": 576,
+      "all_12_body_joints_current_frames": 115,
+      "any_body_prediction_frames": 29,
+      "any_body_missing_frames": 0,
+      "render_backend": "OPTIX",
+      "render_devices": [
+        {
+          "name": "NVIDIA GeForce RTX 4090",
+          "type": "OPTIX"
+        }
+      ],
+      "inference_device": "cuda",
+      "camera_projection_max_difference_px": 3.9833565386643444e-05,
+      "camera_validation_passed": true,
+      "output_sha256": {
+        "detections": "72b9200369828901f29df6592deb1a2d9647d6b4132e32c08bf1b6d7348243f6",
+        "assigned_detections": "de43d3544a583c5b6bc22e35bbeb33b12e2842b4c13ffdd85509bc82a9655651",
+        "poses3d": "9ca9e218051438a74a7ce8b053c265d273eae760264d122d979cec3ead479cb0",
+        "states3d": "a60611cab04856381b8e18f5b09422b1aca788544a33bca7d44165dd36c32115"
+      }
+    },
+    {
+      "id": "03_occlusion",
+      "frames": 144,
+      "rgb_images": 576,
+      "all_12_body_joints_current_frames": 111,
+      "any_body_prediction_frames": 31,
+      "any_body_missing_frames": 4,
+      "render_backend": "OPTIX",
+      "render_devices": [
+        {
+          "name": "NVIDIA GeForce RTX 4090",
+          "type": "OPTIX"
+        }
+      ],
+      "inference_device": "cuda",
+      "camera_projection_max_difference_px": 6.37709462719331e-05,
+      "camera_validation_passed": true,
+      "output_sha256": {
+        "detections": "42cc081df0ba8f08d85dd54366bffd02d3e04182322f9126e416035365c8d536",
+        "assigned_detections": "2f0bbce31cd4e065ce7cd0f92aa2cb59b255d1a6b85c8fcd4d6f6e9baf336356",
+        "poses3d": "924b91cdeacad36a0a3113d482728e4e48da9d3140ebf2172fa47afbe127a5d0",
+        "states3d": "7396d743af012bf3665d6796596266c68843b71e1a32b42a2994c6db55f92518"
+      }
+    },
+    {
+      "id": "04_low_light",
+      "frames": 144,
+      "rgb_images": 576,
+      "all_12_body_joints_current_frames": 116,
+      "any_body_prediction_frames": 26,
+      "any_body_missing_frames": 2,
+      "render_backend": "OPTIX",
+      "render_devices": [
+        {
+          "name": "NVIDIA GeForce RTX 4090",
+          "type": "OPTIX"
+        }
+      ],
+      "inference_device": "cuda",
+      "camera_projection_max_difference_px": 4.107395358383394e-05,
+      "camera_validation_passed": true,
+      "output_sha256": {
+        "detections": "341fe8c7bb99f53d877df43cf7da9141cd982de74c1fd662882d22de063d0782",
+        "assigned_detections": "b8db15e821ae41d0f4a6c78bec69e4987c00e464906895222422e9f41b96a9ae",
+        "poses3d": "434208be42358aa922711c20d8db2f32f2840ae2c4172afea63751bd42236265",
+        "states3d": "9e69806ea1eeb0e457c166c5d1e5dbb68510a5b6bcfc16e6408e156ea6bac478"
+      }
+    },
+    {
+      "id": "05_shorter_body",
+      "frames": 144,
+      "rgb_images": 576,
+      "all_12_body_joints_current_frames": 102,
+      "any_body_prediction_frames": 40,
+      "any_body_missing_frames": 2,
+      "render_backend": "OPTIX",
+      "render_devices": [
+        {
+          "name": "NVIDIA GeForce RTX 4090",
+          "type": "OPTIX"
+        }
+      ],
+      "inference_device": "cuda",
+      "camera_projection_max_difference_px": 6.639869183695922e-05,
+      "camera_validation_passed": true,
+      "output_sha256": {
+        "detections": "fc86a37af2dbba24793662d3a28c9b1974bc386c09869be7083657679b3ee1d5",
+        "assigned_detections": "55af855ca0301b23550d42ae86f0467ef4060ec49b9daefa55ed1499e67df862",
+        "poses3d": "e6c4290968031602fcd888b315467bd6fdc5ed610ef5ee0593206a0a92511977",
+        "states3d": "d63e2af689a2787d1ffae5337abd0b640b9d6571a33ebde68ad514784e258d01"
+      }
+    },
+    {
+      "id": "06_faster",
+      "frames": 144,
+      "rgb_images": 576,
+      "all_12_body_joints_current_frames": 112,
+      "any_body_prediction_frames": 32,
+      "any_body_missing_frames": 0,
+      "render_backend": "OPTIX",
+      "render_devices": [
+        {
+          "name": "NVIDIA GeForce RTX 4090",
+          "type": "OPTIX"
+        }
+      ],
+      "inference_device": "cuda",
+      "camera_projection_max_difference_px": 3.995343165751281e-05,
+      "camera_validation_passed": true,
+      "output_sha256": {
+        "detections": "2a9120a03bcf1e15be9318969a55fb07ea2c36ae068b195213483b329d1732e9",
+        "assigned_detections": "8558911ea35bc07a28323962038a5fb5f7f45957297b49ebd14277cb35d3f1a4",
+        "poses3d": "d10e80fc8ecb4e7323983ab5707b9a0f2ea875b8447611eae781749c4919728d",
+        "states3d": "22c173430e25a85211d954a87efd7593ef1a7b588035409a7fb17bbb6d2ebdc4"
+      }
+    }
+  ],
+  "tests": {
+    "passed": 36,
+    "failed": 0,
+    "command": "python -m unittest tests.test_showcase_scene tests.test_motion_revision tests.test_motion_frontend tests.test_vision_inference tests.test_sensors tests.test_online"
+  },
+  "limitations": [
+    "One stylized CesiumMan asset and walking animation; not independent people or diverse captured actions.",
+    "Raw visual estimation errors, missing joints and bounded predictions are retained.",
+    "Head, palm and foot landmarks can drift; anatomical rotations and physical support remain unverified.",
+    "Offline replay at source FPS; compute timings overlap rendering and are not an online latency benchmark.",
+    "No robot execution or physical hardware validation."
+  ],
+  "truth_used_for_estimation_or_display": false,
+  "all_artifacts_directory": "outputs/vision_showcase",
+  "git_commit_or_push": false,
+  "model_sha256": {
+    "det_model": "bf59d72aa718ed65b127d6c70048dccfd9d48df34e48136212e5d962c8b897d0",
+    "pose_model": "bd033156e5104c4f5d2edfe0453e02661e30a2f3da453ec93c8764d561b83054",
+    "body_pose_model": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c"
+  },
+  "video_sha256": "1fe6b9f3dcce37b31acffd662156b96d78d13a0f64b17d58ea34bee24f30acc6",
+  "implementation_sha256": {
+    "scripts/vision_showcase.py": "ee08d651d94dc62b9b44b0e0cebc8b10db4bc00b52539dd0c619975bc4ae5f23",
+    "scripts/vision_showcase_video.py": "5ce52951cead81e9a9567f7ccaa71621e6f96060ed6b1565c5bb839b29c82fb8",
+    "scripts/render_scene.py": "49a6b13561cef7a0f4948905402a4dfaf93779c18f74f49cfe6567adff7d9162",
+    "pose_sim/showcase_scene.py": "dde369bd217afa5f12b83206e7563fdce5250a39f9ee893beb13700ee41012c3",
+    "config/vision_showcase.json": "80c4ed78c100da1b7d0a108d71021dbec6c851f10ab03cfc2c3b9df5090b98e6"
+  }
+}

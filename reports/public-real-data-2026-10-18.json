@@ -1,0 +1,501 @@
+{
+  "completed_at": "2026-10-18T00:01:48.452369+08:00",
+  "status": "completed_real_rgb_baseline",
+  "research_record": "docs/public_real_datasets_2026-10-17.md",
+  "datasets_reviewed": 16,
+  "download": {
+    "dataset": "MPI-INF-3DHP",
+    "source": "https://vcai.mpi-inf.mpg.de/3dhp-dataset/",
+    "source_bytes": 623152044,
+    "videos": 8,
+    "subjects": [
+      "S1",
+      "S2"
+    ],
+    "camera_ids": [
+      0,
+      2,
+      5,
+      7
+    ],
+    "zip_member_crc_checked": true
+  },
+  "protocol": {
+    "schema_version": 1,
+    "dataset": "MPI-INF-3DHP",
+    "source_base": "https://vcai.mpi-inf.mpg.de/3dhp-dataset/",
+    "camera_ids": [
+      0,
+      2,
+      5,
+      7
+    ],
+    "width": 1024,
+    "height": 1024,
+    "fps": 25,
+    "frames_per_clip": 150,
+    "clips": [
+      {
+        "id": "s1_walk",
+        "sequence": "S1/Seq1",
+        "start_frame": 500,
+        "activity_block": "walking/standing"
+      },
+      {
+        "id": "s1_exercise",
+        "sequence": "S1/Seq1",
+        "start_frame": 2000,
+        "activity_block": "exercise"
+      },
+      {
+        "id": "s1_crouch",
+        "sequence": "S1/Seq1",
+        "start_frame": 5000,
+        "activity_block": "crouch/reach"
+      },
+      {
+        "id": "s2_floor",
+        "sequence": "S2/Seq2",
+        "start_frame": 500,
+        "activity_block": "on the floor"
+      },
+      {
+        "id": "s2_sports",
+        "sequence": "S2/Seq2",
+        "start_frame": 2000,
+        "activity_block": "sports"
+      },
+      {
+        "id": "s2_misc",
+        "sequence": "S2/Seq2",
+        "start_frame": 5000,
+        "activity_block": "miscellaneous"
+      }
+    ],
+    "protocol": "Exploratory frozen-config real-RGB evaluation on a subset of the official training partition; not an official test benchmark.",
+    "selection": "Two subjects, both action sequences, three fixed time windows chosen before accuracy evaluation. Activity labels are approximate publisher block descriptions, not frame-level labels. No algorithm tuning in this run.",
+    "reference": "annot3 markerless multiview motion-capture reference, not independent marker-based Vicon; 12 corresponding body joints only; do not use univ_annot3.",
+    "license": "Local non-commercial research only; do not redistribute videos, labels, or derivatives. See official license in research/mpi_license.txt."
+  },
+  "frames": 900,
+  "input_images": 3600,
+  "body_joint_targets": 10800,
+  "aggregate_individual": {
+    "raw_geometry": {
+      "available": 10581,
+      "current_observations": 10581,
+      "predictions": 0,
+      "coverage": 0.9797222222222223,
+      "all_target_success": 0.8405555555555555,
+      "current_all_target_success": 0.8405555555555555,
+      "common_position_error_mm": {
+        "mean": 66.68868658682058,
+        "p95": 132.18497732286636,
+        "maximum": 1304.069958669862,
+        "count": 10581
+      },
+      "common_current_error_mm": {
+        "mean": 66.68868658682058,
+        "p95": 132.18497732286636,
+        "maximum": 1304.069958669862,
+        "count": 10581
+      }
+    },
+    "legacy_details": {
+      "available": 10692,
+      "current_observations": 10470,
+      "predictions": 222,
+      "coverage": 0.99,
+      "all_target_success": 0.8533333333333334,
+      "current_all_target_success": 0.8441666666666666,
+      "common_position_error_mm": {
+        "mean": 66.72378047331611,
+        "p95": 132.52533260256516,
+        "maximum": 1206.1480987346783,
+        "count": 10692
+      },
+      "common_current_error_mm": {
+        "mean": 64.06766542966315,
+        "p95": 126.88084001179064,
+        "maximum": 1172.6657144192445,
+        "count": 10470
+      }
+    },
+    "current": {
+      "available": 10692,
+      "current_observations": 10470,
+      "predictions": 222,
+      "coverage": 0.99,
+      "all_target_success": 0.8533333333333334,
+      "current_all_target_success": 0.8441666666666666,
+      "common_position_error_mm": {
+        "mean": 66.72378047331611,
+        "p95": 132.52533260256516,
+        "maximum": 1206.1480987346783,
+        "count": 10692
+      },
+      "common_current_error_mm": {
+        "mean": 64.06766542966315,
+        "p95": 126.88084001179064,
+        "maximum": 1172.6657144192445,
+        "count": 10470
+      }
+    }
+  },
+  "aggregate_common": {
+    "raw_geometry": {
+      "mean": 66.5515671210943,
+      "p95": 131.6972376848703,
+      "maximum": 1304.069958669862,
+      "count": 10563
+    },
+    "legacy_details": {
+      "mean": 65.44568008289501,
+      "p95": 129.74186922802272,
+      "maximum": 1206.1480987346783,
+      "count": 10563
+    },
+    "current": {
+      "mean": 65.44568008289501,
+      "p95": 129.74186922802272,
+      "maximum": 1206.1480987346783,
+      "count": 10563
+    }
+  },
+  "clips": [
+    {
+      "id": "s1_walk",
+      "mean_position_error_mm": 67.6870615946415,
+      "p95_position_error_mm": 139.42119054208538,
+      "coverage": 0.9966666666666667,
+      "all_target_success": 0.8438888888888889,
+      "torso_landmark_frame_error_deg": {
+        "mean": 24.63562003050645,
+        "p95": 48.04646403643399,
+        "maximum": 99.80336030221362,
+        "count": 146
+      },
+      "hinge_flexion_error_deg": {
+        "mean": 6.4224232591313655,
+        "p95": 17.046896990039954,
+        "maximum": 59.97197520525219,
+        "count": 567
+      },
+      "phase_lag_ms": {
+        "left_wrist": 0.0,
+        "right_wrist": 0.0,
+        "left_ankle": 0.0,
+        "right_ankle": 0.0
+      },
+      "failures": {
+        "outputs_over_500mm": 2,
+        "current_observations_over_500mm": 1,
+        "current_over_500mm_while_raw_under_150mm": 1
+      }
+    },
+    {
+      "id": "s1_exercise",
+      "mean_position_error_mm": 46.923849287659365,
+      "p95_position_error_mm": 112.90047038272395,
+      "coverage": 1.0,
+      "all_target_success": 0.9044444444444445,
+      "torso_landmark_frame_error_deg": {
+        "mean": 19.087003340878404,
+        "p95": 41.357578906418226,
+        "maximum": 47.97742825489569,
+        "count": 148
+      },
+      "hinge_flexion_error_deg": {
+        "mean": 6.790564481528347,
+        "p95": 17.327908444495502,
+        "maximum": 25.15031559833895,
+        "count": 596
+      },
+      "phase_lag_ms": {
+        "left_wrist": 0.0,
+        "right_wrist": 0.0,
+        "left_ankle": 0.0,
+        "right_ankle": 0.0
+      },
+      "failures": {
+        "outputs_over_500mm": 0,
+        "current_observations_over_500mm": 0,
+        "current_over_500mm_while_raw_under_150mm": 0
+      }
+    },
+    {
+      "id": "s1_crouch",
+      "mean_position_error_mm": 85.8485668279023,
+      "p95_position_error_mm": 163.7163765045216,
+      "coverage": 0.9627777777777777,
+      "all_target_success": 0.7144444444444444,
+      "torso_landmark_frame_error_deg": {
+        "mean": 21.966156261081508,
+        "p95": 41.15350610759222,
+        "maximum": 58.51924319487317,
+        "count": 149
+      },
+      "hinge_flexion_error_deg": {
+        "mean": 7.770146539286634,
+        "p95": 20.25828519060409,
+        "maximum": 83.21968629289631,
+        "count": 500
+      },
+      "phase_lag_ms": {
+        "left_wrist": 0.0,
+        "right_wrist": 0.0,
+        "left_ankle": 0.0,
+        "right_ankle": 80.0
+      },
+      "failures": {
+        "outputs_over_500mm": 29,
+        "current_observations_over_500mm": 10,
+        "current_over_500mm_while_raw_under_150mm": 5
+      }
+    },
+    {
+      "id": "s2_floor",
+      "mean_position_error_mm": 70.4624545179781,
+      "p95_position_error_mm": 127.40932586331068,
+      "coverage": 0.9844444444444445,
+      "all_target_success": 0.8538888888888889,
+      "torso_landmark_frame_error_deg": {
+        "mean": 17.080569554775057,
+        "p95": 24.897280705390937,
+        "maximum": 45.27925535254306,
+        "count": 126
+      },
+      "hinge_flexion_error_deg": {
+        "mean": 7.426808400792832,
+        "p95": 19.686943362490062,
+        "maximum": 60.39899997274165,
+        "count": 519
+      },
+      "phase_lag_ms": {
+        "left_wrist": 0.0,
+        "right_wrist": 40.0,
+        "left_ankle": 0.0,
+        "right_ankle": 0.0
+      },
+      "failures": {
+        "outputs_over_500mm": 0,
+        "current_observations_over_500mm": 0,
+        "current_over_500mm_while_raw_under_150mm": 0
+      }
+    },
+    {
+      "id": "s2_sports",
+      "mean_position_error_mm": 69.03652934848364,
+      "p95_position_error_mm": 132.7456085192712,
+      "coverage": 0.9994444444444445,
+      "all_target_success": 0.8683333333333333,
+      "torso_landmark_frame_error_deg": {
+        "mean": 17.86919334457817,
+        "p95": 36.824731915028494,
+        "maximum": 50.37064115138908,
+        "count": 144
+      },
+      "hinge_flexion_error_deg": {
+        "mean": 12.391973884035218,
+        "p95": 27.682899477515626,
+        "maximum": 67.24732212640968,
+        "count": 569
+      },
+      "phase_lag_ms": {
+        "left_wrist": 0.0,
+        "right_wrist": 0.0,
+        "left_ankle": 0.0,
+        "right_ankle": 0.0
+      },
+      "failures": {
+        "outputs_over_500mm": 0,
+        "current_observations_over_500mm": 0,
+        "current_over_500mm_while_raw_under_150mm": 0
+      }
+    },
+    {
+      "id": "s2_misc",
+      "mean_position_error_mm": 61.14012908895665,
+      "p95_position_error_mm": 104.49650343251129,
+      "coverage": 0.9966666666666667,
+      "all_target_success": 0.935,
+      "torso_landmark_frame_error_deg": {
+        "mean": 13.11371492576958,
+        "p95": 25.901098814820315,
+        "maximum": 27.19325652901521,
+        "count": 137
+      },
+      "hinge_flexion_error_deg": {
+        "mean": 12.210792215793884,
+        "p95": 25.66887898457478,
+        "maximum": 48.15672465294282,
+        "count": 580
+      },
+      "phase_lag_ms": {
+        "left_wrist": 0.0,
+        "right_wrist": 0.0,
+        "left_ankle": 0.0,
+        "right_ankle": 0.0
+      },
+      "failures": {
+        "outputs_over_500mm": 0,
+        "current_observations_over_500mm": 0,
+        "current_over_500mm_while_raw_under_150mm": 0
+      }
+    }
+  ],
+  "failures": {
+    "outputs_over_500mm": 31,
+    "current_observations_over_500mm": 11,
+    "current_over_500mm_while_raw_under_150mm": 6,
+    "evidence": "outputs/public_datasets/mpi_results/failure_5097_2d.jpg",
+    "observations": [
+      "Frame 5097: camera 5 visually detects the chair as a person; cameras 0 and 5 have a truncated/out-of-view person.",
+      "Frame 5097 right wrist: raw inlier cameras 0/7, reprojection 0.326 px but world error 1173.573 mm; geometric agreement alone is insufficient.",
+      "Frame 5099 right wrist: raw error 125.791 mm, state prediction error 1206.148 mm, reason temporal innovation outlier.",
+      "Current and legacy_details 12-body-joint outputs have identical metrics; this reference cannot validate palm/foot improvements."
+    ]
+  },
+  "timing": {
+    "device": "cuda",
+    "model_providers": {
+      "det_model": [
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ],
+      "pose_model": [
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ],
+      "body_pose_model": [
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ]
+    },
+    "mean_current_compute_ms": 112.59928366641462,
+    "mean_stages_ms": {
+      "decode_ms": 41.22176122208152,
+      "detector_pose_ms": 81.06255933325478,
+      "fusion_state_ms": 31.536724333159835
+    },
+    "physical_exposure_latency_verified": false,
+    "comment": "Offline sequential replay including all frames; ablations and video decoding add wall time; not a 25 Hz online acceptance."
+  },
+  "other_downloaded_sample": {
+    "project": "https://parkyeeun23.github.io/HUM4D/",
+    "license": "CC BY 4.0; Park, Naduthodi, Kumar, CVPR 2026 4D World Models Workshop",
+    "files": {
+      "Group_Break_Formation_MocapSuite_take001_Human01.npz": {
+        "url": "https://drive.google.com/uc?export=download&id=10GyPEIWNBdPr_UFqT6tcQGwLW4cOjA0C",
+        "bytes": 11446615,
+        "sha256": "45e91ac7017236972de6a28a3bef082e47879e75b1e585910c35ab1ff1c62d3a"
+      },
+      "camera_242422303238.mp4": {
+        "url": "https://drive.google.com/uc?export=download&id=1dLTkdHjy27afHlLgkt_4b8ivOmHwUH_y",
+        "bytes": 797719,
+        "sha256": "ec38b494e5121b42b89053fde6f1fb0e705f79851a8f692ea562ef1524361f36"
+      },
+      "camera_242422303238.txt": {
+        "url": "https://drive.google.com/uc?export=download&id=1k-kkwA5ozzMbUZhUOWxao3ikpAffDvAq",
+        "bytes": 2661,
+        "sha256": "7a79999b3d27a6927aba9f98bb9b6134974231f1221da502ec585b82471b4bb3"
+      }
+    },
+    "reference": {
+      "frames": 155,
+      "fps": 15,
+      "format": "SMPL joints24 and motion parameters derived from Vicon, not raw markers"
+    },
+    "video": {
+      "frames": 89,
+      "fps": 15.0,
+      "width": 1280,
+      "height": 720
+    },
+    "calibration_keys": [
+      "ResolutionLeftRight",
+      "FocalLengthLeft",
+      "PrincipalPointLeft",
+      "DistortionLeft",
+      "FocalLengthRight",
+      "PrincipalPointRight",
+      "DistortionRight",
+      "RotationLeftRight",
+      "TranslationLeftRight",
+      "HasRGB",
+      "ResolutionRGB",
+      "FocalLengthRGB",
+      "PrincipalPointRGB",
+      "DistortionRGB",
+      "RotationLeftRGB",
+      "TranslationLeftRGB"
+    ],
+    "readiness": "NOT READY for quantitative multiview evaluation",
+    "issues": [
+      "Published sample video has 89 frames, matching-name NPZ has 155 frames; no validated one-to-one mapping.",
+      "Calibration file contains sensor internal stereo/RGB transforms, not RGB-camera-to-world extrinsics.",
+      "Calibration RGB size is 1280x800 but supplied video is 1280x720; crop/resize mapping is unspecified.",
+      "NPZ imgname points to mocap_suit_with_dress paths, while sample file name says MocapSuite; correspondence needs clarification."
+    ],
+    "safety": "No object arrays unpickled and no upstream code executed; no guessed world transform or motion score."
+  },
+  "validation": {
+    "tests_run": 120,
+    "passed": 114,
+    "skipped": 6,
+    "failed": 0,
+    "skip_reason": "Existing robot-runtime-only tests in CUDA environment",
+    "video": {
+      "decoded_frames": 900,
+      "codec": "h264",
+      "width": 1024,
+      "height": 1088,
+      "duration_seconds": 36,
+      "fps": 25
+    },
+    "source_reference_max_disagreement_mm": 0.02135581609386028
+  },
+  "artifacts": {
+    "outputs\\public_datasets\\mpi_benchmark\\manifest.json": {
+      "bytes": 12362,
+      "sha256": "80b870df6f7821f826e0f412b4855479bed1c6cdd56c05164888f8a532b6bc2d"
+    },
+    "outputs\\public_datasets\\mpi_results\\report.json": {
+      "bytes": 262341,
+      "sha256": "f530818ca625f5723bf8b81ee8a26c8e8992573a1c58b0d9727a37ce57857c9c"
+    },
+    "outputs\\public_datasets\\mpi_results\\inference.json": {
+      "bytes": 12382,
+      "sha256": "e5ba30b84735088b695907993d4e99f44ae254c6c012b4eb8c19aa6e806b3012"
+    },
+    "outputs\\public_datasets\\mpi_results\\real_multiview_36s.mp4": {
+      "bytes": 9084771,
+      "sha256": "8e89a12d2eea3cf33848f342783373c360f2e1a0f714f907a455ba6ebeee97f2"
+    },
+    "outputs\\public_datasets\\mpi_results\\failure_5097_2d.jpg": {
+      "bytes": 315138,
+      "sha256": "3837bf085c768a911ff9d396caf2ce9c44ed6e196ebacd54414bb0586a68e696"
+    }
+  },
+  "implementation_sha256": {
+    "pose_sim\\mpi3dhp.py": "59b9b44d13e8b353047a5671b8eadcd6c647b893ee9db8a01d4d717b4c0aa3e9",
+    "pose_sim\\public_download.py": "c1aa21ff5b0bfb0d25ce6fa2a85086b2e8c4b99ae546e16dd32e0b54fe0c1dea",
+    "scripts\\import_mpi3dhp.py": "a28c01957716f51d5e1bd31e7600999bed8743c670e1be86ef2b34b8c139a759",
+    "scripts\\evaluate_mpi3dhp.py": "f3af32f2fd1587f651c7907a447b7497bdfb0d174f6ac9494f1065dcb6c08b18",
+    "config\\public_mpi3dhp.json": "e389d794b2c3b42e96fac69beec00437c15a3f3a8673608f66636337018a97ce"
+  },
+  "limitations": [
+    "3D reference comes from markerless multiview capture, not independent Vicon measurements.",
+    "Official training partition; pretrained model overlap is unknown; not a leaderboard result.",
+    "12 approximately corresponding body joint centers, no foot/palm orientation or contact/force reference.",
+    "World-frame errors have no Procrustes, scale, root or time alignment; hip-relative metric is reported separately.",
+    "Timing is offline throughput, not physical exposure-to-output latency. No robot control validation.",
+    "Torso/hinge errors are landmark-derived quantities, not anatomical full-rotation ground truth.",
+    "Phase lag is descriptive and quantized to 40 ms; differentiated reference velocity includes label noise."
+  ],
+  "algorithm_changed": false,
+  "environment_changed": false,
+  "robot_commands_sent": false,
+  "committed": false,
+  "pushed": false
+}

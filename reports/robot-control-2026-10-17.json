@@ -1,0 +1,201 @@
+{
+  "date": "2026-10-17",
+  "scope": "Multiview RGB to robot joint commands and simulated feedback",
+  "simulation_only": true,
+  "session": "outputs/robot_demo",
+  "tests": {
+    "cuda": {
+      "count": 34,
+      "passed": true,
+      "seconds": 2.365
+    },
+    "cpu": {
+      "count": 34,
+      "passed": true,
+      "seconds": 2.985
+    }
+  },
+  "gpu": "NVIDIA GeForce RTX 4090, 595.97, 24564 MiB",
+  "visual_metrics": {
+    "frames": 12,
+    "camera_count": 4,
+    "detected_joint_reconstruction_rate": 0.9754901960784313,
+    "body12_proxy_coverage": 0.9930555555555556,
+    "body12_proxy_mpjpe_mm": 53.9098906821012,
+    "body12_proxy_median_mm": 37.985621481103934,
+    "body12_proxy_p95_mm": 141.70951952273842,
+    "mean_inlier_reprojection_px": 2.8791900239151067,
+    "oracle_geometry_max_error_mm": 0.00013139479760454912,
+    "oracle_valid_fraction": 1.0,
+    "per_joint_proxy_error_mm": {
+      "nose": null,
+      "left_eye": null,
+      "right_eye": null,
+      "left_ear": null,
+      "right_ear": null,
+      "left_shoulder": 75.70934507987306,
+      "right_shoulder": 50.77660551356977,
+      "left_elbow": 37.581011699537335,
+      "right_elbow": 91.94520895614885,
+      "left_wrist": 44.151999718234016,
+      "right_wrist": 32.45040180620871,
+      "left_hip": 102.28431056361394,
+      "right_hip": 93.96986282165595,
+      "left_knee": 38.53127416794953,
+      "right_knee": 31.099441699019863,
+      "left_ankle": 33.78468067441291,
+      "right_ankle": 12.957444651016601
+    },
+    "limitations": [
+      "Stylized CesiumMan sample; not a real-world accuracy benchmark.",
+      "Only 12 rig joint centres have proxy ground truth; face landmarks have no GT.",
+      "COCO anatomical landmarks and rig centres differ; proxy MPJPE includes definition mismatch.",
+      "Oracle projection test only verifies geometry and never substitutes for image detections.",
+      "One person, fixed calibrated cameras, ideal global-shutter pinhole render; no real-device validation yet."
+    ]
+  },
+  "mean_gpu_inference_ms_per_image": 22.11805624998912,
+  "render": {
+    "backend": "OPTIX",
+    "blender_version": "4.5.3 LTS",
+    "devices": [
+      {
+        "name": "NVIDIA GeForce RTX 4090",
+        "type": "OPTIX"
+      }
+    ],
+    "denoiser": "OPTIX",
+    "image_count": 48,
+    "total_render_seconds": 10.746125799923902,
+    "mean_render_seconds_per_image": 0.22387762083174798,
+    "wall_seconds": 15.566370500004268
+  },
+  "control": {
+    "schema_version": 1,
+    "simulation_only": true,
+    "checks": {
+      "position_limits": true,
+      "velocity_limits": true,
+      "sampled_acceleration_limits": true,
+      "position_velocity_consistency": true,
+      "fresh_sources": true,
+      "end_stationary": true,
+      "motion_generated": true,
+      "no_adapter_faults": true
+    },
+    "passed": true,
+    "robot_id": "generic_dual_arm_8dof",
+    "model_sha256": "2f1e9bf1fbd4403635eb2cb40a555777073c198e60bb2af3c1078d027e4e36e6",
+    "input_pose_sha256": "29bb3a1e144b3f1ad903eef1279118a7a91f505a2c3918ae884f85cb80fd0f4f",
+    "clock_domain": "replay_monotonic",
+    "control_rate_hz": 50,
+    "assumed_perception_delay_ms": 120.0,
+    "observations": 12,
+    "accepted_observations": 9,
+    "command_count": 92,
+    "states": {
+      "HOLD": 58,
+      "TRACKING": 29,
+      "BRAKING": 5
+    },
+    "max_ik_direction_error_deg": 4.632627111950107,
+    "max_command_velocity_rad_s": 1.36,
+    "max_command_acceleration_rad_s2": 4.0000000000000036,
+    "feedback_tracking_rmse_rad": 0.008796834376892703,
+    "feedback_tracking_max_rad": 0.0395192432705532,
+    "mean_pose_ik_compute_ms": 4.559508330809574,
+    "p95_pose_ik_compute_ms": 8.520955003041307,
+    "wall_seconds": 0.06276869999419432,
+    "limitations": [
+      "Kinematic first-order servo; no dynamics, contact, collision or balance simulation.",
+      "Virtual 50 Hz schedule is not a hardware real-time guarantee.",
+      "Perception delay is injected, not measured capture-to-command latency.",
+      "COCO17 cannot observe wrist roll, fingers or full segment rotations.",
+      "ROS trajectory is offline simulation data; hardware interpolation requires retiming."
+    ],
+    "source_sha256": {
+      "motion_control/adapters.py": "4f0e18a5461f3573fd3838bc9f3d282d18d542678a30ebd5909a637d7e19826d",
+      "motion_control/contracts.py": "d0a9aacacf1f406a0ded01bea32c4050b333abe710cb29e58d3202a4f8794c77",
+      "motion_control/controller.py": "8a8283e202ef18bee9e70d4998c95329377967eb767bc5a30da4eb33f718d56a",
+      "motion_control/model.py": "2e983c1f91fac4944104b9a712be23f9a3b795f197d88863898a56e2f8849919",
+      "motion_control/pose.py": "79b9759c93d9ee70e7bfeb68a143bd8a0908f05482d04b54021fb0835f000f2f",
+      "motion_control/preview.py": "95456932efa5d83ae5d7fddaede64487325c8e4b50435063bc5ac29bba8b207b",
+      "motion_control/replay.py": "4cd1da1a15bc964ada1bc63143127d13787861a0092c3ade1d5d0582800b4bc9",
+      "motion_control/retarget.py": "e90e11c4ceb632ef16b1c9badeeb201ddb7623da1dffb04a15531be10fd057e1",
+      "motion_control/__init__.py": "252f90dd097aedf0bcb5a03195ef8988cbc076281566816760a7ab036dee8567",
+      "config/robot_demo.json": "e7b16cfeebbd0a97b357fc0f685b74fd6d5bc35ebbdf40a1d624e627e9d2136b"
+    }
+  },
+  "preview": {
+    "frames": 92,
+    "width": 935,
+    "height": 467
+  },
+  "source_sha256": {
+    ".python-version": "61141e9590171b900fdf709e7ea8f050d5c2a69198d4a4a1977d7c45186307e5",
+    "assets/model_checksums.json": "d4600570d036a31aa66de6bdec2f3cb40239b77f252fda6e27b3ec4bf1424263",
+    "config/demo.json": "342a123f570d410cf7e12a4767b6cb6b7d9f30f42c734f07f6e44f11106fcded",
+    "config/robot_demo.json": "e7b16cfeebbd0a97b357fc0f685b74fd6d5bc35ebbdf40a1d624e627e9d2136b",
+    "motion_control/__init__.py": "252f90dd097aedf0bcb5a03195ef8988cbc076281566816760a7ab036dee8567",
+    "motion_control/adapters.py": "4f0e18a5461f3573fd3838bc9f3d282d18d542678a30ebd5909a637d7e19826d",
+    "motion_control/contracts.py": "d0a9aacacf1f406a0ded01bea32c4050b333abe710cb29e58d3202a4f8794c77",
+    "motion_control/controller.py": "8a8283e202ef18bee9e70d4998c95329377967eb767bc5a30da4eb33f718d56a",
+    "motion_control/model.py": "2e983c1f91fac4944104b9a712be23f9a3b795f197d88863898a56e2f8849919",
+    "motion_control/pose.py": "79b9759c93d9ee70e7bfeb68a143bd8a0908f05482d04b54021fb0835f000f2f",
+    "motion_control/preview.py": "95456932efa5d83ae5d7fddaede64487325c8e4b50435063bc5ac29bba8b207b",
+    "motion_control/replay.py": "4cd1da1a15bc964ada1bc63143127d13787861a0092c3ade1d5d0582800b4bc9",
+    "motion_control/retarget.py": "e90e11c4ceb632ef16b1c9badeeb201ddb7623da1dffb04a15531be10fd057e1",
+    "pose_sim/__init__.py": "30261f49a3828c3b9dd628bfe1b7a7905730ad2ee26b067bf71e2ba175049fb9",
+    "pose_sim/evaluate.py": "c1227a1522105a3f39f6ae776353c75f3979d04f1373ce694d4795923c37a855",
+    "pose_sim/geometry.py": "dc89d249dc60d8b2ec32e7dab56b813eeda18c60842e586fa74701e2da4c17be",
+    "pose_sim/pipeline.py": "ed72591047775fecde5d22d3a4b350204ad4fe0f03236979f3229fb93a46fa9c",
+    "pose_sim/preview.py": "a84c9903b4033cc90963f2a5ef05a12baf5e148519b36a188843c5dfd4c1911e",
+    "pose_sim/runtime.py": "7f1fc2e37471519214e510601662ad17f61a4a416131e5de350faad487c7f35c",
+    "pose_sim/sensors.py": "1189dee491e15e00c9379d34b4600a1bce2663e4c10f6b491baa9016167011d2",
+    "pose_sim/uncertainty.py": "b629020cd788bbaa99bc81e1564ec2e878369bf7e0eaa78016472fff38770878",
+    "requirements-common.txt": "e23e3a0035cd2e78ca79d4fe49215b83414b0ea225ef2a7c19fba62d67fa9f30",
+    "requirements-gpu-lock.txt": "05f908829c736553f36b587e11022838a8c6bac6dbdd61a7aaae7f83bbec34d2",
+    "requirements-gpu.txt": "a19be2f0095efe9cd81374568a9e3fb3bf67a2b122f966e73c1b31dfd08fe453",
+    "requirements-lock.txt": "84b7b3c30253a2937cece5628a98043f137cda878d92a531a210fef2c08f8f1a",
+    "requirements.txt": "c3f6cbf15aa6d7955e593d57abeb77e98f33de67ea20b947ff78288e547a6a00",
+    "run.ps1": "afc909828c414216f62e8e573c3ffc8e839a0d1c7864bbe631c2a82e360e8371",
+    "scripts/benchmark.py": "c278396b79a5ec255aa5d1760b4dbdc3179d934f78df74f8bb92a6335a2c1813",
+    "scripts/bootstrap.py": "e1b44f605ae5efc9d59b4f79bd57458aed2d0c1982ba0b88529d02d04b78dda0",
+    "scripts/clean_outputs.py": "487594a102f5f0520923c047769fa43a688a8abca7391e14c85e1d166bdddbe9",
+    "scripts/import_real.py": "85ed307af9d321253c05ac478cfd27dbb6a77214131b9992d3b2a122b6852ecf",
+    "scripts/inspect_scene.py": "5eedf6bc139d3b9f4538136b9c27c704ae50ccb9299d2afea1114d810bd658fd",
+    "scripts/render_scene.py": "ed73c63a347a67eeab054dd1b42cc87c1f87baa7f8666b6fed1ba4df0b37d3bb",
+    "scripts/run_blender.py": "58069224dab0e8b3d81b17ea1bb0d4de77edfd9f1b81338039dec38a785e6161",
+    "scripts/verify_session.py": "4d181283421bfac5605b15300c6b05288045a1018a9faa70c841d9ffe1bb4847",
+    "tests/test_geometry.py": "0a66a1060244989697e4ee0a66989eee93638dc4a06e76fc34a7176e16aae305",
+    "tests/test_import_real.py": "a8047748fe8b277ddd149f10e3fa37827f6d731275e5fedabdfa1a3fdd09f16f",
+    "tests/test_motion_control.py": "c16e6658a5988e7351121485e1e0bff9f89c7c67d2481e9ee23c4f973b130d51",
+    "tests/test_real_contract.py": "d5e3a0221acd9b977318da6011f5a89839bd9ab165192e1ebd48023e49feb117",
+    "tests/test_runtime.py": "ee76d10b73230ce02b0a5e189d72cd896584610757642edce07de92536456c34",
+    "tests/test_sensors.py": "a4cb72a90fe949fe0a97f98b03789a42cecc3088da043d330879274c06a0a34d"
+  },
+  "cleanup": {
+    "removed_obsolete_sessions": [
+      "gpu_session01",
+      "benchmark01",
+      "benchmark02",
+      "control_check"
+    ],
+    "removed_obsolete_log_files": [
+      "benchmark01.log",
+      "benchmark02.log"
+    ],
+    "removed_obsolete_bytes": 11896706,
+    "retained_sessions": [
+      "gpu_session02",
+      "benchmark03",
+      "robot_demo"
+    ]
+  },
+  "hardware_blockers": [
+    "Target robot and task are not specified.",
+    "No real camera/robot SDK, calibrated device clocks or actuator validation.",
+    "Collision, contact, torque, jerk and whole-body balance require robot-specific implementation.",
+    "ROS 2 export is an offline message layout, not verified physical execution."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "dataset": "MPI-INF-3DHP",
+  "source_base": "https://vcai.mpi-inf.mpg.de/3dhp-dataset/",
+  "camera_ids": [0, 2, 5, 7],
+  "width": 1024,
+  "height": 1024,
+  "fps": 25,
+  "frames_per_clip": 750,
+  "clips": [
+    {"id": "s3_seq1_test", "sequence": "S3/Seq1", "start_frame": 5494, "split": "test"},
+    {"id": "s3_seq2_test", "sequence": "S3/Seq2", "start_frame": 5392, "split": "test"},
+    {"id": "s5_seq1_test", "sequence": "S5/Seq1", "start_frame": 5660, "split": "test"},
+    {"id": "s5_seq2_test", "sequence": "S5/Seq2", "start_frame": 5406, "split": "test"},
+    {"id": "s7_seq1_test", "sequence": "S7/Seq1", "start_frame": 2744, "split": "test"},
+    {"id": "s7_seq2_test", "sequence": "S7/Seq2", "start_frame": 2785, "split": "test"},
+    {"id": "s8_seq1_test", "sequence": "S8/Seq1", "start_frame": 2859, "split": "test"},
+    {"id": "s8_seq2_test", "sequence": "S8/Seq2", "start_frame": 2652, "split": "test"}
+  ],
+  "protocol": "Frozen test split: four people (S3/S5/S7/S8) never used in development, tuning or earlier held-out scoring. Score each frozen candidate once; do not tune on these results.",
+  "selection": "One centred 30 s window per sequence, start=(video_frames-span)//2 with span=(750-1)*stride+1, fixed before any inference. S3/S5 are 50 Hz and decimated by stride 2 to the 25 Hz clock; S7/S8 are 25 Hz.",
+  "reference": "annot3 markerless multiview reference, body12; inference reads only RGB, calibration and timing.",
+  "license": "Local non-commercial research; do not redistribute. See research/mpi_license.txt."
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "target": "unitree_g1_29dof",
+  "hardware_enabled": false,
+  "velocity_frame": "source_heading",
+  "position_gain_s_inv": 2.0,
+  "maximum_position_feedback_axis_m_s": 0.3,
+  "maximum_velocity_axis_m_s": 1.5,
+  "heading_gain_s_inv": 2.0,
+  "maximum_heading_feedback_rad_s": 0.6
+}

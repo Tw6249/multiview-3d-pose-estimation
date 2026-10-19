@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "perception_mode": "markerless",
+  "source_id": null,
+  "landmark_schema_id": null,
+  "units": "metre",
+  "fit_max_rms_m": 0.01,
+  "max_landmark_std_m": 0.03,
+  "max_orientation_std_rad": 0.2,
+  "min_spread_ratio": 0.02,
+  "links": []
+}

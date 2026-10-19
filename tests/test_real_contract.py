@@ -16,7 +16,8 @@ class RealContractTests(unittest.TestCase):
         # End-to-end contract check, using real-image importer and actual detector.
         # No ground-truth file exists anywhere in the temporary session.
         with tempfile.TemporaryDirectory() as temp:
-            p = Path(temp)
+            p = Path(temp)/'真实 输入'
+            p.mkdir()
             Image.new('RGB', (640, 640), (64, 64, 64)).save(p/'blank.png')
             camera = {'K': [[750, 0, 320], [0, 750, 320], [0, 0, 1]],
                       'R_world_to_camera': [[1,0,0],[0,1,0],[0,0,1]],

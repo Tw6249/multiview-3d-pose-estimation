@@ -1,0 +1,2728 @@
+{
+  "date": "2026-10-17",
+  "status": "experimental_modules_implemented_real_world_acceptance_incomplete",
+  "research": "docs/vision_research_2026-10-17.md",
+  "documentation": "docs/vision_pipeline.md",
+  "benchmark": {
+    "domain": "procedural_observation_stress_v1",
+    "manifest_sha256": "2318290f0809bba55981ca59ebd71d80b79b17794723b8d524218e11746b53cf",
+    "configuration_sha256": "0705241bfee49ffeeffa60b9042a5829b7b6c46e3d873edf51d6e1a2a25bf758",
+    "sequences_total": 42,
+    "frames_total": 3780,
+    "tune_subjects": 1,
+    "calibration_subjects": 4,
+    "test_subjects": 2,
+    "test_sequences": 12,
+    "test_frames": 1080,
+    "result_aggregation": "Equal-weight sequence means; p95 fields are means of sequence P95, not pooled percentiles",
+    "results": {
+      "baseline": {
+        "position_error_mm": {
+          "mean": 44.66194760033099,
+          "p95": 307.7498726866026
+        },
+        "current_observation_error_mm": {
+          "mean": 38.585941252852244,
+          "p95": 241.3326661434156
+        },
+        "velocity_error_m_s": {
+          "mean": 0.583224505425812,
+          "p95": 1.4553020510479993
+        },
+        "landmark_rotation_error_deg": {
+          "mean": 6.365262332625626,
+          "p95": 12.700984351907769
+        },
+        "torso_rotation_error_deg": null,
+        "shape_error_mm": null,
+        "occlusion_recovery_excess_step_mm": {
+          "mean": 8.797711251159106,
+          "p95": 16.35592536451497
+        },
+        "foot_slide_when_true_contact_m_s": {
+          "mean": 0.24034604606153087,
+          "p95": 0.42198587349426475
+        },
+        "uncertainty_radius_m": null,
+        "coverage": 0.999354657687991,
+        "within_100mm_all_targets": 0.9346240179573512,
+        "contact_known_fraction": 0.9773148148148149,
+        "uncertainty_coverage": null,
+        "contact_confusion": {
+          "tp": 712,
+          "fp": 64,
+          "fn": 92,
+          "tn": 1259
+        },
+        "contact_micro_f1": 0.9012658227848102,
+        "phase_lag_ms_by_sequence": {
+          "test/heldout_a/walk": {
+            "left_wrist": -33.333333,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "test/heldout_a/turn": {
+            "left_wrist": 66.666666,
+            "right_wrist": 33.333333,
+            "left_ankle": 0.0,
+            "right_ankle": 33.333333
+          },
+          "test/heldout_a/squat": {
+            "left_wrist": 33.333333,
+            "right_wrist": 33.333333
+          },
+          "test/heldout_a/cross_step": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "test/heldout_a/fast_arms": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0
+          },
+          "test/heldout_a/occlusion": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "test/heldout_b/walk": {
+            "left_wrist": -33.333333,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "test/heldout_b/turn": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": -33.333333
+          },
+          "test/heldout_b/squat": {
+            "left_wrist": 33.333333,
+            "right_wrist": 33.333333
+          },
+          "test/heldout_b/cross_step": {
+            "left_wrist": 33.333333,
+            "right_wrist": 0.0,
+            "left_ankle": 33.333333,
+            "right_ankle": 33.333333
+          },
+          "test/heldout_b/fast_arms": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0
+          },
+          "test/heldout_b/occlusion": {
+            "left_wrist": 0.0,
+            "right_wrist": 33.333333,
+            "left_ankle": 33.333333,
+            "right_ankle": 33.333333
+          }
+        },
+        "predicted_points": 891,
+        "observed_points": 34726,
+        "processing_ms": 28.351806110866303
+      },
+      "joint": {
+        "position_error_mm": {
+          "mean": 13.968313879633877,
+          "p95": 26.84981862902426
+        },
+        "current_observation_error_mm": {
+          "mean": 13.788913976517774,
+          "p95": 26.73412536661485
+        },
+        "velocity_error_m_s": {
+          "mean": 0.4542157941282665,
+          "p95": 1.0317266785862393
+        },
+        "landmark_rotation_error_deg": {
+          "mean": 6.377647668155912,
+          "p95": 12.911845328517801
+        },
+        "torso_rotation_error_deg": {
+          "mean": 1.8900697121573915,
+          "p95": 3.4137409021022456
+        },
+        "shape_error_mm": {
+          "mean": 3.68554997398082,
+          "p95": 9.440515667501032
+        },
+        "occlusion_recovery_excess_step_mm": {
+          "mean": 8.787236915620303,
+          "p95": 15.908353676026662
+        },
+        "foot_slide_when_true_contact_m_s": {
+          "mean": 0.24167677943046637,
+          "p95": 0.4257419613209026
+        },
+        "uncertainty_radius_m": {
+          "mean": 0.12041606838448558,
+          "p95": 0.134309238660171
+        },
+        "coverage": 0.9995510662177329,
+        "within_100mm_all_targets": 0.9988496071829404,
+        "contact_known_fraction": 0.9462962962962962,
+        "uncertainty_coverage": 0.9999719416386084,
+        "contact_confusion": {
+          "tp": 686,
+          "fp": 0,
+          "fn": 118,
+          "tn": 1277
+        },
+        "contact_micro_f1": 0.9208053691275168,
+        "phase_lag_ms_by_sequence": {
+          "test/heldout_a/walk": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "test/heldout_a/turn": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "test/heldout_a/squat": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0
+          },
+          "test/heldout_a/cross_step": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "test/heldout_a/fast_arms": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0
+          },
+          "test/heldout_a/occlusion": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "test/heldout_b/walk": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "test/heldout_b/turn": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "test/heldout_b/squat": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0
+          },
+          "test/heldout_b/cross_step": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "test/heldout_b/fast_arms": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0
+          },
+          "test/heldout_b/occlusion": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          }
+        },
+        "predicted_points": 61,
+        "observed_points": 35563,
+        "processing_ms": 32.9672148151278
+      }
+    },
+    "sequence_results": [
+      {
+        "id": "test/heldout_a/walk",
+        "subject": "heldout_a",
+        "action": "walk",
+        "methods": {
+          "baseline": {
+            "position_error_mm": {
+              "mean": 42.033806292270484,
+              "p95": 286.6879417692868,
+              "maximum": 961.1947199571428,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 36.69534046817605,
+              "p95": 277.0410997553369,
+              "maximum": 961.1947199571428,
+              "count": 2892
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 0.936026936026936,
+            "observed_points": 2892,
+            "predicted_points": 78,
+            "velocity_error_m_s": {
+              "mean": 0.5194509364140651,
+              "p95": 1.3721765625475408,
+              "maximum": 4.833509924625918,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.410247664305841,
+              "p95": 13.97650284801462,
+              "maximum": 20.92535292079698,
+              "count": 359
+            },
+            "torso_rotation_error_deg": null,
+            "shape_error_mm": null,
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 10.453887263138022,
+              "p95": 19.260542919090653,
+              "maximum": 31.18604557500634,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.2735156081085593,
+              "p95": 0.43486070265160354,
+              "maximum": 0.4605703268903869,
+              "count": 18
+            },
+            "contact_f1": 0.2222222222222222,
+            "contact_confusion": {
+              "tp": 4,
+              "fp": 14,
+              "fn": 14,
+              "tn": 144
+            },
+            "contact_known_fraction": 0.9777777777777777,
+            "phase_lag_ms": {
+              "left_wrist": -33.333333,
+              "right_wrist": 0.0,
+              "left_ankle": 0.0,
+              "right_ankle": 0.0
+            },
+            "normalized_error_max": 35.951514522426415,
+            "uncertainty_coverage": null,
+            "uncertainty_radius_m": null,
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 32.12000333425951,
+              "p95": 43.345239995687734,
+              "maximum": 52.82250000163913,
+              "count": 90
+            },
+            "corrected_view_groups": 0
+          },
+          "joint": {
+            "position_error_mm": {
+              "mean": 12.269589907535575,
+              "p95": 22.52149700471424,
+              "maximum": 95.41413069014348,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 12.253515982931741,
+              "p95": 22.512777077550055,
+              "maximum": 95.41413069014348,
+              "count": 2965
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 1.0,
+            "observed_points": 2965,
+            "predicted_points": 5,
+            "velocity_error_m_s": {
+              "mean": 0.3754726641975618,
+              "p95": 0.7553153061057849,
+              "maximum": 2.581247253770486,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.365683284331957,
+              "p95": 13.868420007305541,
+              "maximum": 21.162033528446884,
+              "count": 359
+            },
+            "torso_rotation_error_deg": {
+              "mean": 2.3505754911806953,
+              "p95": 3.8007074526377624,
+              "maximum": 4.6219266343847405,
+              "count": 90
+            },
+            "shape_error_mm": {
+              "mean": 3.8701875927242253,
+              "p95": 10.021210775097767,
+              "maximum": 12.8078020439667,
+              "count": 602
+            },
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 9.717348884841224,
+              "p95": 16.781004834729103,
+              "maximum": 33.94407452641741,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.2688479474566236,
+              "p95": 0.4441263046749356,
+              "maximum": 0.45842142281711157,
+              "count": 18
+            },
+            "contact_f1": 0.0,
+            "contact_confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 18,
+              "tn": 154
+            },
+            "contact_known_fraction": 0.9555555555555556,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0,
+              "left_ankle": 0.0,
+              "right_ankle": 0.0
+            },
+            "normalized_error_max": 6.4942471208246095,
+            "uncertainty_coverage": 1.0,
+            "uncertainty_radius_m": {
+              "mean": 0.12013762321687187,
+              "p95": 0.13003550442356518,
+              "maximum": 0.28779196561795545,
+              "count": 2970
+            },
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 36.666581111300424,
+              "p95": 50.0283500077785,
+              "maximum": 54.011300002457574,
+              "count": 90
+            },
+            "corrected_view_groups": 64
+          }
+        }
+      },
+      {
+        "id": "test/heldout_a/turn",
+        "subject": "heldout_a",
+        "action": "turn",
+        "methods": {
+          "baseline": {
+            "position_error_mm": {
+              "mean": 43.9077596859539,
+              "p95": 305.5649498960803,
+              "maximum": 986.7257676190328,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 36.64238982225256,
+              "p95": 81.83956772313063,
+              "maximum": 979.8878281166443,
+              "count": 2888
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 0.935016835016835,
+            "observed_points": 2888,
+            "predicted_points": 82,
+            "velocity_error_m_s": {
+              "mean": 0.530426921336844,
+              "p95": 1.397188859723106,
+              "maximum": 5.045811417007063,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 8.033790087783668,
+              "p95": 15.274501814209334,
+              "maximum": 20.277399286001412,
+              "count": 360
+            },
+            "torso_rotation_error_deg": null,
+            "shape_error_mm": null,
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 8.52311961902949,
+              "p95": 15.344580609969192,
+              "maximum": 16.458454001463892,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.382037840304754,
+              "p95": 0.5432378840941846,
+              "maximum": 0.5655104793855,
+              "count": 6
+            },
+            "contact_f1": 0.4,
+            "contact_confusion": {
+              "tp": 2,
+              "fp": 2,
+              "fn": 4,
+              "tn": 168
+            },
+            "contact_known_fraction": 0.9777777777777777,
+            "phase_lag_ms": {
+              "left_wrist": 66.666666,
+              "right_wrist": 33.333333,
+              "left_ankle": 0.0,
+              "right_ankle": 33.333333
+            },
+            "normalized_error_max": 42.34051781652683,
+            "uncertainty_coverage": null,
+            "uncertainty_radius_m": null,
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 31.279966666220894,
+              "p95": 43.7320000026375,
+              "maximum": 70.07190000149421,
+              "count": 90
+            },
+            "corrected_view_groups": 0
+          },
+          "joint": {
+            "position_error_mm": {
+              "mean": 12.375921756293243,
+              "p95": 22.651766922318796,
+              "maximum": 84.96076485874394,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 12.372117780840501,
+              "p95": 22.63863343275702,
+              "maximum": 84.96076485874394,
+              "count": 2969
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 1.0,
+            "observed_points": 2969,
+            "predicted_points": 1,
+            "velocity_error_m_s": {
+              "mean": 0.38022273200086537,
+              "p95": 0.7823441911821674,
+              "maximum": 1.0796245632891874,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 8.000896664232634,
+              "p95": 15.092990000117432,
+              "maximum": 20.277399286001412,
+              "count": 360
+            },
+            "torso_rotation_error_deg": {
+              "mean": 1.5073018847882487,
+              "p95": 3.130510426347581,
+              "maximum": 4.047680486226786,
+              "count": 90
+            },
+            "shape_error_mm": {
+              "mean": 4.563039415749323,
+              "p95": 8.128791900868487,
+              "maximum": 12.15099017690957,
+              "count": 600
+            },
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 8.135490866231121,
+              "p95": 14.404592150446536,
+              "maximum": 17.099238972183425,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.38235144566688284,
+              "p95": 0.5149140826096984,
+              "maximum": 0.5396078239592064,
+              "count": 6
+            },
+            "contact_f1": 0.0,
+            "contact_confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 6,
+              "tn": 162
+            },
+            "contact_known_fraction": 0.9222222222222223,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0,
+              "left_ankle": 0.0,
+              "right_ankle": 0.0
+            },
+            "normalized_error_max": 5.713828163076935,
+            "uncertainty_coverage": 1.0,
+            "uncertainty_radius_m": {
+              "mean": 0.12014725885047915,
+              "p95": 0.13482941842615426,
+              "maximum": 0.2824589454569847,
+              "count": 2970
+            },
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 33.00073333407959,
+              "p95": 34.94754499552073,
+              "maximum": 36.233299993909895,
+              "count": 90
+            },
+            "corrected_view_groups": 64
+          }
+        }
+      },
+      {
+        "id": "test/heldout_a/squat",
+        "subject": "heldout_a",
+        "action": "squat",
+        "methods": {
+          "baseline": {
+            "position_error_mm": {
+              "mean": 39.863712139677745,
+              "p95": 271.95986942778154,
+              "maximum": 980.0675830639515,
+              "count": 2967
+            },
+            "current_observation_error_mm": {
+              "mean": 34.24927994499356,
+              "p95": 75.44427712042398,
+              "maximum": 980.0675830639515,
+              "count": 2892
+            },
+            "coverage": 0.998989898989899,
+            "within_100mm_all_targets": 0.939057239057239,
+            "observed_points": 2892,
+            "predicted_points": 75,
+            "velocity_error_m_s": {
+              "mean": 0.4807549500797079,
+              "p95": 1.2660941522071063,
+              "maximum": 4.816144040727359,
+              "count": 2967
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 5.993331829605054,
+              "p95": 12.413209419693374,
+              "maximum": 19.632036756455843,
+              "count": 359
+            },
+            "torso_rotation_error_deg": null,
+            "shape_error_mm": null,
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 8.156043225731299,
+              "p95": 15.867162397641614,
+              "maximum": 19.571917888039696,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.17820029541274124,
+              "p95": 0.3679589240341482,
+              "maximum": 0.5070699538176532,
+              "count": 178
+            },
+            "contact_f1": 0.9887640449438202,
+            "contact_confusion": {
+              "tp": 176,
+              "fp": 0,
+              "fn": 4,
+              "tn": 0
+            },
+            "contact_known_fraction": 0.9777777777777777,
+            "phase_lag_ms": {
+              "left_wrist": 33.333333,
+              "right_wrist": 33.333333
+            },
+            "normalized_error_max": 42.02955120276089,
+            "uncertainty_coverage": null,
+            "uncertainty_radius_m": null,
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 27.895614445312983,
+              "p95": 29.468065001128707,
+              "maximum": 30.259999999543652,
+              "count": 90
+            },
+            "corrected_view_groups": 0
+          },
+          "joint": {
+            "position_error_mm": {
+              "mean": 12.257085532756593,
+              "p95": 22.71786221432805,
+              "maximum": 81.56020622896885,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 12.240538158156061,
+              "p95": 22.683021980000518,
+              "maximum": 81.56020622896885,
+              "count": 2967
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 1.0,
+            "observed_points": 2967,
+            "predicted_points": 3,
+            "velocity_error_m_s": {
+              "mean": 0.3209114979936402,
+              "p95": 0.746342537534221,
+              "maximum": 1.0276385524354708,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 5.951897822741007,
+              "p95": 12.251150070345759,
+              "maximum": 20.193543144987075,
+              "count": 359
+            },
+            "torso_rotation_error_deg": {
+              "mean": 2.0918845981716565,
+              "p95": 3.583088112204808,
+              "maximum": 4.564039160180461,
+              "count": 89
+            },
+            "shape_error_mm": {
+              "mean": 3.89844385883305,
+              "p95": 6.96814042857137,
+              "maximum": 9.259623874612489,
+              "count": 596
+            },
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 8.043024054557298,
+              "p95": 16.21277638293617,
+              "maximum": 17.542365138879187,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.17830710463142824,
+              "p95": 0.37023134205732094,
+              "maximum": 0.5350143824050021,
+              "count": 178
+            },
+            "contact_f1": 0.9772727272727273,
+            "contact_confusion": {
+              "tp": 172,
+              "fp": 0,
+              "fn": 8,
+              "tn": 0
+            },
+            "contact_known_fraction": 0.9555555555555556,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0
+            },
+            "normalized_error_max": 5.549990632457424,
+            "uncertainty_coverage": 1.0,
+            "uncertainty_radius_m": {
+              "mean": 0.11999559013859837,
+              "p95": 0.13003550442356518,
+              "maximum": 0.2830856421773387,
+              "count": 2970
+            },
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 32.525246667015985,
+              "p95": 34.063835004053544,
+              "maximum": 43.74540000571869,
+              "count": 90
+            },
+            "corrected_view_groups": 64
+          }
+        }
+      },
+      {
+        "id": "test/heldout_a/cross_step",
+        "subject": "heldout_a",
+        "action": "cross_step",
+        "methods": {
+          "baseline": {
+            "position_error_mm": {
+              "mean": 43.0196637590762,
+              "p95": 298.8679429251969,
+              "maximum": 1044.1141331512795,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 36.34604798952099,
+              "p95": 275.4929177577539,
+              "maximum": 901.8636263726089,
+              "count": 2895
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 0.934006734006734,
+            "observed_points": 2895,
+            "predicted_points": 75,
+            "velocity_error_m_s": {
+              "mean": 0.5362600449309046,
+              "p95": 1.4428614799143356,
+              "maximum": 4.881813481633297,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 5.7349015766814535,
+              "p95": 11.496559534150261,
+              "maximum": 16.54365697317276,
+              "count": 360
+            },
+            "torso_rotation_error_deg": null,
+            "shape_error_mm": null,
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 7.989007400160295,
+              "p95": 14.056453096556963,
+              "maximum": 18.81043350753605,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.2814470244036252,
+              "p95": 0.4681636582873221,
+              "maximum": 0.5188341813255759,
+              "count": 10
+            },
+            "contact_f1": 0.0,
+            "contact_confusion": {
+              "tp": 0,
+              "fp": 7,
+              "fn": 10,
+              "tn": 159
+            },
+            "contact_known_fraction": 0.9777777777777777,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0,
+              "left_ankle": 0.0,
+              "right_ankle": 0.0
+            },
+            "normalized_error_max": 38.39468607742926,
+            "uncertainty_coverage": null,
+            "uncertainty_radius_m": null,
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 27.666743332196752,
+              "p95": 29.622134992678184,
+              "maximum": 34.094000002369285,
+              "count": 90
+            },
+            "corrected_view_groups": 0
+          },
+          "joint": {
+            "position_error_mm": {
+              "mean": 12.305435954311156,
+              "p95": 22.066559695135158,
+              "maximum": 103.05873184165046,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 12.303352745592171,
+              "p95": 22.055773065130122,
+              "maximum": 103.05873184165046,
+              "count": 2968
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 0.9996632996632997,
+            "observed_points": 2968,
+            "predicted_points": 2,
+            "velocity_error_m_s": {
+              "mean": 0.3960427052541647,
+              "p95": 0.7629238878252136,
+              "maximum": 1.9782629873954747,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 5.6746741361213395,
+              "p95": 11.518455385564243,
+              "maximum": 16.177212544542062,
+              "count": 360
+            },
+            "torso_rotation_error_deg": {
+              "mean": 2.4615831504738814,
+              "p95": 4.442655517463365,
+              "maximum": 5.556992682431198,
+              "count": 90
+            },
+            "shape_error_mm": {
+              "mean": 3.6008578519704666,
+              "p95": 11.597121774610086,
+              "maximum": 17.773897049557284,
+              "count": 600
+            },
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 7.981985363229903,
+              "p95": 15.901123954333968,
+              "maximum": 20.19301318385671,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.29102147866583744,
+              "p95": 0.4765237038633984,
+              "maximum": 0.5408703064158735,
+              "count": 10
+            },
+            "contact_f1": 0.0,
+            "contact_confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 10,
+              "tn": 162
+            },
+            "contact_known_fraction": 0.9555555555555556,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0,
+              "left_ankle": 0.0,
+              "right_ankle": 0.0
+            },
+            "normalized_error_max": 7.0145671103899225,
+            "uncertainty_coverage": 1.0,
+            "uncertainty_radius_m": {
+              "mean": 0.1199708040091487,
+              "p95": 0.13003550442356518,
+              "maximum": 0.2960078378080048,
+              "count": 2970
+            },
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 33.002424445456,
+              "p95": 34.369130003324244,
+              "maximum": 49.496599996928126,
+              "count": 90
+            },
+            "corrected_view_groups": 64
+          }
+        }
+      },
+      {
+        "id": "test/heldout_a/fast_arms",
+        "subject": "heldout_a",
+        "action": "fast_arms",
+        "methods": {
+          "baseline": {
+            "position_error_mm": {
+              "mean": 43.52400739721827,
+              "p95": 288.7438547006722,
+              "maximum": 615.4458653123841,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 39.34069377148395,
+              "p95": 281.9880437068947,
+              "maximum": 500.39936593288894,
+              "count": 2906
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 0.9333333333333333,
+            "observed_points": 2906,
+            "predicted_points": 64,
+            "velocity_error_m_s": {
+              "mean": 0.8025852280348106,
+              "p95": 1.6890715378900305,
+              "maximum": 5.0319754764309055,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.2634491815450515,
+              "p95": 11.999137085725815,
+              "maximum": 21.998684672545462,
+              "count": 360
+            },
+            "torso_rotation_error_deg": null,
+            "shape_error_mm": null,
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 9.736063484355475,
+              "p95": 18.061607637928986,
+              "maximum": 20.813372297053235,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.1696516029796234,
+              "p95": 0.3340119668969625,
+              "maximum": 0.5173150381619095,
+              "count": 178
+            },
+            "contact_f1": 0.9887640449438202,
+            "contact_confusion": {
+              "tp": 176,
+              "fp": 0,
+              "fn": 4,
+              "tn": 0
+            },
+            "contact_known_fraction": 0.9777777777777777,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0
+            },
+            "normalized_error_max": 21.13299380574606,
+            "uncertainty_coverage": null,
+            "uncertainty_radius_m": null,
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 27.714946666512535,
+              "p95": 28.9555049923365,
+              "maximum": 38.334199984092265,
+              "count": 90
+            },
+            "corrected_view_groups": 0
+          },
+          "joint": {
+            "position_error_mm": {
+              "mean": 19.19255164562531,
+              "p95": 42.82258982747471,
+              "maximum": 91.26999378821725,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 19.195317458366567,
+              "p95": 42.82637481918334,
+              "maximum": 91.26999378821725,
+              "count": 2969
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 1.0,
+            "observed_points": 2969,
+            "predicted_points": 1,
+            "velocity_error_m_s": {
+              "mean": 0.7502081821882679,
+              "p95": 2.0264108467928255,
+              "maximum": 3.679033287032132,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.210550230829262,
+              "p95": 12.153367483006514,
+              "maximum": 21.519131380532833,
+              "count": 360
+            },
+            "torso_rotation_error_deg": {
+              "mean": 1.7781523326183566,
+              "p95": 3.380069128082227,
+              "maximum": 3.7018768275761884,
+              "count": 90
+            },
+            "shape_error_mm": {
+              "mean": 3.2548614317075115,
+              "p95": 11.425172946642526,
+              "maximum": 12.022178707505937,
+              "count": 525
+            },
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 10.96693257203485,
+              "p95": 21.817321874209934,
+              "maximum": 23.7911999863583,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.1736576544739815,
+              "p95": 0.3409303901817298,
+              "maximum": 0.5173150381619095,
+              "count": 178
+            },
+            "contact_f1": 0.9743589743589743,
+            "contact_confusion": {
+              "tp": 171,
+              "fp": 0,
+              "fn": 9,
+              "tn": 0
+            },
+            "contact_known_fraction": 0.95,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0
+            },
+            "normalized_error_max": 6.211809018679796,
+            "uncertainty_coverage": 1.0,
+            "uncertainty_radius_m": {
+              "mean": 0.12052312714049151,
+              "p95": 0.138712816144466,
+              "maximum": 0.28243585333275006,
+              "count": 2970
+            },
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 32.072847777292026,
+              "p95": 33.697080006822944,
+              "maximum": 36.00019999430515,
+              "count": 90
+            },
+            "corrected_view_groups": 64
+          }
+        }
+      },
+      {
+        "id": "test/heldout_a/occlusion",
+        "subject": "heldout_a",
+        "action": "occlusion",
+        "methods": {
+          "baseline": {
+            "position_error_mm": {
+              "mean": 42.1253418649124,
+              "p95": 287.255399623797,
+              "maximum": 967.9050183925968,
+              "count": 2958
+            },
+            "current_observation_error_mm": {
+              "mean": 35.43086009826723,
+              "p95": 91.01217815331417,
+              "maximum": 960.311670120644,
+              "count": 2873
+            },
+            "coverage": 0.9959595959595959,
+            "within_100mm_all_targets": 0.934006734006734,
+            "observed_points": 2873,
+            "predicted_points": 85,
+            "velocity_error_m_s": {
+              "mean": 0.5037378504271977,
+              "p95": 1.3424723380060042,
+              "maximum": 4.257375219513227,
+              "count": 2958
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.82958266823694,
+              "p95": 13.888994270982753,
+              "maximum": 18.835060997195097,
+              "count": 359
+            },
+            "torso_rotation_error_deg": null,
+            "shape_error_mm": null,
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 7.882249231265557,
+              "p95": 14.049810914612417,
+              "maximum": 37.00600113708744,
+              "count": 64
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.19027994123120076,
+              "p95": 0.28204532445246316,
+              "maximum": 0.2990636229949222,
+              "count": 10
+            },
+            "contact_f1": 0.0,
+            "contact_confusion": {
+              "tp": 0,
+              "fp": 7,
+              "fn": 10,
+              "tn": 158
+            },
+            "contact_known_fraction": 0.9722222222222222,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0,
+              "left_ankle": 0.0,
+              "right_ankle": 0.0
+            },
+            "normalized_error_max": 30.802709919150026,
+            "uncertainty_coverage": null,
+            "uncertainty_radius_m": null,
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 27.00514777906291,
+              "p95": 28.393525013234466,
+              "maximum": 33.31489997799508,
+              "count": 90
+            },
+            "corrected_view_groups": 0
+          },
+          "joint": {
+            "position_error_mm": {
+              "mean": 12.322745409398749,
+              "p95": 22.438691331623577,
+              "maximum": 95.31399014840645,
+              "count": 2962
+            },
+            "current_observation_error_mm": {
+              "mean": 12.281752999587079,
+              "p95": 22.252054437750363,
+              "maximum": 95.31399014840645,
+              "count": 2953
+            },
+            "coverage": 0.9973063973063973,
+            "within_100mm_all_targets": 0.9973063973063973,
+            "observed_points": 2953,
+            "predicted_points": 9,
+            "velocity_error_m_s": {
+              "mean": 0.3729727931291392,
+              "p95": 0.7567046156258029,
+              "maximum": 1.9863693766677353,
+              "count": 2962
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.773638108905966,
+              "p95": 14.258287858058264,
+              "maximum": 18.737292360744902,
+              "count": 359
+            },
+            "torso_rotation_error_deg": {
+              "mean": 2.7623682631945092,
+              "p95": 4.350747241252697,
+              "maximum": 5.650648830558345,
+              "count": 89
+            },
+            "shape_error_mm": {
+              "mean": 3.948865800071421,
+              "p95": 8.649150680552776,
+              "maximum": 12.791868422798947,
+              "count": 600
+            },
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 7.423013716825055,
+              "p95": 13.345758597216678,
+              "maximum": 19.358437874865942,
+              "count": 64
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.20235375472324396,
+              "p95": 0.2949433688905241,
+              "maximum": 0.29616019891084316,
+              "count": 10
+            },
+            "contact_f1": 0.0,
+            "contact_confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 10,
+              "tn": 159
+            },
+            "contact_known_fraction": 0.9388888888888889,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0,
+              "left_ankle": 0.0,
+              "right_ankle": 0.0
+            },
+            "normalized_error_max": 6.224270551729952,
+            "uncertainty_coverage": 1.0,
+            "uncertainty_radius_m": {
+              "mean": 0.12080903408026303,
+              "p95": 0.13675421724310277,
+              "maximum": 0.5515937540356964,
+              "count": 2962
+            },
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 32.23650999942846,
+              "p95": 33.92413999099517,
+              "maximum": 45.666899997740984,
+              "count": 90
+            },
+            "corrected_view_groups": 64
+          }
+        }
+      },
+      {
+        "id": "test/heldout_b/walk",
+        "subject": "heldout_b",
+        "action": "walk",
+        "methods": {
+          "baseline": {
+            "position_error_mm": {
+              "mean": 45.906997881430534,
+              "p95": 328.14513560525705,
+              "maximum": 1081.9526391182092,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 39.62323788573869,
+              "p95": 306.49347858336654,
+              "maximum": 1081.9526391182092,
+              "count": 2895
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 0.9353535353535354,
+            "observed_points": 2895,
+            "predicted_points": 75,
+            "velocity_error_m_s": {
+              "mean": 0.5529632859454525,
+              "p95": 1.4017813055759785,
+              "maximum": 5.3821125588296885,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.0800824931910835,
+              "p95": 13.156034877323561,
+              "maximum": 17.71006599121246,
+              "count": 360
+            },
+            "torso_rotation_error_deg": null,
+            "shape_error_mm": null,
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 7.846759314179999,
+              "p95": 16.71358668185738,
+              "maximum": 19.962621640027795,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.23727475503812906,
+              "p95": 0.4635764720557782,
+              "maximum": 0.48188847880172686,
+              "count": 17
+            },
+            "contact_f1": 0.17647058823529413,
+            "contact_confusion": {
+              "tp": 3,
+              "fp": 14,
+              "fn": 14,
+              "tn": 145
+            },
+            "contact_known_fraction": 0.9777777777777777,
+            "phase_lag_ms": {
+              "left_wrist": -33.333333,
+              "right_wrist": 0.0,
+              "left_ankle": 0.0,
+              "right_ankle": 0.0
+            },
+            "normalized_error_max": 38.75804452476517,
+            "uncertainty_coverage": null,
+            "uncertainty_radius_m": null,
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 28.048328888447333,
+              "p95": 29.480475005402695,
+              "maximum": 35.92779999598861,
+              "count": 90
+            },
+            "corrected_view_groups": 0
+          },
+          "joint": {
+            "position_error_mm": {
+              "mean": 12.43082906106298,
+              "p95": 23.492858327698173,
+              "maximum": 87.98479028485528,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 12.43325313365856,
+              "p95": 23.49301432253746,
+              "maximum": 87.98479028485528,
+              "count": 2969
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 1.0,
+            "observed_points": 2969,
+            "predicted_points": 1,
+            "velocity_error_m_s": {
+              "mean": 0.4055506227040464,
+              "p95": 0.8454136407490588,
+              "maximum": 2.853539110012597,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.008161980522929,
+              "p95": 12.754004608871591,
+              "maximum": 18.027627683573268,
+              "count": 360
+            },
+            "torso_rotation_error_deg": {
+              "mean": 1.6007335080714604,
+              "p95": 3.151083441231948,
+              "maximum": 4.520771707307414,
+              "count": 90
+            },
+            "shape_error_mm": {
+              "mean": 3.3857322765883433,
+              "p95": 7.5604778927806375,
+              "maximum": 11.935989732695163,
+              "count": 602
+            },
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 7.864925881350828,
+              "p95": 15.170640816179617,
+              "maximum": 19.705418021614744,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.23824540141759093,
+              "p95": 0.48924296235614,
+              "maximum": 0.4896587144350723,
+              "count": 17
+            },
+            "contact_f1": 0.0,
+            "contact_confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 17,
+              "tn": 155
+            },
+            "contact_known_fraction": 0.9555555555555556,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0,
+              "left_ankle": 0.0,
+              "right_ankle": 0.0
+            },
+            "normalized_error_max": 5.987053613080725,
+            "uncertainty_coverage": 1.0,
+            "uncertainty_radius_m": {
+              "mean": 0.11994321839679198,
+              "p95": 0.13201056593418528,
+              "maximum": 0.21196952655052378,
+              "count": 2970
+            },
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 32.7547166674372,
+              "p95": 35.19024500710657,
+              "maximum": 36.919500009389594,
+              "count": 90
+            },
+            "corrected_view_groups": 64
+          }
+        }
+      },
+      {
+        "id": "test/heldout_b/turn",
+        "subject": "heldout_b",
+        "action": "turn",
+        "methods": {
+          "baseline": {
+            "position_error_mm": {
+              "mean": 47.9044981189997,
+              "p95": 335.67045895533556,
+              "maximum": 1090.3110187577372,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 41.79470972547559,
+              "p95": 302.35010371971197,
+              "maximum": 1090.3110187577372,
+              "count": 2898
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 0.9346801346801347,
+            "observed_points": 2898,
+            "predicted_points": 72,
+            "velocity_error_m_s": {
+              "mean": 0.5489511490860046,
+              "p95": 1.3471237038324815,
+              "maximum": 4.797717661679652,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.372050366929592,
+              "p95": 11.627482034951296,
+              "maximum": 17.849000592895834,
+              "count": 360
+            },
+            "torso_rotation_error_deg": null,
+            "shape_error_mm": null,
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 7.667734930339685,
+              "p95": 13.708365782289714,
+              "maximum": 15.022806289999574,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.2388811007887711,
+              "p95": 0.3900342874333845,
+              "maximum": 0.40910818811044153,
+              "count": 5
+            },
+            "contact_f1": 0.25,
+            "contact_confusion": {
+              "tp": 1,
+              "fp": 2,
+              "fn": 4,
+              "tn": 169
+            },
+            "contact_known_fraction": 0.9777777777777777,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0,
+              "left_ankle": 0.0,
+              "right_ankle": -33.333333
+            },
+            "normalized_error_max": 46.81362145592453,
+            "uncertainty_coverage": null,
+            "uncertainty_radius_m": null,
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 27.522587774890578,
+              "p95": 28.860474987595808,
+              "maximum": 30.3227000113111,
+              "count": 90
+            },
+            "corrected_view_groups": 0
+          },
+          "joint": {
+            "position_error_mm": {
+              "mean": 13.280598865718781,
+              "p95": 25.101264483056912,
+              "maximum": 88.50225161643206,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 13.278752419001993,
+              "p95": 25.103712386052642,
+              "maximum": 88.50225161643206,
+              "count": 2967
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 1.0,
+            "observed_points": 2967,
+            "predicted_points": 3,
+            "velocity_error_m_s": {
+              "mean": 0.413925686076384,
+              "p95": 0.8675402270139873,
+              "maximum": 1.318363196209508,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.32010343499255,
+              "p95": 11.40767782624318,
+              "maximum": 16.600049650750307,
+              "count": 360
+            },
+            "torso_rotation_error_deg": {
+              "mean": 1.5045232524160213,
+              "p95": 3.281170570442475,
+              "maximum": 3.8803080478364795,
+              "count": 90
+            },
+            "shape_error_mm": {
+              "mean": 2.791648294018216,
+              "p95": 5.748829908660863,
+              "maximum": 10.155136436006295,
+              "count": 603
+            },
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 7.572165900088249,
+              "p95": 12.557600355351026,
+              "maximum": 14.659962456948199,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.22479386728522927,
+              "p95": 0.37810809587819727,
+              "maximum": 0.4042790749097621,
+              "count": 5
+            },
+            "contact_f1": 0.0,
+            "contact_confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 5,
+              "tn": 167
+            },
+            "contact_known_fraction": 0.9555555555555556,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0,
+              "left_ankle": 0.0,
+              "right_ankle": 0.0
+            },
+            "normalized_error_max": 5.952002181506335,
+            "uncertainty_coverage": 1.0,
+            "uncertainty_radius_m": {
+              "mean": 0.12010014137506551,
+              "p95": 0.13242978228675242,
+              "maximum": 0.28633812427912336,
+              "count": 2970
+            },
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 32.82414555885933,
+              "p95": 34.897034999448806,
+              "maximum": 47.33599998871796,
+              "count": 90
+            },
+            "corrected_view_groups": 64
+          }
+        }
+      },
+      {
+        "id": "test/heldout_b/squat",
+        "subject": "heldout_b",
+        "action": "squat",
+        "methods": {
+          "baseline": {
+            "position_error_mm": {
+              "mean": 46.1574055224471,
+              "p95": 317.8331208173519,
+              "maximum": 1101.525413781246,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 40.67512514723558,
+              "p95": 300.561493164683,
+              "maximum": 1101.525413781246,
+              "count": 2904
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 0.9346801346801347,
+            "observed_points": 2904,
+            "predicted_points": 66,
+            "velocity_error_m_s": {
+              "mean": 0.5227919072068993,
+              "p95": 1.368170306387583,
+              "maximum": 5.349648692077382,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.139873721671638,
+              "p95": 11.546101390026847,
+              "maximum": 14.971443642825601,
+              "count": 360
+            },
+            "torso_rotation_error_deg": null,
+            "shape_error_mm": null,
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 8.664342394318906,
+              "p95": 12.869401302158671,
+              "maximum": 43.78933120423498,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.1879183151402993,
+              "p95": 0.3843024335071665,
+              "maximum": 0.45274719024108573,
+              "count": 178
+            },
+            "contact_f1": 0.9859154929577465,
+            "contact_confusion": {
+              "tp": 175,
+              "fp": 0,
+              "fn": 5,
+              "tn": 0
+            },
+            "contact_known_fraction": 0.9777777777777777,
+            "phase_lag_ms": {
+              "left_wrist": 33.333333,
+              "right_wrist": 33.333333
+            },
+            "normalized_error_max": 47.51967734789096,
+            "uncertainty_coverage": null,
+            "uncertainty_radius_m": null,
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 27.70027555525303,
+              "p95": 28.99903000361519,
+              "maximum": 34.48340002796613,
+              "count": 90
+            },
+            "corrected_view_groups": 0
+          },
+          "joint": {
+            "position_error_mm": {
+              "mean": 12.78453860645024,
+              "p95": 23.660926845360724,
+              "maximum": 111.01628915426909,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 12.767697145830002,
+              "p95": 23.648534396660608,
+              "maximum": 111.01628915426909,
+              "count": 2967
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 0.9996632996632997,
+            "observed_points": 2967,
+            "predicted_points": 3,
+            "velocity_error_m_s": {
+              "mean": 0.35654189450414064,
+              "p95": 0.8357652061536219,
+              "maximum": 1.543834122966086,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.075693180756748,
+              "p95": 11.393467219953127,
+              "maximum": 14.622517563571625,
+              "count": 360
+            },
+            "torso_rotation_error_deg": {
+              "mean": 1.5237999805037115,
+              "p95": 2.965018036037725,
+              "maximum": 3.651542601778875,
+              "count": 89
+            },
+            "shape_error_mm": {
+              "mean": 4.540980699816859,
+              "p95": 16.95756229195139,
+              "maximum": 19.88093044110689,
+              "count": 601
+            },
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 8.374261639564367,
+              "p95": 13.502115509145392,
+              "maximum": 42.47985373205316,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.18900558949674845,
+              "p95": 0.3839483257722388,
+              "maximum": 0.47782185935155613,
+              "count": 178
+            },
+            "contact_f1": 0.9743589743589743,
+            "contact_confusion": {
+              "tp": 171,
+              "fp": 0,
+              "fn": 9,
+              "tn": 0
+            },
+            "contact_known_fraction": 0.95,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0
+            },
+            "normalized_error_max": 5.7874982963559845,
+            "uncertainty_coverage": 1.0,
+            "uncertainty_radius_m": {
+              "mean": 0.12031830046432462,
+              "p95": 0.13480064596510527,
+              "maximum": 0.3219584742159758,
+              "count": 2970
+            },
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 32.74664777693235,
+              "p95": 34.76338499895064,
+              "maximum": 48.38659998495132,
+              "count": 90
+            },
+            "corrected_view_groups": 64
+          }
+        }
+      },
+      {
+        "id": "test/heldout_b/cross_step",
+        "subject": "heldout_b",
+        "action": "cross_step",
+        "methods": {
+          "baseline": {
+            "position_error_mm": {
+              "mean": 46.76471442184988,
+              "p95": 332.6377228210534,
+              "maximum": 1167.6814296305465,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 39.373811542981194,
+              "p95": 302.84449118274426,
+              "maximum": 1050.5809418935285,
+              "count": 2896
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 0.934006734006734,
+            "observed_points": 2896,
+            "predicted_points": 74,
+            "velocity_error_m_s": {
+              "mean": 0.5775042007002258,
+              "p95": 1.5151688758568476,
+              "maximum": 6.644500585252346,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 5.636263963412681,
+              "p95": 10.753033451131788,
+              "maximum": 15.29008426112302,
+              "count": 360
+            },
+            "torso_rotation_error_deg": null,
+            "shape_error_mm": null,
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 8.309395129147667,
+              "p95": 14.328412372758892,
+              "maximum": 18.802597377815637,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.31718364960661616,
+              "p95": 0.6126580163958522,
+              "maximum": 0.6392316189716861,
+              "count": 8
+            },
+            "contact_f1": 0.0,
+            "contact_confusion": {
+              "tp": 0,
+              "fp": 8,
+              "fn": 8,
+              "tn": 160
+            },
+            "contact_known_fraction": 0.9777777777777777,
+            "phase_lag_ms": {
+              "left_wrist": 33.333333,
+              "right_wrist": 0.0,
+              "left_ankle": 33.333333,
+              "right_ankle": 33.333333
+            },
+            "normalized_error_max": 45.14252031592072,
+            "uncertainty_coverage": null,
+            "uncertainty_radius_m": null,
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 28.12553555413615,
+              "p95": 29.73214000230655,
+              "maximum": 34.06350000295788,
+              "count": 90
+            },
+            "corrected_view_groups": 0
+          },
+          "joint": {
+            "position_error_mm": {
+              "mean": 12.860849661805625,
+              "p95": 22.621515555788136,
+              "maximum": 90.33557025854732,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 12.86188414802876,
+              "p95": 22.622071926893994,
+              "maximum": 90.33557025854732,
+              "count": 2969
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 1.0,
+            "observed_points": 2969,
+            "predicted_points": 1,
+            "velocity_error_m_s": {
+              "mean": 0.4214564517482773,
+              "p95": 0.8458736026992538,
+              "maximum": 1.8389201117048977,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 5.606744671299178,
+              "p95": 10.78696513771733,
+              "maximum": 15.14452702261941,
+              "count": 360
+            },
+            "torso_rotation_error_deg": {
+              "mean": 1.6282878057091168,
+              "p95": 2.8043042975078945,
+              "maximum": 4.068062199157632,
+              "count": 89
+            },
+            "shape_error_mm": {
+              "mean": 2.838042865220722,
+              "p95": 6.949796048105805,
+              "maximum": 7.493060892841408,
+              "count": 603
+            },
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 8.151909217951548,
+              "p95": 13.903150387795923,
+              "maximum": 14.49997661639693,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.3056907793588165,
+              "p95": 0.6136093955526564,
+              "maximum": 0.6531899733651952,
+              "count": 8
+            },
+            "contact_f1": 0.0,
+            "contact_confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "tn": 161
+            },
+            "contact_known_fraction": 0.9333333333333333,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0,
+              "left_ankle": 0.0,
+              "right_ankle": 0.0
+            },
+            "normalized_error_max": 6.147134637020593,
+            "uncertainty_coverage": 1.0,
+            "uncertainty_radius_m": {
+              "mean": 0.11988269956633466,
+              "p95": 0.13003550442356518,
+              "maximum": 0.21475042768550598,
+              "count": 2970
+            },
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 32.97863888890586,
+              "p95": 34.9671699834289,
+              "maximum": 44.131800008472055,
+              "count": 90
+            },
+            "corrected_view_groups": 64
+          }
+        }
+      },
+      {
+        "id": "test/heldout_b/fast_arms",
+        "subject": "heldout_b",
+        "action": "fast_arms",
+        "methods": {
+          "baseline": {
+            "position_error_mm": {
+              "mean": 47.69984456996862,
+              "p95": 314.9850060669977,
+              "maximum": 657.9387617518296,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 43.12005447722526,
+              "p95": 310.571420813088,
+              "maximum": 563.9433860614782,
+              "count": 2904
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 0.9323232323232323,
+            "observed_points": 2904,
+            "predicted_points": 66,
+            "velocity_error_m_s": {
+              "mean": 0.8807729465675358,
+              "p95": 1.9124217734543103,
+              "maximum": 5.577533859738976,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.245032961307386,
+              "p95": 12.081858207590331,
+              "maximum": 18.55988542618112,
+              "count": 360
+            },
+            "torso_rotation_error_deg": null,
+            "shape_error_mm": null,
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 11.655400493475582,
+              "p95": 19.553221825865332,
+              "maximum": 36.254314137126876,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.1830748518488141,
+              "p95": 0.3601292285553451,
+              "maximum": 0.46541335164423947,
+              "count": 178
+            },
+            "contact_f1": 0.9859154929577465,
+            "contact_confusion": {
+              "tp": 175,
+              "fp": 0,
+              "fn": 5,
+              "tn": 0
+            },
+            "contact_known_fraction": 0.9777777777777777,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0
+            },
+            "normalized_error_max": 23.952801595734197,
+            "uncertainty_coverage": null,
+            "uncertainty_radius_m": null,
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 27.511702223758522,
+              "p95": 29.048395009886008,
+              "maximum": 34.83250000863336,
+              "count": 90
+            },
+            "corrected_view_groups": 0
+          },
+          "joint": {
+            "position_error_mm": {
+              "mean": 22.313814109795775,
+              "p95": 48.6605289722047,
+              "maximum": 473.9821779224312,
+              "count": 2970
+            },
+            "current_observation_error_mm": {
+              "mean": 20.299116194676184,
+              "p95": 47.68324924609818,
+              "maximum": 85.02414664913789,
+              "count": 2946
+            },
+            "coverage": 1.0,
+            "within_100mm_all_targets": 0.9925925925925926,
+            "observed_points": 2946,
+            "predicted_points": 24,
+            "velocity_error_m_s": {
+              "mean": 0.8584993120182388,
+              "p95": 2.3202535387965324,
+              "maximum": 5.679747384028925,
+              "count": 2970
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.982270325040496,
+              "p95": 15.294742356150254,
+              "maximum": 26.662700854892865,
+              "count": 339
+            },
+            "torso_rotation_error_deg": {
+              "mean": 1.8089174373750856,
+              "p95": 3.208821699965024,
+              "maximum": 3.8921918501105686,
+              "count": 90
+            },
+            "shape_error_mm": {
+              "mean": 2.638644944148425,
+              "p95": 6.9066521238226875,
+              "maximum": 9.334474097354162,
+              "count": 468
+            },
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 13.155327094857347,
+              "p95": 22.881911272582634,
+              "maximum": 43.74439593934018,
+              "count": 33
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.18627608907629,
+              "p95": 0.3721898057054889,
+              "maximum": 0.46486705849084675,
+              "count": 178
+            },
+            "contact_f1": 0.9772727272727273,
+            "contact_confusion": {
+              "tp": 172,
+              "fp": 0,
+              "fn": 8,
+              "tn": 0
+            },
+            "contact_known_fraction": 0.9555555555555556,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0
+            },
+            "normalized_error_max": 8.00085045750855,
+            "uncertainty_coverage": 0.9996632996632997,
+            "uncertainty_radius_m": {
+              "mean": 0.1225084547001481,
+              "p95": 0.1433185840835593,
+              "maximum": 0.5437753163795586,
+              "count": 2970
+            },
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 32.46835444361851,
+              "p95": 34.11021499632625,
+              "maximum": 47.09429998183623,
+              "count": 90
+            },
+            "corrected_view_groups": 64
+          }
+        }
+      },
+      {
+        "id": "test/heldout_b/occlusion",
+        "subject": "heldout_b",
+        "action": "occlusion",
+        "methods": {
+          "baseline": {
+            "position_error_mm": {
+              "mean": 47.03561955016707,
+              "p95": 324.6470696304206,
+              "maximum": 1093.1783926647083,
+              "count": 2962
+            },
+            "current_observation_error_mm": {
+              "mean": 39.73974416087629,
+              "p95": 290.3529220405388,
+              "maximum": 1093.1783926647083,
+              "count": 2883
+            },
+            "coverage": 0.9973063973063973,
+            "within_100mm_all_targets": 0.932996632996633,
+            "observed_points": 2883,
+            "predicted_points": 79,
+            "velocity_error_m_s": {
+              "mean": 0.5424946443800956,
+              "p95": 1.409093717180668,
+              "maximum": 5.44741960024843,
+              "count": 2962
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.644541476837129,
+              "p95": 14.198397289093235,
+              "maximum": 21.109319179125812,
+              "count": 360
+            },
+            "torso_rotation_error_deg": null,
+            "shape_error_mm": null,
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 8.688532528767297,
+              "p95": 22.457958833449826,
+              "maximum": 29.869842799513965,
+              "count": 64
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.244687567875237,
+              "p95": 0.4228515835669672,
+              "maximum": 0.4741205469642259,
+              "count": 10
+            },
+            "contact_f1": 0.0,
+            "contact_confusion": {
+              "tp": 0,
+              "fp": 10,
+              "fn": 10,
+              "tn": 156
+            },
+            "contact_known_fraction": 0.9777777777777777,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 33.333333,
+              "left_ankle": 33.333333,
+              "right_ankle": 33.333333
+            },
+            "normalized_error_max": 45.700845689318086,
+            "uncertainty_coverage": null,
+            "uncertainty_radius_m": null,
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 27.63082111034439,
+              "p95": 29.024685012700502,
+              "maximum": 34.996300004422665,
+              "count": 90
+            },
+            "corrected_view_groups": 0
+          },
+          "joint": {
+            "position_error_mm": {
+              "mean": 13.225806044852519,
+              "p95": 23.441762368587916,
+              "maximum": 102.03532391480684,
+              "count": 2962
+            },
+            "current_observation_error_mm": {
+              "mean": 13.179669551543675,
+              "p95": 23.290287308763958,
+              "maximum": 102.03532391480684,
+              "count": 2954
+            },
+            "coverage": 0.9973063973063973,
+            "within_100mm_all_targets": 0.996969696969697,
+            "observed_points": 2954,
+            "predicted_points": 8,
+            "velocity_error_m_s": {
+              "mean": 0.398784987724472,
+              "p95": 0.8358325425564043,
+              "maximum": 1.2605633179113565,
+              "count": 2962
+            },
+            "landmark_rotation_error_deg": {
+              "mean": 6.5614581780968795,
+              "p95": 14.162615988880386,
+              "maximum": 20.864661429765686,
+              "count": 360
+            },
+            "torso_rotation_error_deg": {
+              "mean": 1.662708841385957,
+              "p95": 2.8667149020534373,
+              "maximum": 4.100310663382194,
+              "count": 90
+            },
+            "shape_error_mm": {
+              "mean": 4.895294656921278,
+              "p95": 12.37328123834798,
+              "maximum": 16.468431060479016,
+              "count": 596
+            },
+            "occlusion_recovery_excess_step_mm": {
+              "mean": 8.06045779591186,
+              "p95": 14.422247977392946,
+              "maximum": 24.327476933400526,
+              "count": 64
+            },
+            "foot_slide_when_true_contact_m_s": {
+              "mean": 0.25957024091292297,
+              "p95": 0.43013575830850187,
+              "maximum": 0.4916189691591028,
+              "count": 10
+            },
+            "contact_f1": 0.0,
+            "contact_confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 10,
+              "tn": 157
+            },
+            "contact_known_fraction": 0.9277777777777778,
+            "phase_lag_ms": {
+              "left_wrist": 0.0,
+              "right_wrist": 0.0,
+              "left_ankle": 0.0,
+              "right_ankle": 0.0
+            },
+            "normalized_error_max": 6.9449088617090995,
+            "uncertainty_coverage": 1.0,
+            "uncertainty_radius_m": {
+              "mean": 0.1206565686753093,
+              "p95": 0.138712816144466,
+              "maximum": 0.47362196727617467,
+              "count": 2962
+            },
+            "position_targets": 2970,
+            "processing_ms": {
+              "mean": 32.32973111120777,
+              "p95": 34.05063499958487,
+              "maximum": 35.59810001752339,
+              "count": 90
+            },
+            "corrected_view_groups": 64
+          }
+        }
+      }
+    ],
+    "review_note": "Frozen test subjects and observations. One dimension-learning regression found in code review was fixed; the same test was rerun as regression, not claimed as new independent data."
+  },
+  "uncertainty": {
+    "calibration": {
+      "schema_version": 1,
+      "domain": "procedural_observation_stress_v1",
+      "configuration_sha256": "0705241bfee49ffeeffa60b9042a5829b7b6c46e3d873edf51d6e1a2a25bf758",
+      "multiplier": 7.962143560197739,
+      "nominal_coverage": 0.9,
+      "calibration_sequences": 24,
+      "calibration_unit": "whole-sequence maximum normalized joint error",
+      "guarantee_claimed": false,
+      "limitation": "Empirical block calibration; shared procedural motion/subjects violate independent real-world exchangeability.",
+      "subjects": [
+        "calibration_a",
+        "calibration_b",
+        "calibration_c",
+        "calibration_d"
+      ]
+    },
+    "whole_sequence_test_coverage": 0.9166666666666666,
+    "real_world_valid": false,
+    "guarantee_claimed": false
+  },
+  "ablation": {
+    "baseline": {
+      "mean_sequence_position_error_mm": 43.14120640312289,
+      "mean_coverage": 0.9985970819304154,
+      "mean_processing_ms": 28.31210407446768
+    },
+    "joint": {
+      "mean_sequence_position_error_mm": 13.806315796960668,
+      "mean_coverage": 0.9995510662177329,
+      "mean_processing_ms": 38.06109981470164
+    },
+    "no_association": {
+      "mean_sequence_position_error_mm": 41.62930975876395,
+      "mean_coverage": 0.9995510662177329,
+      "mean_processing_ms": 33.49075444571941
+    },
+    "no_structure": {
+      "mean_sequence_position_error_mm": 13.740924380957267,
+      "mean_coverage": 0.9995510662177329,
+      "mean_processing_ms": 32.75411018613441
+    }
+  },
+  "ablation_method_names": {
+    "joint": "earlier structured-reprojection candidate",
+    "no_structure": "selected discrete association + adaptive state",
+    "no_association": "structured candidate without label correction"
+  },
+  "rgb_regression": {
+    "previous_state": {
+      "frames": 96,
+      "body12_coverage": 0.9947916666666666,
+      "proxy_error_mm": {
+        "mean": 47.62701490658759,
+        "p95": 113.39170538981983,
+        "maximum": 305.36312441349844
+      },
+      "proxy_current_observation_error_mm": {
+        "mean": 46.95546589454869,
+        "p95": 113.19939398191343,
+        "maximum": 189.40216505549986
+      },
+      "proxy_coverage": 0.9947916666666666,
+      "bone_length_cv": {
+        "left_shoulder--left_elbow": 0.02493207103260532,
+        "left_elbow--left_wrist": 0.019806564447059277,
+        "left_hip--left_knee": 0.023916773617032344,
+        "left_knee--left_ankle": 0.014899469882966074,
+        "right_shoulder--right_elbow": 0.016383556529231555,
+        "right_elbow--right_wrist": 0.011769663009233489,
+        "right_hip--right_knee": 0.019612255237187844,
+        "right_knee--right_ankle": 0.013234622883543724
+      },
+      "body_step_speed_m_s": {
+        "mean": 1.0645462110189856,
+        "p95": 2.4337021708469413,
+        "maximum": 7.362796955951723
+      },
+      "joint_state_counts": {
+        "missing": 13,
+        "filtered": 3048,
+        "predicted": 107
+      },
+      "body12_state_counts": {
+        "filtered": 1106,
+        "predicted": 40,
+        "missing": 6
+      },
+      "rejection_reasons": {
+        "missing triangulation": 43,
+        "temporal innovation outlier": 18,
+        "bone length outlier": 32,
+        "unreliable triangulation": 27
+      },
+      "orientation_frame_counts": {
+        "left_foot": 95,
+        "left_palm": 65,
+        "right_foot": 96,
+        "right_palm": 82
+      },
+      "contact_frame_counts": {
+        "left": 0,
+        "right": 0
+      }
+    },
+    "new_state": {
+      "frames": 96,
+      "body12_coverage": 0.9991319444444444,
+      "proxy_error_mm": {
+        "mean": 49.95955162032592,
+        "p95": 115.72382436873416,
+        "maximum": 291.0596755123471
+      },
+      "proxy_current_observation_error_mm": {
+        "mean": 48.75835642912362,
+        "p95": 114.73067825307436,
+        "maximum": 183.30053560813718
+      },
+      "proxy_coverage": 0.9991319444444444,
+      "bone_length_cv": {
+        "left_shoulder--left_elbow": 0.05009844613288676,
+        "left_elbow--left_wrist": 0.09972820710035701,
+        "left_hip--left_knee": 0.049107370471509405,
+        "left_knee--left_ankle": 0.08340483745494166,
+        "right_shoulder--right_elbow": 0.04226881658596189,
+        "right_elbow--right_wrist": 0.09031701837012777,
+        "right_hip--right_knee": 0.025679937712665243,
+        "right_knee--right_ankle": 0.027802065896807716
+      },
+      "body_step_speed_m_s": {
+        "mean": 1.0915975860784566,
+        "p95": 2.512613402783377,
+        "maximum": 5.48786862780002
+      },
+      "joint_state_counts": {
+        "missing": 9,
+        "filtered": 3034,
+        "predicted": 125
+      },
+      "body12_state_counts": {
+        "filtered": 1092,
+        "predicted": 59,
+        "missing": 1
+      },
+      "rejection_reasons": {
+        "missing triangulation": 87,
+        "temporal innovation outlier": 20,
+        "unreliable triangulation": 26,
+        "bone length outlier": 1
+      },
+      "orientation_frame_counts": {
+        "left_foot": 95,
+        "left_palm": 68,
+        "right_foot": 96,
+        "right_palm": 87,
+        "torso": 84
+      },
+      "contact_frame_counts": {
+        "left": 0,
+        "right": 0
+      }
+    },
+    "new_reference_accepted": 77,
+    "old_reference_accepted": 86,
+    "total_frames": 96,
+    "rejected_reasons": {
+      "Unreliable left_ankle": 2,
+      "Root motion exceeds imitation profile": 7,
+      "Missing left_hip": 7,
+      "Missing right_knee": 1,
+      "Unreliable right_hip": 1,
+      "Unreliable left_hip": 1
+    },
+    "default_promoted": false,
+    "reason": "Mean proxy error and G1 reference admission regressed; maximum error and coverage improved."
+  },
+  "online": {
+    "serial": {
+      "processed": 36,
+      "stale_before": 0,
+      "stale_after": 25,
+      "latency_ms": {
+        "mean": 157.9651185277778,
+        "p95": 177.75687499999998,
+        "maximum": 178.596833,
+        "count": 36
+      },
+      "processing_ms": {
+        "mean": 113.90972222222223,
+        "p95": 118.829725,
+        "maximum": 120.7705,
+        "count": 36
+      },
+      "submitted": 96,
+      "replaced": 60,
+      "wall_seconds": 4.179709599993657,
+      "measurement_kind": "paced_file_replay_with_host_scheduled_exposure",
+      "physical_exposure_latency_verified": false,
+      "source_rate_hz": 24,
+      "detector_workers": 1,
+      "runtime": {
+        "device": "cuda",
+        "model_kind": "hybrid",
+        "detector": "default",
+        "detector_postprocess": "cpu",
+        "onnxruntime_version": "1.22.0",
+        "libraries": {
+          "onnxruntime-gpu": "1.22.0",
+          "nvidia-cudnn-cu12": "9.10.2.21",
+          "nvidia-cuda-runtime-cu12": "12.9.79",
+          "nvidia-cublas-cu12": "12.9.2.10"
+        },
+        "models": {
+          "det_model": {
+            "providers": [
+              "CUDAExecutionProvider",
+              "CPUExecutionProvider"
+            ],
+            "onnx_file": "yolox_m_8xb8-300e_humanart-c2c7a14a.onnx",
+            "sha256": "bf59d72aa718ed65b127d6c70048dccfd9d48df34e48136212e5d962c8b897d0",
+            "source_sha256": "3dea6513388889f0fff4b77bf7a26013600321b9eb9ceb0e9a400a82572f5f23",
+            "conversion": {
+              "source_sha256": "3dea6513388889f0fff4b77bf7a26013600321b9eb9ceb0e9a400a82572f5f23",
+              "sha256": "bf59d72aa718ed65b127d6c70048dccfd9d48df34e48136212e5d962c8b897d0",
+              "onnx_version": "1.18.0",
+              "iou_threshold": 0.6499999761581421,
+              "max_output": 200,
+              "score_threshold": 0.3,
+              "original_score_threshold": 0.009999999776482582
+            }
+          },
+          "pose_model": {
+            "providers": [
+              "CUDAExecutionProvider",
+              "CPUExecutionProvider"
+            ],
+            "onnx_file": "rtmw-dw-x-l_simcc-cocktail14_270e-384x288_20231122.onnx",
+            "sha256": "bd033156e5104c4f5d2edfe0453e02661e30a2f3da453ec93c8764d561b83054",
+            "source_sha256": "bd033156e5104c4f5d2edfe0453e02661e30a2f3da453ec93c8764d561b83054",
+            "conversion": null
+          },
+          "body_pose_model": {
+            "providers": [
+              "CUDAExecutionProvider",
+              "CPUExecutionProvider"
+            ],
+            "onnx_file": "rtmpose-m_simcc-body7_pt-body7_420e-256x192-e48f03d0_20230504.onnx",
+            "sha256": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c",
+            "source_sha256": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c",
+            "conversion": null
+          }
+        },
+        "intra_op_threads": 4,
+        "inter_op_threads": 1,
+        "thread_spinning": false,
+        "cuda_use_tf32": false,
+        "initialization_seconds": 1.206953999993857
+      },
+      "warmup_seconds": 0.5077483000059146,
+      "queue_capacity_packets": 1,
+      "output_deadline_ms": 150.0,
+      "limitation": "Real exposure and synchronization require SDK clock mapping; replay measures actual computation and scheduling only.",
+      "valid_deliveries": 11,
+      "planner_follow_count": 0,
+      "state_rate_hz": 8.613038570922399
+    },
+    "concurrent_detector": {
+      "processed": 40,
+      "stale_before": 0,
+      "stale_after": 14,
+      "latency_ms": {
+        "mean": 143.54223000000002,
+        "p95": 163.657302,
+        "maximum": 166.2867,
+        "count": 40
+      },
+      "processing_ms": {
+        "mean": 101.2678625,
+        "p95": 106.68315,
+        "maximum": 107.7229,
+        "count": 40
+      },
+      "submitted": 96,
+      "replaced": 56,
+      "wall_seconds": 4.130130200006533,
+      "measurement_kind": "paced_file_replay_with_host_scheduled_exposure",
+      "physical_exposure_latency_verified": false,
+      "source_rate_hz": 24,
+      "detector_workers": 4,
+      "runtime": {
+        "device": "cuda",
+        "model_kind": "hybrid",
+        "detector": "default",
+        "detector_postprocess": "cpu",
+        "onnxruntime_version": "1.22.0",
+        "libraries": {
+          "onnxruntime-gpu": "1.22.0",
+          "nvidia-cudnn-cu12": "9.10.2.21",
+          "nvidia-cuda-runtime-cu12": "12.9.79",
+          "nvidia-cublas-cu12": "12.9.2.10"
+        },
+        "models": {
+          "det_model": {
+            "providers": [
+              "CUDAExecutionProvider",
+              "CPUExecutionProvider"
+            ],
+            "onnx_file": "yolox_m_8xb8-300e_humanart-c2c7a14a.onnx",
+            "sha256": "bf59d72aa718ed65b127d6c70048dccfd9d48df34e48136212e5d962c8b897d0",
+            "source_sha256": "3dea6513388889f0fff4b77bf7a26013600321b9eb9ceb0e9a400a82572f5f23",
+            "conversion": {
+              "source_sha256": "3dea6513388889f0fff4b77bf7a26013600321b9eb9ceb0e9a400a82572f5f23",
+              "sha256": "bf59d72aa718ed65b127d6c70048dccfd9d48df34e48136212e5d962c8b897d0",
+              "onnx_version": "1.18.0",
+              "iou_threshold": 0.6499999761581421,
+              "max_output": 200,
+              "score_threshold": 0.3,
+              "original_score_threshold": 0.009999999776482582
+            }
+          },
+          "pose_model": {
+            "providers": [
+              "CUDAExecutionProvider",
+              "CPUExecutionProvider"
+            ],
+            "onnx_file": "rtmw-dw-x-l_simcc-cocktail14_270e-384x288_20231122.onnx",
+            "sha256": "bd033156e5104c4f5d2edfe0453e02661e30a2f3da453ec93c8764d561b83054",
+            "source_sha256": "bd033156e5104c4f5d2edfe0453e02661e30a2f3da453ec93c8764d561b83054",
+            "conversion": null
+          },
+          "body_pose_model": {
+            "providers": [
+              "CUDAExecutionProvider",
+              "CPUExecutionProvider"
+            ],
+            "onnx_file": "rtmpose-m_simcc-body7_pt-body7_420e-256x192-e48f03d0_20230504.onnx",
+            "sha256": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c",
+            "source_sha256": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c",
+            "conversion": null
+          }
+        },
+        "intra_op_threads": 4,
+        "inter_op_threads": 1,
+        "thread_spinning": false,
+        "cuda_use_tf32": false,
+        "initialization_seconds": 1.1860622999956831
+      },
+      "warmup_seconds": 0.5143702999921516,
+      "queue_capacity_packets": 1,
+      "output_deadline_ms": 150.0,
+      "limitation": "Real exposure and synchronization require SDK clock mapping; replay measures actual computation and scheduling only.",
+      "valid_deliveries": 26,
+      "planner_follow_count": 0,
+      "state_rate_hz": 9.684924702842716
+    }
+  },
+  "detector_concurrency_parity": {
+    "frames": 96,
+    "max_keypoint_difference_px": 0.0,
+    "max_score_difference": 0.0,
+    "person_counts_identical": true,
+    "coverage_identical": true,
+    "passed": true,
+    "scope": "same hybrid model; body remains batch 1; four concurrent detector calls only"
+  },
+  "public_real_rgb": {
+    "source": {
+      "source": "MAMMA official public demo",
+      "repository_commit": "588492f18876e2ed6888b2d26929047cb6b575e7",
+      "source_video_sha256": {
+        "A001": "550092ac0f82680958aed280222b9746e5700cfcf804759f310fa56291f23d8f",
+        "B001": "ca0bd69c35497c6a44caee77a06cadda537f263d7a1919e3ef18f2076d16cc3b",
+        "C001": "7e540aa89b5a3ed2b754201005f2d100921d83fb659e1897723bfb6cbbbfb14f",
+        "D001": "e2a97406767835caa3ae3c7eae1f882cd3bf77575005abc537946443a3428b20"
+      },
+      "source_calibration_sha256": "6a8043eb8b6a521f7faba8c889e3626ae1161cde0fd4c2d958ffea3622ec514a",
+      "license_url": "https://raw.githubusercontent.com/cuevhv/mamma/588492f18876e2ed6888b2d26929047cb6b575e7/LICENSE",
+      "license_scope": "non-commercial local research; no redistribution",
+      "start_frame": 60,
+      "frames": 30,
+      "frame_alignment": "published demo frame indices; hardware exposure skew unverified",
+      "reference_labels_available": false,
+      "purpose": "real RGB multi-person rejection and occlusion challenge; not quantitative 3D accuracy"
+    },
+    "frames": 30,
+    "images": 120,
+    "detected_person_counts": {
+      "2": 83,
+      "3": 37
+    },
+    "body_3d_coverage": 0.0,
+    "outcome": "All views rejected due to multiple people; current source identity association is incomplete.",
+    "reference_labels_available": false
+  },
+  "tests": {
+    "robot": {
+      "run": 92,
+      "passed": 92,
+      "skipped": 0
+    },
+    "vision": {
+      "run": 92,
+      "passed": 86,
+      "skipped": 6
+    },
+    "initial_vision_process_note": "One native process ended without a completed unittest summary; subsequent verbose full run passed. Cause not established."
+  },
+  "acceptance": {
+    "synthetic_position_improved": true,
+    "rgb_non_regression": false,
+    "real_human_accuracy": false,
+    "realtime_24_hz": false,
+    "physical_exposure_latency": false,
+    "g1_dynamics": false,
+    "physical_g1": false
+  },
+  "limitations": [
+    "Procedural observation benchmark bypasses RGB detectors; fixed noise/swap schedules do not represent every real failure.",
+    "Different body configurations are synthetic, not independent real participants; contact reference is kinematic, not force-based.",
+    "Foot sliding did not improve; contact and rotations are geometric estimates without real-world calibration.",
+    "Discrete lag resolution is about 33 ms; a zero-frame estimate is not zero end-to-end latency.",
+    "No learned cross-view feature network, SMPL-X/MHR fit, multi-person identity tracker or OOD network was reproduced.",
+    "Global left/right symmetry and anatomical axial twist remain unresolved; partial outputs are explicitly unknown.",
+    "Empirical uncertainty uses correlated synthetic sequences and is deliberately forbidden for RGB/live hardware.",
+    "PerceptionGate supplies planner requests only; blending, balance and full G1 dynamic control remain unvalidated."
+  ],
+  "source_sha256": {
+    "config/demo.json": "342a123f570d410cf7e12a4767b6cb6b7d9f30f42c734f07f6e44f11106fcded",
+    "config/g1_twist.json": "36b6eaf24e4556efc3214f1795b7b0e5f08bc8f36a32f0dc05436d7d1fb82c0d",
+    "config/human_walk.json": "37bafddc672a20c7d13aff4dcda8e5d71519dce12b8948da192350b7c5b878b3",
+    "config/robot_demo.json": "e7b16cfeebbd0a97b357fc0f685b74fd6d5bc35ebbdf40a1d624e627e9d2136b",
+    "config/source_robot.json": "7eacc654abaaf1b192c8492e83aa60bf733b47b32a51ca19af5bcc966ffc160e",
+    "config/transfer_source_to_g1.json": "7ec76401120cb11961bc4350d5fb5238988dccff7a0660e48e31c13b0d2df820",
+    "config/vision.json": "7f5d86ddcf8c766cad4dba21dbb83594d1d7d8f94e52f062a93334b66d7da096",
+    "config/vision_benchmark.json": "6e9c0504fc527980374431a4ffdf4e55a0d60a189e43406c938b2fd6fd256e9c",
+    "config/vision_motion.json": "b7a49c65305abc83491b098bb684df8fb193b646de5693c0f5a367bd5c8f74b2",
+    "config/vision_state.json": "683a5de65919880b52f188a182e921cf36f45e1b0275b44f3ce7a7538f3f9525",
+    "motion_control/__init__.py": "252f90dd097aedf0bcb5a03195ef8988cbc076281566816760a7ab036dee8567",
+    "motion_control/adapters.py": "4f0e18a5461f3573fd3838bc9f3d282d18d542678a30ebd5909a637d7e19826d",
+    "motion_control/contracts.py": "d0a9aacacf1f406a0ded01bea32c4050b333abe710cb29e58d3202a4f8794c77",
+    "motion_control/controller.py": "8a8283e202ef18bee9e70d4998c95329377967eb767bc5a30da4eb33f718d56a",
+    "motion_control/g1_command.py": "63bd88c70fc4833648a3ee4b51d9e1f3b1a5f8da6c71381b6c106f44c4d4f720",
+    "motion_control/humanoid.py": "1c81d2c894c35a1c48bf43b8c9dfc550efe72688c067ccdb8fa77f5e45d6e881",
+    "motion_control/humanoid_replay.py": "34cc888e4c0ad27297f6623b249e6e41ee5cd78e6d7f7f785fdf9ac25d5f0772",
+    "motion_control/model.py": "2e983c1f91fac4944104b9a712be23f9a3b795f197d88863898a56e2f8849919",
+    "motion_control/perception_gate.py": "46052de10436bb6113882f622e25dc1e0bb158c8d2f281cd1ba6eb2b6f2e8e5f",
+    "motion_control/pose.py": "79b9759c93d9ee70e7bfeb68a143bd8a0908f05482d04b54021fb0835f000f2f",
+    "motion_control/preview.py": "95456932efa5d83ae5d7fddaede64487325c8e4b50435063bc5ac29bba8b207b",
+    "motion_control/replay.py": "4cd1da1a15bc964ada1bc63143127d13787861a0092c3ade1d5d0582800b4bc9",
+    "motion_control/retarget.py": "e90e11c4ceb632ef16b1c9badeeb201ddb7623da1dffb04a15531be10fd057e1",
+    "motion_control/root_tracking.py": "73af858a68241a61598aa1ddd994ac0fbb194cd4d7df2082cce04062d3b66f13",
+    "motion_control/transfer.py": "3d6e2a6770a4f5ad5da1750930c13fb6e8aa05f631fb6f14bf1bed7dc04c8d03",
+    "motion_control/twist.py": "6e9ac72089bbd4dd2d49fbc7054bdb3752d7586c3e7c075b2199c13b9c75cf7d",
+    "motion_control/unitree.py": "4821bd042077944cf8fc1f85dcddf69533557d9b0b31337593ba727a6c1ce4ec",
+    "pose_sim/__init__.py": "30261f49a3828c3b9dd628bfe1b7a7905730ad2ee26b067bf71e2ba175049fb9",
+    "pose_sim/benchmark_data.py": "760b5a1a0e23ea1793086ae0abe120d6b49de6f53aed644318951e8cdcaf78e7",
+    "pose_sim/body_shape.py": "ffba972e833c6f052df79b09044c3d9c13d4933f51ed0932b87678c41389af41",
+    "pose_sim/evaluate.py": "874be0614d757df6ec3c748074b54acf7dbf7fc500a7f8a2062060f61614dbdb",
+    "pose_sim/geometry.py": "b10280a6741694b9819774a581243c86151ad026c98ccd9caba444963ecdfdd6",
+    "pose_sim/human_motion.py": "f204515019b213c5acb1229aa647c183acf463513395e1486565f67365f69e14",
+    "pose_sim/human_state.py": "ba2d1b2aa07156376a161574c6f5bcd4d58a1d9019e6834298a52164a87b9fae",
+    "pose_sim/inference.py": "a72339fff001455f20978188d9fb8ce604377229bd7a4c60e6b5f2f254c304e7",
+    "pose_sim/landmarks.py": "33e2946d5ef9bfbff6a2b187194c372b33bc1c5daf39f9cfa5c8e2f3c5cff1b7",
+    "pose_sim/markerless.py": "ac975b6d559ab9ced67794d6beec1f478062011ea564dca49a6191495165fcc9",
+    "pose_sim/motion_evaluation.py": "a7948eeb090e21e12bf39b281b842f48d7872d5762f4ad6e6fcfda8ba99e6e04",
+    "pose_sim/mujoco_camera.py": "12c9880f4a205986c470636f196f2810f990d46dc34e8af26191187db91fb9a5",
+    "pose_sim/multiview_temporal.py": "1c500cc1b056ac091f3f0d1e90ba13c69d2aeab92928bb799599b14dd587af13",
+    "pose_sim/online.py": "ae59eda05ed5f2255fa485c98b7b42dbae58b5e0e7f6829828cc4f1e7c3e52cf",
+    "pose_sim/pipeline.py": "1f57dcdc182b10264bd3a92ab9237cbb5f751390d681b43c652cef274b627ab3",
+    "pose_sim/preview.py": "a84c9903b4033cc90963f2a5ef05a12baf5e148519b36a188843c5dfd4c1911e",
+    "pose_sim/robot_assets.py": "a4ac080c0e575180492ad6556c73d1d5d5585718bd6aa6de7a6d4722c9e63437",
+    "pose_sim/robot_preview.py": "5332debed3aae7b86e05f94f844d05d2b8fc0b81f1a95f7f27752f3ea4b8213a",
+    "pose_sim/robot_source.py": "3ad91254b133c0fed495834c3d8e4d00d3222162c2b522447467979c9365e7e5",
+    "pose_sim/runtime.py": "bdcaeacc4cd8d6d9953f038293461f7d0c4a3ea347bcfa6a6f360c1fd596c97c",
+    "pose_sim/sensors.py": "1189dee491e15e00c9379d34b4600a1bce2663e4c10f6b491baa9016167011d2",
+    "pose_sim/streaming_vision.py": "ea7be672db1f70cd4aa55a5be7468de81a306a32ff99906af4fdf0956ec146ae",
+    "pose_sim/uncertainty.py": "99cd1c6d7158f9da7e828ce25c0c10b30c3107818ab40fd817d74c773543291e",
+    "pose_sim/vision_metrics.py": "0212845d73a32b8a4a18d6b0b37ea74ec4fad599f86f8075a4c1b9123dd1191e",
+    "scripts/benchmark.py": "c278396b79a5ec255aa5d1760b4dbdc3179d934f78df74f8bb92a6335a2c1813",
+    "scripts/benchmark_motion.py": "995c846baba4abf1dae421df54e6291bdc125b8bbd5769aeb534bbc8d1d94bf5",
+    "scripts/bootstrap.py": "e1b44f605ae5efc9d59b4f79bd57458aed2d0c1982ba0b88529d02d04b78dda0",
+    "scripts/bootstrap_robot.py": "4050811d028168c5b1d7600ba7171eca4caef289a9df68061a90decd9fd397e2",
+    "scripts/check_stream_parity.py": "3b693f55d8288ad4767d68b520fcfdf55957a303e6f6bc87ead9e988cb3b0cf5",
+    "scripts/clean_outputs.py": "487594a102f5f0520923c047769fa43a688a8abca7391e14c85e1d166bdddbe9",
+    "scripts/diagnose_imitation.py": "caec0c447bd0279ab77fd5a3f63e4ee185d7a13df674b2b70b4a7d02158c693c",
+    "scripts/fetch_robot_assets.py": "f9b519d77e1ad2bbab88afd5cddf3a17758d84b64c2a7c91b33d52560e76ff06",
+    "scripts/import_mamma_example.py": "97e5fb07c3b6c582966136c8e92b1ac39b6a62f265af413064ca82750c7160b6",
+    "scripts/import_real.py": "85ed307af9d321253c05ac478cfd27dbb6a77214131b9992d3b2a122b6852ecf",
+    "scripts/inspect_scene.py": "5eedf6bc139d3b9f4538136b9c27c704ae50ccb9299d2afea1114d810bd658fd",
+    "scripts/plot_motion_report.py": "522f807a4a4573a3d6a9d7f353384824ea1f83bc3a7e9ef0c470b16d557ffb04",
+    "scripts/prepare_vision_models.py": "85f98fe1af4aa3966e8ad4306bc50deb7e1f155895e6fa076e0c1a563dc0449b",
+    "scripts/refine_motion.py": "fd64f5dda63df2f1bc5733a798527a9e83e068ea0b3bfe1c0825560d9de30ff4",
+    "scripts/render_scene.py": "430717604830a8b06c9396680f94d65c668496e7e272cb019ba35ec175249d9d",
+    "scripts/robot_demo.py": "774915893db3db26134c47a57975bc4aabdb8e64618ece51db9a14d3edb072a3",
+    "scripts/run_blender.py": "58069224dab0e8b3d81b17ea1bb0d4de77edfd9f1b81338039dec38a785e6161",
+    "scripts/stream_vision.py": "667d37233d649c1e9bea438ff70359471e8dc3f85aeb48c5a8486cae85f8c642",
+    "scripts/verify_session.py": "4d181283421bfac5605b15300c6b05288045a1018a9faa70c841d9ffe1bb4847",
+    "scripts/vision_demo.py": "ddda91b04ead436954632b9551edce9414525785fcc626292347e6a896f57998",
+    "scripts/vision_preview.py": "4b7569babc1870d305a1e7eb31b5a941a2e72c8f23d2334f085eb0dd44c4f882",
+    "tests/test_geometry.py": "86b22cf2381890fd17af2038bcd79f668619d7ad20a61dfc9abce2c91a8748c4",
+    "tests/test_human_state.py": "e78ff8d2e343d5769057832d350800952f2bd0d58b405488f9e56b43835c4c5b",
+    "tests/test_humanoid.py": "4f419455b8d73900052f6da840c58a374423fbcbceb54e641b233891cda01252",
+    "tests/test_import_real.py": "a8047748fe8b277ddd149f10e3fa37827f6d731275e5fedabdfa1a3fdd09f16f",
+    "tests/test_markerless.py": "1a28bd4ef50b0b2d15f4a87e7743b8152bc54ab22a19f2200672625a6b7aab45",
+    "tests/test_motion_control.py": "c16e6658a5988e7351121485e1e0bff9f89c7c67d2481e9ee23c4f973b130d51",
+    "tests/test_motion_frontend.py": "eaf1bb4f966dc4d4b94798cd9acd11dbd72d00d178269d8d32b330e149918460",
+    "tests/test_online.py": "b16e0fd16e14568e00fdd50091744f8c3a7529f2222a281128dfad18b6a87d13",
+    "tests/test_real_contract.py": "d5e3a0221acd9b977318da6011f5a89839bd9ab165192e1ebd48023e49feb117",
+    "tests/test_robot_transfer.py": "277fa22274b073aae7cdd63299ca7ef5fc5b12d713c4adf3fbf2ef3496d86a94",
+    "tests/test_runtime.py": "ee76d10b73230ce02b0a5e189d72cd896584610757642edce07de92536456c34",
+    "tests/test_sensors.py": "a4cb72a90fe949fe0a97f98b03789a42cecc3088da043d330879274c06a0a34d",
+    "tests/test_vision_inference.py": "e8d02acd593490dcd9aa702dc5072c5c9a1d92d70b23aef71634ae6ac3d45ad8"
+  },
+  "cleanup": {
+    "status": "blocked_by_automatic_approval",
+    "tool_reason": "blocked by policy; no detailed reason supplied",
+    "deleted_bytes": 0,
+    "pending_bytes": 466905573,
+    "directories": [
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\motion_benchmark\\tune_v1",
+        "bytes": 47810658
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\motion_benchmark\\tune_v2",
+        "bytes": 100420500
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\motion_benchmark\\calibration",
+        "bytes": 104936995
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\motion_benchmark\\test",
+        "bytes": 96853286
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\motion_benchmark\\stream_serial",
+        "bytes": 1479859
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\motion_benchmark\\stream_parallel",
+        "bytes": 1762179
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\motion_benchmark\\stream_serial_final",
+        "bytes": 1524484
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\motion_benchmark\\rgb_refined",
+        "bytes": 7246849
+      },
+      {
+        "path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\motion_benchmark\\calibration_final\\calibration",
+        "bytes": 104870763
+      }
+    ]
+  },
+  "ablation_configuration_sha256": "3c13007a4308c2471beff24f28f8680041d269ad76fc9c6e324f60936958a11a",
+  "artifacts": {
+    "plot": "outputs/motion_benchmark/summary.png",
+    "test": "outputs/motion_benchmark/test_final/report.json",
+    "calibration": "outputs/motion_benchmark/calibration_final/uncertainty_calibration.json",
+    "rgb": "outputs/motion_benchmark/rgb_refined_final",
+    "stream": "outputs/motion_benchmark/stream_parallel_final",
+    "public": "outputs/motion_benchmark/mamma_audit",
+    "cleanup_pending": "outputs/motion_benchmark/cleanup_pending.json"
+  },
+  "checks": {
+    "git_diff_check": "passed; existing requirements-lock.txt LF/CRLF warning",
+    "committed": false,
+    "pushed": false
+  }
+}

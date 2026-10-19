@@ -1,0 +1,3093 @@
+{
+  "date": "2026-10-18",
+  "status": "first_four_track_round_completed_accuracy_candidates_rejected_replay_runtime_improved",
+  "default_changes": {
+    "perception_algorithm": false,
+    "body_model": "RTMPose-M retained",
+    "structured_reprojection": false,
+    "experimental_joint_window": false,
+    "experimental_velocity": false,
+    "online_replay_workers": {
+      "detector": 4,
+      "pose": 4
+    },
+    "replay_drop_expired_before_decode": true,
+    "summary_only_replay_state_memory_bounded": true,
+    "hardware_commands_enabled": false
+  },
+  "protocol": {
+    "long_clips": {
+      "development": 1000,
+      "calibration": 500,
+      "post_freeze_assessment": 1500
+    },
+    "kinematic_historical_short_clip_frames": 1800,
+    "reference": "MPI-INF-3DHP markerless 3D reference; 12 approximately corresponding body landmarks; no Procrustes, scale, root or time alignment",
+    "independence": "S4/S6 separated for this selection but known from previous rounds; not a new unseen test set. Short clips may overlap long clips; frame counts must not be added as independent data.",
+    "default_selected_before_calibration": true,
+    "heldout_used_for_tuning": false,
+    "thresholds_relaxed": false,
+    "shared_detection_pairs_have_different_common_valid_targets": "Do not compare common-point means between the joint-window and head experiments as if they use identical point subsets."
+  },
+  "joint_estimation": {
+    "results": {
+      "development": {
+        "paired": {
+          "baseline": {
+            "coverage": 0.856,
+            "all_target_success": 0.7355833333333334,
+            "current_all_target_success": 0.7224166666666667,
+            "current_observations": 9975,
+            "predictions": 297,
+            "common_position_error_mm": {
+              "mean": 67.64181258549853,
+              "p95": 133.55206982034005,
+              "maximum": 836.9463929891969,
+              "count": 10266
+            },
+            "common_current_error_mm": {
+              "mean": 65.3034780861975,
+              "p95": 127.4240192721564,
+              "maximum": 833.626043445802,
+              "count": 9940
+            }
+          },
+          "single_frame": {
+            "coverage": 0.8566666666666667,
+            "all_target_success": 0.7394166666666667,
+            "current_all_target_success": 0.7260833333333333,
+            "current_observations": 9994,
+            "predictions": 286,
+            "common_position_error_mm": {
+              "mean": 67.0937807452908,
+              "p95": 131.7567273277746,
+              "maximum": 839.5275907942142,
+              "count": 10266
+            },
+            "common_current_error_mm": {
+              "mean": 64.89570083967517,
+              "p95": 126.63569243935858,
+              "maximum": 835.6565469192024,
+              "count": 9940
+            }
+          },
+          "joint_window": {
+            "coverage": 0.8565,
+            "all_target_success": 0.7359166666666667,
+            "current_all_target_success": 0.7234166666666667,
+            "current_observations": 9983,
+            "predictions": 295,
+            "common_position_error_mm": {
+              "mean": 67.7890902533315,
+              "p95": 133.23979581296172,
+              "maximum": 844.1458410269363,
+              "count": 10266
+            },
+            "common_current_error_mm": {
+              "mean": 65.35256795539412,
+              "p95": 127.40237099952802,
+              "maximum": 841.1602756208865,
+              "count": 9940
+            }
+          }
+        },
+        "outputs_over_500mm": {
+          "baseline": 31,
+          "single_frame": 34,
+          "joint_window": 36
+        },
+        "frames": 1000,
+        "cases": [
+          {
+            "id": "s1_long",
+            "paired": {
+              "baseline": {
+                "coverage": 0.715,
+                "all_target_success": 0.5878333333333333,
+                "current_all_target_success": 0.5681666666666667,
+                "current_observations": 4093,
+                "predictions": 197,
+                "common_position_error_mm": {
+                  "mean": 70.23511818885152,
+                  "p95": 146.14639518131006,
+                  "maximum": 836.9463929891969,
+                  "count": 4287
+                },
+                "common_current_error_mm": {
+                  "mean": 66.54123849667572,
+                  "p95": 137.09144591747446,
+                  "maximum": 833.626043445802,
+                  "count": 4076
+                }
+              },
+              "single_frame": {
+                "coverage": 0.7156666666666667,
+                "all_target_success": 0.5895,
+                "current_all_target_success": 0.5695,
+                "current_observations": 4096,
+                "predictions": 198,
+                "common_position_error_mm": {
+                  "mean": 69.82246174230694,
+                  "p95": 143.27243594499376,
+                  "maximum": 839.5275907942142,
+                  "count": 4287
+                },
+                "common_current_error_mm": {
+                  "mean": 66.17072951443014,
+                  "p95": 134.45257288229774,
+                  "maximum": 835.6565469192024,
+                  "count": 4076
+                }
+              },
+              "joint_window": {
+                "coverage": 0.7156666666666667,
+                "all_target_success": 0.5875,
+                "current_all_target_success": 0.5681666666666667,
+                "current_observations": 4090,
+                "predictions": 204,
+                "common_position_error_mm": {
+                  "mean": 70.41743525589968,
+                  "p95": 145.59839204576812,
+                  "maximum": 844.1458410269363,
+                  "count": 4287
+                },
+                "common_current_error_mm": {
+                  "mean": 66.50249827787194,
+                  "p95": 135.5460019676639,
+                  "maximum": 841.1602756208865,
+                  "count": 4076
+                }
+              }
+            },
+            "details": {
+              "baseline": {
+                "kinematics": {
+                  "hip_relative_position_error_mm": {
+                    "mean": 112.28746686374274,
+                    "p95": 179.14294154977165,
+                    "maximum": 866.2747269348022,
+                    "count": 3900
+                  },
+                  "torso_landmark_frame_error_deg": {
+                    "mean": 19.972593997757595,
+                    "p95": 47.39007473871558,
+                    "maximum": 81.14381831842869,
+                    "count": 315
+                  },
+                  "hinge_flexion_error_deg": {
+                    "mean": 7.41948436508332,
+                    "p95": 18.956600548507595,
+                    "maximum": 129.24924221676187,
+                    "count": 1248
+                  },
+                  "differentiated_reference_velocity_error_m_s": {
+                    "mean": 0.40117853477731785,
+                    "p95": 1.063563459695909,
+                    "maximum": 5.316463184454571,
+                    "count": 4267
+                  },
+                  "descriptive_phase_lag_ms": {
+                    "left_wrist": 0.0
+                  },
+                  "full_anatomical_rotation_error": null,
+                  "foot_contact_accuracy": null,
+                  "foot_slip_error": null
+                },
+                "recovery": {
+                  "recovery_excess_step_mm": {
+                    "mean": 67.34284529193516,
+                    "p95": 202.46943683195315,
+                    "maximum": 737.8970606361153,
+                    "count": 85
+                  },
+                  "recovery_step_mm": {
+                    "mean": 83.13671547600332,
+                    "p95": 222.16337475478946,
+                    "maximum": 739.251015640359,
+                    "count": 85
+                  },
+                  "track_reinitializations": 0,
+                  "reinitialization_displacement_mm": null,
+                  "gap_reappearance_excess_step_mm": {
+                    "mean": 179.46189731628155,
+                    "p95": 534.2415922945139,
+                    "maximum": 750.9041167509093,
+                    "count": 47
+                  },
+                  "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+                },
+                "large_errors_over_500mm": 29
+              },
+              "single_frame": {
+                "kinematics": {
+                  "hip_relative_position_error_mm": {
+                    "mean": 111.3336004288429,
+                    "p95": 176.93314660508312,
+                    "maximum": 868.7508089955099,
+                    "count": 3924
+                  },
+                  "torso_landmark_frame_error_deg": {
+                    "mean": 19.28863682066718,
+                    "p95": 41.044269622487136,
+                    "maximum": 70.6516813414766,
+                    "count": 317
+                  },
+                  "hinge_flexion_error_deg": {
+                    "mean": 7.647352774229238,
+                    "p95": 19.739509105575074,
+                    "maximum": 128.1776375408555,
+                    "count": 1251
+                  },
+                  "differentiated_reference_velocity_error_m_s": {
+                    "mean": 0.3896815142565811,
+                    "p95": 1.048295420611585,
+                    "maximum": 4.754332738261094,
+                    "count": 4271
+                  },
+                  "descriptive_phase_lag_ms": {
+                    "left_wrist": 0.0
+                  },
+                  "full_anatomical_rotation_error": null,
+                  "foot_contact_accuracy": null,
+                  "foot_slip_error": null
+                },
+                "recovery": {
+                  "recovery_excess_step_mm": {
+                    "mean": 66.26749221680308,
+                    "p95": 184.82371190192214,
+                    "maximum": 730.3255042612643,
+                    "count": 85
+                  },
+                  "recovery_step_mm": {
+                    "mean": 81.9215813839894,
+                    "p95": 164.1215207758607,
+                    "maximum": 731.6782592675102,
+                    "count": 85
+                  },
+                  "track_reinitializations": 0,
+                  "reinitialization_displacement_mm": null,
+                  "gap_reappearance_excess_step_mm": {
+                    "mean": 181.85690036223204,
+                    "p95": 545.9992094181314,
+                    "maximum": 749.6617365202628,
+                    "count": 48
+                  },
+                  "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+                },
+                "large_errors_over_500mm": 32
+              },
+              "joint_window": {
+                "kinematics": {
+                  "hip_relative_position_error_mm": {
+                    "mean": 112.80896124629416,
+                    "p95": 180.51448998904922,
+                    "maximum": 875.1426945138917,
+                    "count": 3915
+                  },
+                  "torso_landmark_frame_error_deg": {
+                    "mean": 20.277556286470173,
+                    "p95": 52.04011402572112,
+                    "maximum": 152.51793009352753,
+                    "count": 313
+                  },
+                  "hinge_flexion_error_deg": {
+                    "mean": 7.661817554139012,
+                    "p95": 19.516625136373428,
+                    "maximum": 131.23840308823074,
+                    "count": 1244
+                  },
+                  "differentiated_reference_velocity_error_m_s": {
+                    "mean": 0.3981489671888294,
+                    "p95": 1.0682335232880917,
+                    "maximum": 5.303797034417137,
+                    "count": 4271
+                  },
+                  "descriptive_phase_lag_ms": {
+                    "left_wrist": 0.0
+                  },
+                  "full_anatomical_rotation_error": null,
+                  "foot_contact_accuracy": null,
+                  "foot_slip_error": null
+                },
+                "recovery": {
+                  "recovery_excess_step_mm": {
+                    "mean": 66.87185984334792,
+                    "p95": 178.80034838091268,
+                    "maximum": 801.8589518175366,
+                    "count": 86
+                  },
+                  "recovery_step_mm": {
+                    "mean": 82.12558096936814,
+                    "p95": 175.17878891249947,
+                    "maximum": 803.2375617684098,
+                    "count": 86
+                  },
+                  "track_reinitializations": 0,
+                  "reinitialization_displacement_mm": null,
+                  "gap_reappearance_excess_step_mm": {
+                    "mean": 182.44753672306507,
+                    "p95": 530.5711051567724,
+                    "maximum": 750.9953697481866,
+                    "count": 51
+                  },
+                  "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+                },
+                "large_errors_over_500mm": 34
+              }
+            },
+            "fusion_state_ms": {
+              "baseline": {
+                "mean": 23.177864399913233,
+                "p95": 35.15538501960691,
+                "maximum": 69.12509998073801,
+                "count": 500
+              },
+              "single_frame": {
+                "mean": 26.649758001498412,
+                "p95": 40.520669997204095,
+                "maximum": 108.87070000171661,
+                "count": 500
+              },
+              "joint_window": {
+                "mean": 49.78439560084371,
+                "p95": 80.23133500246331,
+                "maximum": 225.03359999973327,
+                "count": 500
+              }
+            }
+          },
+          {
+            "id": "s2_long",
+            "paired": {
+              "baseline": {
+                "coverage": 0.997,
+                "all_target_success": 0.8833333333333333,
+                "current_all_target_success": 0.8766666666666667,
+                "current_observations": 5882,
+                "predictions": 100,
+                "common_position_error_mm": {
+                  "mean": 65.78238774496096,
+                  "p95": 124.78505791813285,
+                  "maximum": 791.2547624047317,
+                  "count": 5979
+                },
+                "common_current_error_mm": {
+                  "mean": 64.44312484044218,
+                  "p95": 120.83969145913302,
+                  "maximum": 791.2547624047317,
+                  "count": 5864
+                }
+              },
+              "single_frame": {
+                "coverage": 0.9976666666666667,
+                "all_target_success": 0.8893333333333333,
+                "current_all_target_success": 0.8826666666666667,
+                "current_observations": 5898,
+                "predictions": 88,
+                "common_position_error_mm": {
+                  "mean": 65.13729045691345,
+                  "p95": 122.90623106720723,
+                  "maximum": 790.7887964552987,
+                  "count": 5979
+                },
+                "common_current_error_mm": {
+                  "mean": 64.00944284542192,
+                  "p95": 120.01086360603838,
+                  "maximum": 790.7887964552987,
+                  "count": 5864
+                }
+              },
+              "joint_window": {
+                "coverage": 0.9973333333333333,
+                "all_target_success": 0.8843333333333333,
+                "current_all_target_success": 0.8786666666666667,
+                "current_observations": 5893,
+                "predictions": 91,
+                "common_position_error_mm": {
+                  "mean": 65.90454182951319,
+                  "p95": 124.41516208659617,
+                  "maximum": 790.476482244592,
+                  "count": 5979
+                },
+                "common_current_error_mm": {
+                  "mean": 64.5532644092789,
+                  "p95": 120.76194026039171,
+                  "maximum": 790.476482244592,
+                  "count": 5864
+                }
+              }
+            },
+            "details": {
+              "baseline": {
+                "kinematics": {
+                  "hip_relative_position_error_mm": {
+                    "mean": 82.37177709575124,
+                    "p95": 147.511863296416,
+                    "maximum": 802.6098314856841,
+                    "count": 5919
+                  },
+                  "torso_landmark_frame_error_deg": {
+                    "mean": 16.153046978444124,
+                    "p95": 32.628925473281264,
+                    "maximum": 71.10079951359096,
+                    "count": 461
+                  },
+                  "hinge_flexion_error_deg": {
+                    "mean": 10.222142826686467,
+                    "p95": 21.613077465186866,
+                    "maximum": 63.160541295434975,
+                    "count": 1891
+                  },
+                  "differentiated_reference_velocity_error_m_s": {
+                    "mean": 0.4552945321343276,
+                    "p95": 1.1171016113283632,
+                    "maximum": 10.032420966175007,
+                    "count": 5962
+                  },
+                  "descriptive_phase_lag_ms": {
+                    "left_wrist": 0.0,
+                    "right_wrist": 0.0,
+                    "left_ankle": 0.0,
+                    "right_ankle": 0.0
+                  },
+                  "full_anatomical_rotation_error": null,
+                  "foot_contact_accuracy": null,
+                  "foot_slip_error": null
+                },
+                "recovery": {
+                  "recovery_excess_step_mm": {
+                    "mean": 113.86957268473053,
+                    "p95": 334.3765334339613,
+                    "maximum": 401.867899734722,
+                    "count": 59
+                  },
+                  "recovery_step_mm": {
+                    "mean": 141.75689976008462,
+                    "p95": 444.4325733683993,
+                    "maximum": 468.21755604872,
+                    "count": 59
+                  },
+                  "track_reinitializations": 0,
+                  "reinitialization_displacement_mm": null,
+                  "gap_reappearance_excess_step_mm": {
+                    "mean": 130.7708381888565,
+                    "p95": 324.0795052681314,
+                    "maximum": 353.41585269787896,
+                    "count": 8
+                  },
+                  "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+                },
+                "large_errors_over_500mm": 2
+              },
+              "single_frame": {
+                "kinematics": {
+                  "hip_relative_position_error_mm": {
+                    "mean": 81.48409339765455,
+                    "p95": 145.05129041831668,
+                    "maximum": 801.9712267603072,
+                    "count": 5945
+                  },
+                  "torso_landmark_frame_error_deg": {
+                    "mean": 16.50093529979962,
+                    "p95": 31.564228222026465,
+                    "maximum": 72.10246909096098,
+                    "count": 468
+                  },
+                  "hinge_flexion_error_deg": {
+                    "mean": 10.271165887218658,
+                    "p95": 21.45710602004602,
+                    "maximum": 63.50415341020805,
+                    "count": 1908
+                  },
+                  "differentiated_reference_velocity_error_m_s": {
+                    "mean": 0.44624475433527505,
+                    "p95": 1.0907145799409408,
+                    "maximum": 10.035587867585814,
+                    "count": 5966
+                  },
+                  "descriptive_phase_lag_ms": {
+                    "left_wrist": 0.0,
+                    "right_wrist": 0.0,
+                    "left_ankle": 0.0,
+                    "right_ankle": 0.0
+                  },
+                  "full_anatomical_rotation_error": null,
+                  "foot_contact_accuracy": null,
+                  "foot_slip_error": null
+                },
+                "recovery": {
+                  "recovery_excess_step_mm": {
+                    "mean": 115.33464450350215,
+                    "p95": 351.1960764182923,
+                    "maximum": 398.49653081002293,
+                    "count": 54
+                  },
+                  "recovery_step_mm": {
+                    "mean": 139.42875792140225,
+                    "p95": 437.6018821460953,
+                    "maximum": 464.2129543699516,
+                    "count": 54
+                  },
+                  "track_reinitializations": 0,
+                  "reinitialization_displacement_mm": null,
+                  "gap_reappearance_excess_step_mm": {
+                    "mean": 106.14782851164031,
+                    "p95": 226.29699803408076,
+                    "maximum": 260.6153946636846,
+                    "count": 5
+                  },
+                  "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+                },
+                "large_errors_over_500mm": 2
+              },
+              "joint_window": {
+                "kinematics": {
+                  "hip_relative_position_error_mm": {
+                    "mean": 82.06013899866838,
+                    "p95": 146.90355933210427,
+                    "maximum": 801.7194481292345,
+                    "count": 5921
+                  },
+                  "torso_landmark_frame_error_deg": {
+                    "mean": 16.56229675510338,
+                    "p95": 34.167131825585955,
+                    "maximum": 73.43779337592476,
+                    "count": 461
+                  },
+                  "hinge_flexion_error_deg": {
+                    "mean": 10.207043079753504,
+                    "p95": 21.66151436080636,
+                    "maximum": 61.746452300794466,
+                    "count": 1906
+                  },
+                  "differentiated_reference_velocity_error_m_s": {
+                    "mean": 0.45878059070834976,
+                    "p95": 1.1506248668381884,
+                    "maximum": 10.025118767203601,
+                    "count": 5964
+                  },
+                  "descriptive_phase_lag_ms": {
+                    "left_wrist": 0.0,
+                    "right_wrist": 0.0,
+                    "left_ankle": 0.0,
+                    "right_ankle": 0.0
+                  },
+                  "full_anatomical_rotation_error": null,
+                  "foot_contact_accuracy": null,
+                  "foot_slip_error": null
+                },
+                "recovery": {
+                  "recovery_excess_step_mm": {
+                    "mean": 129.61560673169737,
+                    "p95": 397.40905099400226,
+                    "maximum": 411.3646005873429,
+                    "count": 55
+                  },
+                  "recovery_step_mm": {
+                    "mean": 153.2902709475531,
+                    "p95": 462.90548277297466,
+                    "maximum": 468.6728382455463,
+                    "count": 55
+                  },
+                  "track_reinitializations": 0,
+                  "reinitialization_displacement_mm": null,
+                  "gap_reappearance_excess_step_mm": {
+                    "mean": 148.58652458581696,
+                    "p95": 284.4461716256508,
+                    "maximum": 298.05415898818256,
+                    "count": 6
+                  },
+                  "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+                },
+                "large_errors_over_500mm": 2
+              }
+            },
+            "fusion_state_ms": {
+              "baseline": {
+                "mean": 33.80822740041185,
+                "p95": 35.549474999425,
+                "maximum": 293.00349997356534,
+                "count": 500
+              },
+              "single_frame": {
+                "mean": 39.84003959939582,
+                "p95": 41.33704500127351,
+                "maximum": 406.62480000173673,
+                "count": 500
+              },
+              "joint_window": {
+                "mean": 74.05223820003448,
+                "p95": 82.49171497736825,
+                "maximum": 458.0600999761373,
+                "count": 500
+              }
+            }
+          }
+        ]
+      },
+      "heldout": {
+        "paired": {
+          "baseline": {
+            "coverage": 0.9947222222222222,
+            "all_target_success": 0.9498888888888889,
+            "current_all_target_success": 0.9414444444444444,
+            "current_observations": 17720,
+            "predictions": 185,
+            "common_position_error_mm": {
+              "mean": 49.544214129429044,
+              "p95": 97.12397225829335,
+              "maximum": 403.86802719355535,
+              "count": 17892
+            },
+            "common_current_error_mm": {
+              "mean": 49.2337020920235,
+              "p95": 95.88107005802426,
+              "maximum": 403.86802719355535,
+              "count": 17677
+            }
+          },
+          "single_frame": {
+            "coverage": 0.9941111111111111,
+            "all_target_success": 0.9515555555555556,
+            "current_all_target_success": 0.9435,
+            "current_observations": 17723,
+            "predictions": 171,
+            "common_position_error_mm": {
+              "mean": 49.48300544015597,
+              "p95": 96.26519633160737,
+              "maximum": 423.40165622245314,
+              "count": 17892
+            },
+            "common_current_error_mm": {
+              "mean": 49.18382612813655,
+              "p95": 95.43924769109785,
+              "maximum": 416.341121376399,
+              "count": 17677
+            }
+          },
+          "joint_window": {
+            "coverage": 0.9947222222222222,
+            "all_target_success": 0.9503333333333334,
+            "current_all_target_success": 0.9426111111111111,
+            "current_observations": 17730,
+            "predictions": 175,
+            "common_position_error_mm": {
+              "mean": 49.57931743148707,
+              "p95": 96.91008998125815,
+              "maximum": 475.5309570024672,
+              "count": 17892
+            },
+            "common_current_error_mm": {
+              "mean": 49.245013392681614,
+              "p95": 95.84325636648424,
+              "maximum": 394.7622866289313,
+              "count": 17677
+            }
+          }
+        },
+        "outputs_over_500mm": {
+          "baseline": 0,
+          "single_frame": 0,
+          "joint_window": 0
+        },
+        "frames": 1500,
+        "cases": [
+          {
+            "id": "s4_long",
+            "paired": {
+              "baseline": {
+                "coverage": 0.9905555555555555,
+                "all_target_success": 0.9668888888888889,
+                "current_all_target_success": 0.9585555555555556,
+                "current_observations": 8830,
+                "predictions": 85,
+                "common_position_error_mm": {
+                  "mean": 43.81328965154828,
+                  "p95": 86.065566634709,
+                  "maximum": 403.86802719355535,
+                  "count": 8910
+                },
+                "common_current_error_mm": {
+                  "mean": 43.55946774943793,
+                  "p95": 85.35559694521838,
+                  "maximum": 403.86802719355535,
+                  "count": 8813
+                }
+              },
+              "single_frame": {
+                "coverage": 0.99,
+                "all_target_success": 0.9675555555555555,
+                "current_all_target_success": 0.9596666666666667,
+                "current_observations": 8831,
+                "predictions": 79,
+                "common_position_error_mm": {
+                  "mean": 43.81736814009131,
+                  "p95": 85.25562607503191,
+                  "maximum": 423.40165622245314,
+                  "count": 8910
+                },
+                "common_current_error_mm": {
+                  "mean": 43.54818010351126,
+                  "p95": 84.62745820565625,
+                  "maximum": 416.341121376399,
+                  "count": 8813
+                }
+              },
+              "joint_window": {
+                "coverage": 0.9905555555555555,
+                "all_target_success": 0.9675555555555555,
+                "current_all_target_success": 0.9593333333333334,
+                "current_observations": 8829,
+                "predictions": 86,
+                "common_position_error_mm": {
+                  "mean": 43.81927991634185,
+                  "p95": 85.81380217635238,
+                  "maximum": 475.5309570024672,
+                  "count": 8910
+                },
+                "common_current_error_mm": {
+                  "mean": 43.53045855271396,
+                  "p95": 85.22117492354012,
+                  "maximum": 394.7622866289313,
+                  "count": 8813
+                }
+              }
+            },
+            "details": {
+              "baseline": {
+                "kinematics": {
+                  "hip_relative_position_error_mm": {
+                    "mean": 63.18935845335533,
+                    "p95": 105.36321563384381,
+                    "maximum": 359.2185454651629,
+                    "count": 8903
+                  },
+                  "torso_landmark_frame_error_deg": {
+                    "mean": 10.942251652955992,
+                    "p95": 20.532758703649822,
+                    "maximum": 37.63142543997383,
+                    "count": 722
+                  },
+                  "hinge_flexion_error_deg": {
+                    "mean": 5.480061543717001,
+                    "p95": 14.14824472057581,
+                    "maximum": 38.02863663366318,
+                    "count": 2905
+                  },
+                  "differentiated_reference_velocity_error_m_s": {
+                    "mean": 0.21288488570853736,
+                    "p95": 0.610877968877177,
+                    "maximum": 2.546677010058789,
+                    "count": 8891
+                  },
+                  "descriptive_phase_lag_ms": {
+                    "left_wrist": 0.0,
+                    "right_wrist": 0.0,
+                    "left_ankle": 0.0,
+                    "right_ankle": 0.0
+                  },
+                  "full_anatomical_rotation_error": null,
+                  "foot_contact_accuracy": null,
+                  "foot_slip_error": null
+                },
+                "recovery": {
+                  "recovery_excess_step_mm": {
+                    "mean": 41.43400961113318,
+                    "p95": 142.01863403524243,
+                    "maximum": 212.12953653205705,
+                    "count": 29
+                  },
+                  "recovery_step_mm": {
+                    "mean": 45.11595990792625,
+                    "p95": 140.44901541508008,
+                    "maximum": 193.63303798777753,
+                    "count": 29
+                  },
+                  "track_reinitializations": 0,
+                  "reinitialization_displacement_mm": null,
+                  "gap_reappearance_excess_step_mm": {
+                    "mean": 42.340130210841195,
+                    "p95": 180.1721709452539,
+                    "maximum": 209.90251112087807,
+                    "count": 25
+                  },
+                  "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+                },
+                "large_errors_over_500mm": 0
+              },
+              "single_frame": {
+                "kinematics": {
+                  "hip_relative_position_error_mm": {
+                    "mean": 63.109439043616014,
+                    "p95": 105.43912807066525,
+                    "maximum": 371.1612319964671,
+                    "count": 8898
+                  },
+                  "torso_landmark_frame_error_deg": {
+                    "mean": 10.666976984396696,
+                    "p95": 20.31076196410431,
+                    "maximum": 33.883809392298275,
+                    "count": 724
+                  },
+                  "hinge_flexion_error_deg": {
+                    "mean": 5.650296704917985,
+                    "p95": 14.09789037391453,
+                    "maximum": 38.94455001015335,
+                    "count": 2907
+                  },
+                  "differentiated_reference_velocity_error_m_s": {
+                    "mean": 0.18444603159318781,
+                    "p95": 0.49773185397436037,
+                    "maximum": 2.612170914737763,
+                    "count": 8886
+                  },
+                  "descriptive_phase_lag_ms": {
+                    "left_wrist": 0.0,
+                    "right_wrist": 0.0,
+                    "left_ankle": 0.0,
+                    "right_ankle": 0.0
+                  },
+                  "full_anatomical_rotation_error": null,
+                  "foot_contact_accuracy": null,
+                  "foot_slip_error": null
+                },
+                "recovery": {
+                  "recovery_excess_step_mm": {
+                    "mean": 20.66898546459728,
+                    "p95": 46.553364699347924,
+                    "maximum": 76.0560518963469,
+                    "count": 24
+                  },
+                  "recovery_step_mm": {
+                    "mean": 27.65942106916818,
+                    "p95": 79.52842463456209,
+                    "maximum": 82.72325273305508,
+                    "count": 24
+                  },
+                  "track_reinitializations": 0,
+                  "reinitialization_displacement_mm": null,
+                  "gap_reappearance_excess_step_mm": {
+                    "mean": 41.43247918725477,
+                    "p95": 172.83897861824653,
+                    "maximum": 211.26003428001513,
+                    "count": 26
+                  },
+                  "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+                },
+                "large_errors_over_500mm": 0
+              },
+              "joint_window": {
+                "kinematics": {
+                  "hip_relative_position_error_mm": {
+                    "mean": 63.35206080215498,
+                    "p95": 106.11375357153484,
+                    "maximum": 419.94433240967425,
+                    "count": 8903
+                  },
+                  "torso_landmark_frame_error_deg": {
+                    "mean": 10.896843968729614,
+                    "p95": 20.497049541008998,
+                    "maximum": 36.48089509455995,
+                    "count": 721
+                  },
+                  "hinge_flexion_error_deg": {
+                    "mean": 5.537221768930647,
+                    "p95": 13.898400112751943,
+                    "maximum": 38.317768900301076,
+                    "count": 2904
+                  },
+                  "differentiated_reference_velocity_error_m_s": {
+                    "mean": 0.20261981083622643,
+                    "p95": 0.5624941692085503,
+                    "maximum": 2.6379208213486365,
+                    "count": 8891
+                  },
+                  "descriptive_phase_lag_ms": {
+                    "left_wrist": 0.0,
+                    "right_wrist": 0.0,
+                    "left_ankle": 0.0,
+                    "right_ankle": 0.0
+                  },
+                  "full_anatomical_rotation_error": null,
+                  "foot_contact_accuracy": null,
+                  "foot_slip_error": null
+                },
+                "recovery": {
+                  "recovery_excess_step_mm": {
+                    "mean": 49.92955941818028,
+                    "p95": 187.08163983007088,
+                    "maximum": 430.0523523351487,
+                    "count": 30
+                  },
+                  "recovery_step_mm": {
+                    "mean": 57.40660123619909,
+                    "p95": 182.08715689867566,
+                    "maximum": 468.68019371786926,
+                    "count": 30
+                  },
+                  "track_reinitializations": 0,
+                  "reinitialization_displacement_mm": null,
+                  "gap_reappearance_excess_step_mm": {
+                    "mean": 42.2022903776363,
+                    "p95": 180.03477936648875,
+                    "maximum": 213.29197689476882,
+                    "count": 25
+                  },
+                  "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+                },
+                "large_errors_over_500mm": 0
+              }
+            },
+            "fusion_state_ms": {
+              "baseline": {
+                "mean": 31.688458399342682,
+                "p95": 34.67651500541251,
+                "maximum": 103.97120000561699,
+                "count": 750
+              },
+              "single_frame": {
+                "mean": 36.6363285331754,
+                "p95": 39.616795007896144,
+                "maximum": 246.97880001622252,
+                "count": 750
+              },
+              "joint_window": {
+                "mean": 70.75067946656297,
+                "p95": 80.9323100009351,
+                "maximum": 357.04080000869,
+                "count": 750
+              }
+            }
+          },
+          {
+            "id": "s6_long",
+            "paired": {
+              "baseline": {
+                "coverage": 0.9988888888888889,
+                "all_target_success": 0.9328888888888889,
+                "current_all_target_success": 0.9243333333333333,
+                "current_observations": 8890,
+                "predictions": 100,
+                "common_position_error_mm": {
+                  "mean": 55.229199332938016,
+                  "p95": 107.96006215605712,
+                  "maximum": 329.51633532342674,
+                  "count": 8982
+                },
+                "common_current_error_mm": {
+                  "mean": 54.875289102538694,
+                  "p95": 106.79517577621357,
+                  "maximum": 329.51633532342674,
+                  "count": 8864
+                }
+              },
+              "single_frame": {
+                "coverage": 0.9982222222222222,
+                "all_target_success": 0.9355555555555556,
+                "current_all_target_success": 0.9273333333333333,
+                "current_observations": 8892,
+                "predictions": 92,
+                "common_position_error_mm": {
+                  "mean": 55.103226809959594,
+                  "p95": 106.93888248571548,
+                  "maximum": 328.51132139841013,
+                  "count": 8982
+                },
+                "common_current_error_mm": {
+                  "mean": 54.78704684282775,
+                  "p95": 106.10550903109942,
+                  "maximum": 328.51132139841013,
+                  "count": 8864
+                }
+              },
+              "joint_window": {
+                "coverage": 0.9988888888888889,
+                "all_target_success": 0.9331111111111111,
+                "current_all_target_success": 0.9258888888888889,
+                "current_observations": 8901,
+                "predictions": 89,
+                "common_position_error_mm": {
+                  "mean": 55.2931823012203,
+                  "p95": 107.71566982679772,
+                  "maximum": 330.66457712587396,
+                  "count": 8982
+                },
+                "common_current_error_mm": {
+                  "mean": 54.92668891215757,
+                  "p95": 106.81203531525952,
+                  "maximum": 330.66457712587396,
+                  "count": 8864
+                }
+              }
+            },
+            "details": {
+              "baseline": {
+                "kinematics": {
+                  "hip_relative_position_error_mm": {
+                    "mean": 65.29100591665846,
+                    "p95": 129.68763256589534,
+                    "maximum": 380.92570143593116,
+                    "count": 8946
+                  },
+                  "torso_landmark_frame_error_deg": {
+                    "mean": 10.74647935300191,
+                    "p95": 21.72110407618846,
+                    "maximum": 49.07792533323035,
+                    "count": 697
+                  },
+                  "hinge_flexion_error_deg": {
+                    "mean": 8.087534748212159,
+                    "p95": 23.860631893125795,
+                    "maximum": 116.68901032199155,
+                    "count": 2897
+                  },
+                  "differentiated_reference_velocity_error_m_s": {
+                    "mean": 0.28856106144530747,
+                    "p95": 0.859808005751579,
+                    "maximum": 5.034225101253376,
+                    "count": 8967
+                  },
+                  "descriptive_phase_lag_ms": {
+                    "left_wrist": 0.0,
+                    "right_wrist": 0.0,
+                    "left_ankle": 0.0,
+                    "right_ankle": 0.0
+                  },
+                  "full_anatomical_rotation_error": null,
+                  "foot_contact_accuracy": null,
+                  "foot_slip_error": null
+                },
+                "recovery": {
+                  "recovery_excess_step_mm": {
+                    "mean": 56.44376284581691,
+                    "p95": 224.13136467715793,
+                    "maximum": 386.3739406664849,
+                    "count": 66
+                  },
+                  "recovery_step_mm": {
+                    "mean": 62.37155011121877,
+                    "p95": 222.76110908386354,
+                    "maximum": 381.20021524949857,
+                    "count": 66
+                  },
+                  "track_reinitializations": 0,
+                  "reinitialization_displacement_mm": null,
+                  "gap_reappearance_excess_step_mm": {
+                    "mean": 67.80900624776835,
+                    "p95": 130.87799911250224,
+                    "maximum": 142.17569162826587,
+                    "count": 6
+                  },
+                  "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+                },
+                "large_errors_over_500mm": 0
+              },
+              "single_frame": {
+                "kinematics": {
+                  "hip_relative_position_error_mm": {
+                    "mean": 65.43739496878808,
+                    "p95": 128.74372380557355,
+                    "maximum": 381.17647042927814,
+                    "count": 8874
+                  },
+                  "torso_landmark_frame_error_deg": {
+                    "mean": 11.092933733793577,
+                    "p95": 20.774864893062873,
+                    "maximum": 29.439997089779414,
+                    "count": 691
+                  },
+                  "hinge_flexion_error_deg": {
+                    "mean": 8.129039263271368,
+                    "p95": 23.57713857927824,
+                    "maximum": 119.7932682038419,
+                    "count": 2899
+                  },
+                  "differentiated_reference_velocity_error_m_s": {
+                    "mean": 0.2595052141235616,
+                    "p95": 0.7695082417901313,
+                    "maximum": 4.9403977920209865,
+                    "count": 8961
+                  },
+                  "descriptive_phase_lag_ms": {
+                    "left_wrist": 0.0,
+                    "right_wrist": 0.0,
+                    "left_ankle": 0.0,
+                    "right_ankle": 0.0
+                  },
+                  "full_anatomical_rotation_error": null,
+                  "foot_contact_accuracy": null,
+                  "foot_slip_error": null
+                },
+                "recovery": {
+                  "recovery_excess_step_mm": {
+                    "mean": 53.779147143660914,
+                    "p95": 236.74718346090333,
+                    "maximum": 386.306099475794,
+                    "count": 57
+                  },
+                  "recovery_step_mm": {
+                    "mean": 59.18065756215888,
+                    "p95": 226.3845167937937,
+                    "maximum": 381.08641642004676,
+                    "count": 57
+                  },
+                  "track_reinitializations": 0,
+                  "reinitialization_displacement_mm": null,
+                  "gap_reappearance_excess_step_mm": {
+                    "mean": 53.323509549995194,
+                    "p95": 122.19322943327208,
+                    "maximum": 143.85855556803236,
+                    "count": 7
+                  },
+                  "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+                },
+                "large_errors_over_500mm": 0
+              },
+              "joint_window": {
+                "kinematics": {
+                  "hip_relative_position_error_mm": {
+                    "mean": 65.4951192559257,
+                    "p95": 128.18095595123344,
+                    "maximum": 380.7891645862732,
+                    "count": 8957
+                  },
+                  "torso_landmark_frame_error_deg": {
+                    "mean": 10.982599784967174,
+                    "p95": 21.924234254045583,
+                    "maximum": 51.16139972346705,
+                    "count": 708
+                  },
+                  "hinge_flexion_error_deg": {
+                    "mean": 8.010938908094793,
+                    "p95": 23.769557576629843,
+                    "maximum": 112.67723072116371,
+                    "count": 2908
+                  },
+                  "differentiated_reference_velocity_error_m_s": {
+                    "mean": 0.2785426039397339,
+                    "p95": 0.8266878391450004,
+                    "maximum": 4.9868279810313,
+                    "count": 8967
+                  },
+                  "descriptive_phase_lag_ms": {
+                    "left_wrist": 0.0,
+                    "right_wrist": 0.0,
+                    "left_ankle": 0.0,
+                    "right_ankle": 0.0
+                  },
+                  "full_anatomical_rotation_error": null,
+                  "foot_contact_accuracy": null,
+                  "foot_slip_error": null
+                },
+                "recovery": {
+                  "recovery_excess_step_mm": {
+                    "mean": 59.044816167676416,
+                    "p95": 248.57474362676118,
+                    "maximum": 386.6381096538058,
+                    "count": 58
+                  },
+                  "recovery_step_mm": {
+                    "mean": 65.69439650208918,
+                    "p95": 240.3813189641217,
+                    "maximum": 381.47603826254436,
+                    "count": 58
+                  },
+                  "track_reinitializations": 0,
+                  "reinitialization_displacement_mm": null,
+                  "gap_reappearance_excess_step_mm": {
+                    "mean": 65.27023397535565,
+                    "p95": 129.9349234394024,
+                    "maximum": 149.69735983331626,
+                    "count": 6
+                  },
+                  "definition": "Transition from non-filtered to filtered; no physical occlusion labels available."
+                },
+                "large_errors_over_500mm": 0
+              }
+            },
+            "fusion_state_ms": {
+              "baseline": {
+                "mean": 33.37106826734574,
+                "p95": 34.648664997075684,
+                "maximum": 524.7544999874663,
+                "count": 750
+              },
+              "single_frame": {
+                "mean": 39.56391160054287,
+                "p95": 41.34613000351237,
+                "maximum": 652.8895000228658,
+                "count": 750
+              },
+              "joint_window": {
+                "mean": 72.22370493303363,
+                "p95": 81.80527999356855,
+                "maximum": 741.5950000286102,
+                "count": 750
+              }
+            }
+          }
+        ]
+      }
+    },
+    "selection": {
+      "selected": "baseline",
+      "default_changed": false,
+      "decided_before_calibration_and_heldout": true,
+      "implementation_sha256": "e7e74d5770433cf2f0d754822e230b230ccde86fc354551f120639ed96df3dce",
+      "reasons": [
+        "Both structured candidates increase >500 mm error counts on development. Joint window also worsens aggregate mean and adds computation. No promotion or retuning on heldout."
+      ]
+    },
+    "scientific_gap": "Decoded single-peak/inlier observations cannot recover discarded image hypotheses; shared lengths and acceleration did not remove gross front-end errors."
+  },
+  "body_frontend": {
+    "results": {
+      "development": {
+        "paired": {
+          "medium": {
+            "coverage": 0.856,
+            "all_target_success": 0.7355833333333334,
+            "current_all_target_success": 0.7224166666666667,
+            "current_observations": 9975,
+            "predictions": 297,
+            "common_position_error_mm": {
+              "mean": 67.05934459321445,
+              "p95": 132.69739684368204,
+              "maximum": 836.9463929891969,
+              "count": 10185
+            },
+            "common_current_error_mm": {
+              "mean": 64.94326467584528,
+              "p95": 127.23435592299666,
+              "maximum": 833.626043445802,
+              "count": 9796
+            }
+          },
+          "large": {
+            "coverage": 0.85825,
+            "all_target_success": 0.7381666666666666,
+            "current_all_target_success": 0.72625,
+            "current_observations": 10031,
+            "predictions": 268,
+            "common_position_error_mm": {
+              "mean": 65.10492063293125,
+              "p95": 128.74169259789792,
+              "maximum": 791.6199714756254,
+              "count": 10185
+            },
+            "common_current_error_mm": {
+              "mean": 63.443207106885104,
+              "p95": 125.57277391774727,
+              "maximum": 791.6199714756254,
+              "count": 9796
+            }
+          }
+        },
+        "outputs_over_500mm": {
+          "medium": 31,
+          "large": 23
+        },
+        "cases": [
+          {
+            "id": "s1_long",
+            "paired": {
+              "medium": {
+                "coverage": 0.715,
+                "all_target_success": 0.5878333333333333,
+                "current_all_target_success": 0.5681666666666667,
+                "current_observations": 4093,
+                "predictions": 197,
+                "common_position_error_mm": {
+                  "mean": 68.84818770029123,
+                  "p95": 143.3022023001961,
+                  "maximum": 836.9463929891969,
+                  "count": 4212
+                },
+                "common_current_error_mm": {
+                  "mean": 65.5985830085767,
+                  "p95": 136.24661541071808,
+                  "maximum": 833.626043445802,
+                  "count": 3985
+                }
+              },
+              "large": {
+                "coverage": 0.7183333333333334,
+                "all_target_success": 0.5938333333333333,
+                "current_all_target_success": 0.577,
+                "current_observations": 4130,
+                "predictions": 180,
+                "common_position_error_mm": {
+                  "mean": 63.77837282754358,
+                  "p95": 132.19509050707092,
+                  "maximum": 635.5831666309434,
+                  "count": 4212
+                },
+                "common_current_error_mm": {
+                  "mean": 61.248845423455776,
+                  "p95": 129.23823529594304,
+                  "maximum": 603.7221477531679,
+                  "count": 3985
+                }
+              }
+            },
+            "head_ms": {
+              "medium": {
+                "mean": 12.741235000255983,
+                "p95": 18.212129987659864,
+                "maximum": 20.438400009879842,
+                "count": 500
+              },
+              "large": {
+                "mean": 25.502919199934695,
+                "p95": 34.1631299990695,
+                "maximum": 35.80040001543239,
+                "count": 500
+              }
+            },
+            "backend_ms": {
+              "medium": {
+                "mean": 23.029303199902643,
+                "p95": 34.8582249993342,
+                "maximum": 62.67739998293109,
+                "count": 500
+              },
+              "large": {
+                "mean": 23.99194959923625,
+                "p95": 35.792300003231496,
+                "maximum": 98.44229998998344,
+                "count": 500
+              }
+            },
+            "medium_cache_max_pixel_difference": 0.0
+          },
+          {
+            "id": "s2_long",
+            "paired": {
+              "medium": {
+                "coverage": 0.997,
+                "all_target_success": 0.8833333333333333,
+                "current_all_target_success": 0.8766666666666667,
+                "current_observations": 5882,
+                "predictions": 100,
+                "common_position_error_mm": {
+                  "mean": 65.79790023242298,
+                  "p95": 124.85114150443958,
+                  "maximum": 791.2547624047317,
+                  "count": 5973
+                },
+                "common_current_error_mm": {
+                  "mean": 64.4938680907593,
+                  "p95": 121.2665729931166,
+                  "maximum": 791.2547624047317,
+                  "count": 5811
+                }
+              },
+              "large": {
+                "coverage": 0.9981666666666666,
+                "all_target_success": 0.8825,
+                "current_all_target_success": 0.8755,
+                "current_observations": 5901,
+                "predictions": 88,
+                "common_position_error_mm": {
+                  "mean": 66.04036669961346,
+                  "p95": 123.9117513753309,
+                  "maximum": 791.6199714756254,
+                  "count": 5973
+                },
+                "common_current_error_mm": {
+                  "mean": 64.94803094244972,
+                  "p95": 121.82185918138484,
+                  "maximum": 791.6199714756254,
+                  "count": 5811
+                }
+              }
+            },
+            "head_ms": {
+              "medium": {
+                "mean": 16.055656199809164,
+                "p95": 18.90886998880887,
+                "maximum": 25.599899992812425,
+                "count": 500
+              },
+              "large": {
+                "mean": 32.66466000064975,
+                "p95": 34.58600000740262,
+                "maximum": 39.35859998455271,
+                "count": 500
+              }
+            },
+            "backend_ms": {
+              "medium": {
+                "mean": 33.67171979905106,
+                "p95": 35.36451000109082,
+                "maximum": 243.7451999867335,
+                "count": 500
+              },
+              "large": {
+                "mean": 34.432862800429575,
+                "p95": 35.77542001003167,
+                "maximum": 257.8380999912042,
+                "count": 500
+              }
+            },
+            "medium_cache_max_pixel_difference": 0.0
+          }
+        ]
+      },
+      "heldout": {
+        "paired": {
+          "medium": {
+            "coverage": 0.9947222222222222,
+            "all_target_success": 0.9498888888888889,
+            "current_all_target_success": 0.9414444444444444,
+            "current_observations": 17720,
+            "predictions": 185,
+            "common_position_error_mm": {
+              "mean": 49.54569764048741,
+              "p95": 96.90549335537808,
+              "maximum": 403.86802719355535,
+              "count": 17848
+            },
+            "common_current_error_mm": {
+              "mean": 49.21391718585638,
+              "p95": 95.58311338124578,
+              "maximum": 403.86802719355535,
+              "count": 17555
+            }
+          },
+          "large": {
+            "coverage": 0.9948888888888889,
+            "all_target_success": 0.9483333333333334,
+            "current_all_target_success": 0.9402222222222222,
+            "current_observations": 17738,
+            "predictions": 170,
+            "common_position_error_mm": {
+              "mean": 49.70357586440511,
+              "p95": 98.41407383154058,
+              "maximum": 441.2305486642559,
+              "count": 17848
+            },
+            "common_current_error_mm": {
+              "mean": 49.417858520424716,
+              "p95": 97.66466593794647,
+              "maximum": 441.2305486642559,
+              "count": 17555
+            }
+          }
+        },
+        "outputs_over_500mm": {
+          "medium": 0,
+          "large": 0
+        },
+        "cases": [
+          {
+            "id": "s4_long",
+            "paired": {
+              "medium": {
+                "coverage": 0.9905555555555555,
+                "all_target_success": 0.9668888888888889,
+                "current_all_target_success": 0.9585555555555556,
+                "current_observations": 8830,
+                "predictions": 85,
+                "common_position_error_mm": {
+                  "mean": 43.71978476443588,
+                  "p95": 85.78346862155081,
+                  "maximum": 403.86802719355535,
+                  "count": 8891
+                },
+                "common_current_error_mm": {
+                  "mean": 43.46079390649528,
+                  "p95": 84.82760263141544,
+                  "maximum": 403.86802719355535,
+                  "count": 8755
+                }
+              },
+              "large": {
+                "coverage": 0.9934444444444445,
+                "all_target_success": 0.9592222222222222,
+                "current_all_target_success": 0.95,
+                "current_observations": 8843,
+                "predictions": 98,
+                "common_position_error_mm": {
+                  "mean": 44.84325663527652,
+                  "p95": 93.78775046818816,
+                  "maximum": 441.2305486642559,
+                  "count": 8891
+                },
+                "common_current_error_mm": {
+                  "mean": 44.51759632167385,
+                  "p95": 93.09981146977564,
+                  "maximum": 441.2305486642559,
+                  "count": 8755
+                }
+              }
+            },
+            "head_ms": {
+              "medium": {
+                "mean": 15.742501200370802,
+                "p95": 19.29303000069922,
+                "maximum": 23.807599995052442,
+                "count": 750
+              },
+              "large": {
+                "mean": 31.729994799902972,
+                "p95": 34.685030004766304,
+                "maximum": 37.05340001033619,
+                "count": 750
+              }
+            },
+            "backend_ms": {
+              "medium": {
+                "mean": 31.522867599851452,
+                "p95": 34.63584001437994,
+                "maximum": 142.48129999032244,
+                "count": 750
+              },
+              "large": {
+                "mean": 32.640063998910286,
+                "p95": 34.920010005589575,
+                "maximum": 160.05050000967458,
+                "count": 750
+              }
+            },
+            "medium_cache_max_pixel_difference": 0.0
+          },
+          {
+            "id": "s6_long",
+            "paired": {
+              "medium": {
+                "coverage": 0.9988888888888889,
+                "all_target_success": 0.9328888888888889,
+                "current_all_target_success": 0.9243333333333333,
+                "current_observations": 8890,
+                "predictions": 100,
+                "common_position_error_mm": {
+                  "mean": 55.328682052787755,
+                  "p95": 108.69018245229586,
+                  "maximum": 329.51633532342674,
+                  "count": 8957
+                },
+                "common_current_error_mm": {
+                  "mean": 54.93762108481166,
+                  "p95": 107.28416786863322,
+                  "maximum": 329.51633532342674,
+                  "count": 8800
+                }
+              },
+              "large": {
+                "coverage": 0.9963333333333333,
+                "all_target_success": 0.9374444444444444,
+                "current_all_target_success": 0.9304444444444444,
+                "current_observations": 8895,
+                "predictions": 72,
+                "common_position_error_mm": {
+                  "mean": 54.52808164381588,
+                  "p95": 104.76057554029715,
+                  "maximum": 317.8644598208339,
+                  "count": 8957
+                },
+                "common_current_error_mm": {
+                  "mean": 54.2930625602047,
+                  "p95": 104.14084951883675,
+                  "maximum": 317.8644598208339,
+                  "count": 8800
+                }
+              }
+            },
+            "head_ms": {
+              "medium": {
+                "mean": 15.894259333377704,
+                "p95": 19.18565499217948,
+                "maximum": 27.334399987012148,
+                "count": 750
+              },
+              "large": {
+                "mean": 32.146940266829915,
+                "p95": 35.23598500323715,
+                "maximum": 44.498999981442466,
+                "count": 750
+              }
+            },
+            "backend_ms": {
+              "medium": {
+                "mean": 33.18443373319072,
+                "p95": 35.04379998485092,
+                "maximum": 414.95170001871884,
+                "count": 750
+              },
+              "large": {
+                "mean": 33.62928573403042,
+                "p95": 35.05624500248814,
+                "maximum": 485.42080001789145,
+                "count": 750
+              }
+            },
+            "medium_cache_max_pixel_difference": 0.0
+          }
+        ]
+      }
+    },
+    "selection": {
+      "candidate": "large",
+      "default": "medium",
+      "promoted": false,
+      "decision_before_heldout": true,
+      "code_sha256": "935f6588a5b5a2493bddb7903aa2ded7b77d596e5fa5f0d7d6ed8230a827bed7",
+      "reason": "Advance fixed X head to known heldout assessment: development common mean/P95 67.059/132.697 -> 65.105/128.742 mm, all-target success 0.735583 -> 0.738167, >500mm outputs 31 -> 23. S2 mean and all-target success slightly worsen; head cost about doubles. No parameter changes.",
+      "final_decision": "retain medium",
+      "heldout_summary": {
+        "medium_mean_mm": 49.54569764048741,
+        "large_mean_mm": 49.70357586440511,
+        "medium_p95_mm": 96.90549335537808,
+        "large_p95_mm": 98.41407383154058,
+        "medium_all_target_success": 0.9498888888888889,
+        "large_all_target_success": 0.9483333333333334
+      },
+      "final_reason": "Development improvement did not transfer to frozen known heldout: aggregate mean, P95 and all-target success worsened; body-head processing cost about doubled."
+    },
+    "models": {
+      "medium": {
+        "mode": "balanced",
+        "url": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/rtmpose-m_simcc-body7_pt-body7_420e-256x192-e48f03d0_20230504.zip",
+        "input_size": [
+          192,
+          256
+        ],
+        "sha256": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c",
+        "providers": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "onnxruntime": "1.22.0",
+        "cuda_use_tf32": false,
+        "intra_op_threads": 4,
+        "inter_op_threads": 1
+      },
+      "large": {
+        "mode": "performance",
+        "url": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/rtmpose-x_simcc-body7_pt-body7_700e-384x288-71d7b7e9_20230629.zip",
+        "input_size": [
+          288,
+          384
+        ],
+        "sha256": "df0c0fa91e9870b1515dcaff741fd76cc753dcfb12786862f61b243bae81cd52",
+        "providers": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "onnxruntime": "1.22.0",
+        "cuda_use_tf32": false,
+        "intra_op_threads": 4,
+        "inter_op_threads": 1
+      }
+    },
+    "gpu_kernel_proof": {
+      "balanced": {
+        "model": {
+          "mode": "balanced",
+          "url": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/rtmpose-m_simcc-body7_pt-body7_420e-256x192-e48f03d0_20230504.zip",
+          "input_size": [
+            192,
+            256
+          ],
+          "sha256": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c",
+          "providers": [
+            "CUDAExecutionProvider",
+            "CPUExecutionProvider"
+          ],
+          "onnxruntime": "1.22.0",
+          "cuda_use_tf32": false,
+          "intra_op_threads": 4,
+          "inter_op_threads": 1
+        },
+        "kernel_events_by_provider": {
+          "CUDAExecutionProvider": 740,
+          "CPUExecutionProvider": 8
+        },
+        "profile_path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\vision_joint_round\\head_profile_balanced_2026-10-18_14-14-32.json",
+        "profile_bytes": 555476
+      },
+      "performance": {
+        "model": {
+          "mode": "performance",
+          "url": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/rtmpose-x_simcc-body7_pt-body7_700e-384x288-71d7b7e9_20230629.zip",
+          "input_size": [
+            288,
+            384
+          ],
+          "sha256": "df0c0fa91e9870b1515dcaff741fd76cc753dcfb12786862f61b243bae81cd52",
+          "providers": [
+            "CUDAExecutionProvider",
+            "CPUExecutionProvider"
+          ],
+          "onnxruntime": "1.22.0",
+          "cuda_use_tf32": false,
+          "intra_op_threads": 4,
+          "inter_op_threads": 1
+        },
+        "kernel_events_by_provider": {
+          "CUDAExecutionProvider": 1068,
+          "CPUExecutionProvider": 8
+        },
+        "profile_path": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\vision_joint_round\\head_profile_performance_2026-10-18_14-14-33.json",
+        "profile_bytes": 804115
+      }
+    }
+  },
+  "kinematic_observability": {
+    "development": {
+      "frames": 900,
+      "torso_landmark_rotation_error_deg": {
+        "mean": 19.078269237831105,
+        "count": 850
+      },
+      "hinge_error_deg": {
+        "mean": 8.874683240393175,
+        "count": 3331
+      },
+      "velocity_common_baseline_m_s": {
+        "mean": 0.3916832927773836,
+        "count": 9699
+      },
+      "velocity_common_candidate_m_s": {
+        "mean": 0.494882562732791,
+        "count": 9699
+      }
+    },
+    "heldout": {
+      "frames": 900,
+      "torso_landmark_rotation_error_deg": {
+        "mean": 13.926053856241424,
+        "count": 814
+      },
+      "hinge_error_deg": {
+        "mean": 9.21234206406168,
+        "count": 3422
+      },
+      "velocity_common_baseline_m_s": {
+        "mean": 0.342951432444877,
+        "count": 9849
+      },
+      "velocity_common_candidate_m_s": {
+        "mean": 0.4121666174785523,
+        "count": 9849
+      }
+    },
+    "module_cpu_ms": {
+      "mean": 7.33999811163004,
+      "p95": 8.766570003353989,
+      "maximum": 26.78430001833476,
+      "count": 1800
+    },
+    "velocity_candidate_promoted": false,
+    "rotation_diagnostic_integrated_into_controller": false,
+    "foot_rotation_accuracy": null,
+    "foot_contact_accuracy": null,
+    "scope": "Derived landmark/hinge reference, differentiated reference velocity. No anatomical rotation or force labels, foot availability is not accuracy; unknown remains unknown.",
+    "historical_frontend_not_current_person_selection": true
+  },
+  "uncertainty": {
+    "position": {
+      "calibration": {
+        "domain": "mpi3dhp_four_view_body12_position",
+        "estimator_sha256": "e7e74d5770433cf2f0d754822e230b230ccde86fc354551f120639ed96df3dce",
+        "nominal_coverage": 0.9,
+        "blocks": 20,
+        "multiplier": 20.398256509658058,
+        "rank": 19,
+        "guarantee_claimed": false,
+        "reference": "Dataset markerless 3D reference; not independent physical metrology",
+        "assumption_warning": "Block dependence and distribution shift invalidate unconditional coverage guarantees",
+        "std_floor": 0.005
+      },
+      "clips": [
+        {
+          "id": "s4_long_baseline_scores",
+          "targets": 9000,
+          "current_scored": 8830,
+          "current_scored_fraction": 0.9811111111111112,
+          "nominal_three_std_reference_coverage": 0.7545866364665912,
+          "calibrated_reference_coverage": 1.0,
+          "all_target_within_radius": 0.9811111111111112,
+          "block_reference_coverage": 1.0,
+          "blocks": 30,
+          "radius": {
+            "mean": 0.40852558489332347,
+            "p95": 0.8158128886520714,
+            "maximum": 1.872625472264993,
+            "count": 8830
+          },
+          "risk_at_radius_threshold": [
+            {
+              "maximum_radius": 0.05,
+              "accepted_targets": 0,
+              "all_target_accepted_fraction": 0.0,
+              "error_exceeds_threshold_fraction": null
+            },
+            {
+              "maximum_radius": 0.1,
+              "accepted_targets": 0,
+              "all_target_accepted_fraction": 0.0,
+              "error_exceeds_threshold_fraction": null
+            },
+            {
+              "maximum_radius": 0.2,
+              "accepted_targets": 0,
+              "all_target_accepted_fraction": 0.0,
+              "error_exceeds_threshold_fraction": null
+            }
+          ]
+        },
+        {
+          "id": "s6_long_baseline_scores",
+          "targets": 9000,
+          "current_scored": 8890,
+          "current_scored_fraction": 0.9877777777777778,
+          "nominal_three_std_reference_coverage": 0.595050618672666,
+          "calibrated_reference_coverage": 0.999437570303712,
+          "all_target_within_radius": 0.9872222222222222,
+          "block_reference_coverage": 0.9333333333333333,
+          "blocks": 30,
+          "radius": {
+            "mean": 0.3793641465799759,
+            "p95": 0.5988826798532689,
+            "maximum": 1.4773645597529446,
+            "count": 8890
+          },
+          "risk_at_radius_threshold": [
+            {
+              "maximum_radius": 0.05,
+              "accepted_targets": 0,
+              "all_target_accepted_fraction": 0.0,
+              "error_exceeds_threshold_fraction": null
+            },
+            {
+              "maximum_radius": 0.1,
+              "accepted_targets": 0,
+              "all_target_accepted_fraction": 0.0,
+              "error_exceeds_threshold_fraction": null
+            },
+            {
+              "maximum_radius": 0.2,
+              "accepted_targets": 0,
+              "all_target_accepted_fraction": 0.0,
+              "error_exceeds_threshold_fraction": null
+            }
+          ]
+        }
+      ]
+    },
+    "velocity": {
+      "calibration": {
+        "domain": "mpi3dhp_four_view_body12_velocity",
+        "estimator_sha256": "e7e74d5770433cf2f0d754822e230b230ccde86fc354551f120639ed96df3dce",
+        "nominal_coverage": 0.9,
+        "blocks": 20,
+        "multiplier": 11.874042272944244,
+        "rank": 19,
+        "guarantee_claimed": false,
+        "reference": "Dataset markerless 3D reference; not independent physical metrology",
+        "assumption_warning": "Block dependence and distribution shift invalidate unconditional coverage guarantees",
+        "std_floor": 0.05
+      },
+      "clips": [
+        {
+          "id": "s4_long_baseline_scores",
+          "targets": 9000,
+          "current_scored": 8806,
+          "current_scored_fraction": 0.9784444444444444,
+          "nominal_three_std_reference_coverage": 0.9972745855098796,
+          "calibrated_reference_coverage": 1.0,
+          "all_target_within_radius": 0.9784444444444444,
+          "block_reference_coverage": 1.0,
+          "blocks": 30,
+          "radius": {
+            "mean": 5.350597839700085,
+            "p95": 6.98175271309549,
+            "maximum": 23.74808454588849,
+            "count": 8806
+          },
+          "risk_at_radius_threshold": [
+            {
+              "maximum_radius": 0.2,
+              "accepted_targets": 0,
+              "all_target_accepted_fraction": 0.0,
+              "error_exceeds_threshold_fraction": null
+            },
+            {
+              "maximum_radius": 0.5,
+              "accepted_targets": 0,
+              "all_target_accepted_fraction": 0.0,
+              "error_exceeds_threshold_fraction": null
+            },
+            {
+              "maximum_radius": 1.0,
+              "accepted_targets": 0,
+              "all_target_accepted_fraction": 0.0,
+              "error_exceeds_threshold_fraction": null
+            }
+          ]
+        },
+        {
+          "id": "s6_long_baseline_scores",
+          "targets": 9000,
+          "current_scored": 8871,
+          "current_scored_fraction": 0.9856666666666667,
+          "nominal_three_std_reference_coverage": 0.988389133130425,
+          "calibrated_reference_coverage": 1.0,
+          "all_target_within_radius": 0.9856666666666667,
+          "block_reference_coverage": 1.0,
+          "blocks": 30,
+          "radius": {
+            "mean": 5.2042453224750505,
+            "p95": 5.876343420919773,
+            "maximum": 23.74808454588849,
+            "count": 8871
+          },
+          "risk_at_radius_threshold": [
+            {
+              "maximum_radius": 0.2,
+              "accepted_targets": 0,
+              "all_target_accepted_fraction": 0.0,
+              "error_exceeds_threshold_fraction": null
+            },
+            {
+              "maximum_radius": 0.5,
+              "accepted_targets": 0,
+              "all_target_accepted_fraction": 0.0,
+              "error_exceeds_threshold_fraction": null
+            },
+            {
+              "maximum_radius": 1.0,
+              "accepted_targets": 0,
+              "all_target_accepted_fraction": 0.0,
+              "error_exceeds_threshold_fraction": null
+            }
+          ]
+        }
+      ]
+    },
+    "scope": "Descriptive reference-error calibration only. Adjacent blocks dependent, known dataset/subjects; no true contact/rotation/force or hardware coverage guarantee. Default control gate unchanged.",
+    "metadata_revision": "Persisted the same denominator floors (0.005 m and 0.05 m/s) already used in fit and heldout scoring. No refit, parameter selection or score changes."
+  },
+  "online": {
+    "online_10hz": {
+      "processed": 127,
+      "stale_before": 17,
+      "stale_after": 92,
+      "latency_ms": {
+        "mean": 169.63092677165355,
+        "p95": 208.03232,
+        "maximum": 221.7734,
+        "count": 127
+      },
+      "processing_ms": {
+        "mean": 111.97110157480319,
+        "p95": 115.53560999999999,
+        "maximum": 127.2388,
+        "count": 127
+      },
+      "submitted": 144,
+      "replaced": 0,
+      "metrics_window": {
+        "capacity": 4096,
+        "samples": 127,
+        "truncated": false,
+        "scope": "most recent processed packets"
+      },
+      "wall_seconds": 14.522869100008393,
+      "measurement_kind": "paced_file_replay_with_host_scheduled_exposure",
+      "physical_exposure_latency_verified": false,
+      "source_rate_hz": 10,
+      "detector_workers": 1,
+      "pose_workers": 1,
+      "legacy_details": false,
+      "association_history": false,
+      "stage_processing_ms": {
+        "detector_ms": {
+          "mean": 34.812559842088035,
+          "p95": 36.193430004641414,
+          "maximum": 37.16619999613613,
+          "count": 127
+        },
+        "pose_ms": {
+          "mean": 43.044559053039016,
+          "p95": 44.62913999159355,
+          "maximum": 46.455100004095584,
+          "count": 127
+        },
+        "person_selection_ms": {
+          "mean": 0.19156692941915096,
+          "p95": 0.2118900010827928,
+          "maximum": 0.3110000106971711,
+          "count": 127
+        },
+        "fusion_ms": {
+          "mean": 27.256159843348964,
+          "p95": 30.885969987139106,
+          "maximum": 37.68149999086745,
+          "count": 127
+        },
+        "state_ms": {
+          "mean": 6.638189762377906,
+          "p95": 7.99335001502186,
+          "maximum": 9.237399994162843,
+          "count": 127
+        }
+      },
+      "warmup_seconds": 0.32264220001525246,
+      "queue_capacity_packets": 1,
+      "output_deadline_ms": 150.0,
+      "limitation": "Real exposure and synchronization require SDK clock mapping; replay measures actual computation and scheduling only.",
+      "valid_deliveries": 35,
+      "planner_follow_count": 0,
+      "state_rate_hz": 8.744828527024774,
+      "states_saved": false
+    },
+    "online_24hz": {
+      "processed": 1,
+      "stale_before": 143,
+      "stale_after": 1,
+      "latency_ms": {
+        "mean": 153.7785,
+        "p95": 153.7785,
+        "maximum": 153.7785,
+        "count": 1
+      },
+      "processing_ms": {
+        "mean": 111.9336,
+        "p95": 111.9336,
+        "maximum": 111.9336,
+        "count": 1
+      },
+      "submitted": 144,
+      "replaced": 0,
+      "metrics_window": {
+        "capacity": 4096,
+        "samples": 1,
+        "truncated": false,
+        "scope": "most recent processed packets"
+      },
+      "wall_seconds": 8.453947399975732,
+      "measurement_kind": "paced_file_replay_with_host_scheduled_exposure",
+      "physical_exposure_latency_verified": false,
+      "source_rate_hz": 24,
+      "detector_workers": 1,
+      "pose_workers": 1,
+      "legacy_details": false,
+      "association_history": false,
+      "stage_processing_ms": {
+        "detector_ms": {
+          "mean": 34.76889999001287,
+          "p95": 34.76889999001287,
+          "maximum": 34.76889999001287,
+          "count": 1
+        },
+        "pose_ms": {
+          "mean": 44.99080000096001,
+          "p95": 44.99080000096001,
+          "maximum": 44.99080000096001,
+          "count": 1
+        },
+        "person_selection_ms": {
+          "mean": 0.18209998961538076,
+          "p95": 0.18209998961538076,
+          "maximum": 0.18209998961538076,
+          "count": 1
+        },
+        "fusion_ms": {
+          "mean": 28.03210000274703,
+          "p95": 28.03210000274703,
+          "maximum": 28.03210000274703,
+          "count": 1
+        },
+        "state_ms": {
+          "mean": 3.934900014428422,
+          "p95": 3.934900014428422,
+          "maximum": 3.934900014428422,
+          "count": 1
+        }
+      },
+      "warmup_seconds": 0.5301731000072323,
+      "queue_capacity_packets": 1,
+      "output_deadline_ms": 150.0,
+      "limitation": "Real exposure and synchronization require SDK clock mapping; replay measures actual computation and scheduling only.",
+      "valid_deliveries": 0,
+      "planner_follow_count": 0,
+      "state_rate_hz": 0.11828793730167644,
+      "states_saved": false
+    },
+    "online_24hz_parallel": {
+      "processed": 58,
+      "stale_before": 1,
+      "stale_after": 22,
+      "latency_ms": {
+        "mean": 147.04565517241377,
+        "p95": 170.03829305,
+        "maximum": 174.4587,
+        "count": 58
+      },
+      "processing_ms": {
+        "mean": 104.04352586206895,
+        "p95": 108.42211999999999,
+        "maximum": 111.1875,
+        "count": 58
+      },
+      "submitted": 144,
+      "replaced": 85,
+      "metrics_window": {
+        "capacity": 4096,
+        "samples": 58,
+        "truncated": false,
+        "scope": "most recent processed packets"
+      },
+      "wall_seconds": 6.1145551999798045,
+      "measurement_kind": "paced_file_replay_with_host_scheduled_exposure",
+      "physical_exposure_latency_verified": false,
+      "source_rate_hz": 24,
+      "detector_workers": 1,
+      "pose_workers": 4,
+      "legacy_details": false,
+      "association_history": false,
+      "stage_processing_ms": {
+        "detector_ms": {
+          "mean": 35.47738620395178,
+          "p95": 37.067779985954985,
+          "maximum": 38.25649997452274,
+          "count": 58
+        },
+        "pose_ms": {
+          "mean": 33.30538103533588,
+          "p95": 38.55601502000354,
+          "maximum": 40.588000003481284,
+          "count": 58
+        },
+        "person_selection_ms": {
+          "mean": 0.1692568937493167,
+          "p95": 0.18532998074078932,
+          "maximum": 0.22529999841935933,
+          "count": 58
+        },
+        "fusion_ms": {
+          "mean": 28.888449998640713,
+          "p95": 31.600454990984872,
+          "maximum": 33.89200000674464,
+          "count": 58
+        },
+        "state_ms": {
+          "mean": 6.16949482806878,
+          "p95": 7.603190001100302,
+          "maximum": 8.230900013586506,
+          "count": 58
+        }
+      },
+      "warmup_seconds": 0.33635950001189485,
+      "queue_capacity_packets": 1,
+      "output_deadline_ms": 150.0,
+      "limitation": "Real exposure and synchronization require SDK clock mapping; replay measures actual computation and scheduling only.",
+      "valid_deliveries": 36,
+      "planner_follow_count": 0,
+      "state_rate_hz": 9.48556323445924,
+      "states_saved": false
+    },
+    "online_final_default_10hz": {
+      "processed": 144,
+      "stale_before": 0,
+      "stale_after": 0,
+      "latency_ms": {
+        "mean": 110.02187291666667,
+        "p95": 117.51980999999999,
+        "maximum": 122.8991,
+        "count": 144
+      },
+      "processing_ms": {
+        "mean": 88.56662291666667,
+        "p95": 93.94483,
+        "maximum": 100.8977,
+        "count": 144
+      },
+      "submitted": 144,
+      "replaced": 0,
+      "metrics_window": {
+        "capacity": 4096,
+        "samples": 144,
+        "truncated": false,
+        "scope": "most recent processed packets"
+      },
+      "wall_seconds": 14.46593939999002,
+      "source": {
+        "input_frames": 144,
+        "drop_expired_before_decode": true,
+        "skipped_before_decode": 0,
+        "decoded_frames": 144,
+        "metrics_scope": "last 4096 decoded frames",
+        "decode_ms": {
+          "mean": 20.330127083333334,
+          "p95": 23.32762,
+          "maximum": 27.0485,
+          "count": 144
+        },
+        "start_lateness_ms": {
+          "mean": 0.9263861111111112,
+          "p95": 2.9675149999999997,
+          "maximum": 6.0896,
+          "count": 144
+        }
+      },
+      "measurement_kind": "paced_file_replay_with_host_scheduled_exposure",
+      "physical_exposure_latency_verified": false,
+      "source_rate_hz": 10.0,
+      "detector_workers": 4,
+      "pose_workers": 4,
+      "legacy_details": false,
+      "association_history": false,
+      "stage_processing_ms": {
+        "detector_ms": {
+          "mean": 20.263010416682746,
+          "p95": 21.583770019060466,
+          "maximum": 30.441500013694167,
+          "count": 144
+        },
+        "pose_ms": {
+          "mean": 33.37995277575424,
+          "p95": 37.77943502354901,
+          "maximum": 39.08489999594167,
+          "count": 144
+        },
+        "person_selection_ms": {
+          "mean": 0.16802291712439102,
+          "p95": 0.1838000025600195,
+          "maximum": 0.35230000503361225,
+          "count": 144
+        },
+        "fusion_ms": {
+          "mean": 26.91095347088574,
+          "p95": 29.199814998719376,
+          "maximum": 32.60459998273291,
+          "count": 144
+        },
+        "state_ms": {
+          "mean": 7.785642360734831,
+          "p95": 9.035979979671538,
+          "maximum": 14.052600017748773,
+          "count": 144
+        }
+      },
+      "warmup_seconds": 0.5346017999981996,
+      "queue_capacity_packets": 1,
+      "output_deadline_ms": 150.0,
+      "limitation": "Real exposure and synchronization require SDK clock mapping; replay measures actual computation and scheduling only.",
+      "valid_deliveries": 144,
+      "planner_follow_count": 0,
+      "state_rate_hz": 9.95441747807262,
+      "states_saved": false
+    },
+    "online_stall_fixed": {
+      "processed": 47,
+      "stale_before": 49,
+      "stale_after": 47,
+      "latency_ms": {
+        "mean": 170.1107615319149,
+        "p95": 184.5766431,
+        "maximum": 186.550433,
+        "count": 47
+      },
+      "processing_ms": {
+        "mean": 87.13637446808511,
+        "p95": 92.72131999999999,
+        "maximum": 94.716,
+        "count": 47
+      },
+      "submitted": 96,
+      "replaced": 0,
+      "metrics_window": {
+        "capacity": 4096,
+        "samples": 47,
+        "truncated": false,
+        "scope": "most recent processed packets"
+      },
+      "wall_seconds": 6.082157400000142,
+      "source": {
+        "input_frames": 144,
+        "drop_expired_before_decode": true,
+        "skipped_before_decode": 48,
+        "decode_ms": {
+          "mean": 62.585940625,
+          "p95": 66.44069999999999,
+          "maximum": 70.1616,
+          "count": 96
+        },
+        "start_lateness_ms": {
+          "mean": 28.728189489583333,
+          "p95": 48.616167,
+          "maximum": 49.825567,
+          "count": 96
+        }
+      },
+      "measurement_kind": "paced_file_replay_with_host_scheduled_exposure",
+      "physical_exposure_latency_verified": false,
+      "source_rate_hz": 24,
+      "detector_workers": 4,
+      "pose_workers": 4,
+      "legacy_details": false,
+      "association_history": false,
+      "stage_processing_ms": {
+        "detector_ms": {
+          "mean": 20.494380853128956,
+          "p95": 21.872430003713816,
+          "maximum": 27.355600002920255,
+          "count": 47
+        },
+        "pose_ms": {
+          "mean": 33.25408936398936,
+          "p95": 37.461279981653206,
+          "maximum": 38.3711000031326,
+          "count": 47
+        },
+        "person_selection_ms": {
+          "mean": 0.16370637867441204,
+          "p95": 0.17296998703386635,
+          "maximum": 0.21019999985583127,
+          "count": 47
+        },
+        "fusion_ms": {
+          "mean": 28.12844254893865,
+          "p95": 30.708860003505833,
+          "maximum": 31.424299988429993,
+          "count": 47
+        },
+        "state_ms": {
+          "mean": 5.06104255513724,
+          "p95": 6.375520006986334,
+          "maximum": 6.504799996037036,
+          "count": 47
+        }
+      },
+      "warmup_seconds": 0.3261639999982435,
+      "queue_capacity_packets": 1,
+      "output_deadline_ms": 150.0,
+      "limitation": "Real exposure and synchronization require SDK clock mapping; replay measures actual computation and scheduling only.",
+      "valid_deliveries": 0,
+      "planner_follow_count": 0,
+      "state_rate_hz": 7.727521158857037,
+      "states_saved": false,
+      "fault_injection": {
+        "additional_decode_delay_ms_per_camera": 10,
+        "cameras": 4,
+        "physical_measurement": false
+      }
+    },
+    "online_stall_legacy": {
+      "processed": 1,
+      "stale_before": 143,
+      "stale_after": 1,
+      "latency_ms": {
+        "mean": 159.2664,
+        "p95": 159.2664,
+        "maximum": 159.2664,
+        "count": 1
+      },
+      "processing_ms": {
+        "mean": 94.1622,
+        "p95": 94.1622,
+        "maximum": 94.1622,
+        "count": 1
+      },
+      "submitted": 144,
+      "replaced": 0,
+      "metrics_window": {
+        "capacity": 4096,
+        "samples": 1,
+        "truncated": false,
+        "scope": "most recent processed packets"
+      },
+      "wall_seconds": 9.023275400017155,
+      "source": {
+        "input_frames": 144,
+        "drop_expired_before_decode": false,
+        "skipped_before_decode": 0,
+        "decode_ms": {
+          "mean": 62.266171527777765,
+          "p95": 67.29933999999999,
+          "maximum": 69.5728,
+          "count": 144
+        },
+        "start_lateness_ms": {
+          "mean": 1484.0144027777778,
+          "p95": 2801.95239305,
+          "maximum": 2946.156767,
+          "count": 144
+        }
+      },
+      "measurement_kind": "paced_file_replay_with_host_scheduled_exposure",
+      "physical_exposure_latency_verified": false,
+      "source_rate_hz": 24,
+      "detector_workers": 4,
+      "pose_workers": 4,
+      "legacy_details": false,
+      "association_history": false,
+      "stage_processing_ms": {
+        "detector_ms": {
+          "mean": 27.402499981690198,
+          "p95": 27.402499981690198,
+          "maximum": 27.402499981690198,
+          "count": 1
+        },
+        "pose_ms": {
+          "mean": 34.48470000876114,
+          "p95": 34.48470000876114,
+          "maximum": 34.48470000876114,
+          "count": 1
+        },
+        "person_selection_ms": {
+          "mean": 0.1635999942664057,
+          "p95": 0.1635999942664057,
+          "maximum": 0.1635999942664057,
+          "count": 1
+        },
+        "fusion_ms": {
+          "mean": 27.646299975458533,
+          "p95": 27.646299975458533,
+          "maximum": 27.646299975458533,
+          "count": 1
+        },
+        "state_ms": {
+          "mean": 4.434700007550418,
+          "p95": 4.434700007550418,
+          "maximum": 4.434700007550418,
+          "count": 1
+        }
+      },
+      "warmup_seconds": 0.5159843000001274,
+      "queue_capacity_packets": 1,
+      "output_deadline_ms": 150.0,
+      "limitation": "Real exposure and synchronization require SDK clock mapping; replay measures actual computation and scheduling only.",
+      "valid_deliveries": 0,
+      "planner_follow_count": 0,
+      "state_rate_hz": 0.11082450171011059,
+      "states_saved": false,
+      "fault_injection": {
+        "additional_decode_delay_ms_per_camera": 10,
+        "cameras": 4,
+        "physical_measurement": false
+      }
+    },
+    "online_verified_10hz": {
+      "processed": 144,
+      "stale_before": 0,
+      "stale_after": 0,
+      "latency_ms": {
+        "mean": 106.24216041666666,
+        "p95": 113.48955,
+        "maximum": 120.369,
+        "count": 144
+      },
+      "processing_ms": {
+        "mean": 86.09822569444444,
+        "p95": 91.756815,
+        "maximum": 101.6641,
+        "count": 144
+      },
+      "submitted": 144,
+      "replaced": 0,
+      "metrics_window": {
+        "capacity": 4096,
+        "samples": 144,
+        "truncated": false,
+        "scope": "most recent processed packets"
+      },
+      "wall_seconds": 14.457549099985044,
+      "source": {
+        "input_frames": 144,
+        "drop_expired_before_decode": true,
+        "skipped_before_decode": 0,
+        "decode_ms": {
+          "mean": 19.09305763888889,
+          "p95": 22.7734,
+          "maximum": 24.6702,
+          "count": 144
+        },
+        "start_lateness_ms": {
+          "mean": 0.8463951388888888,
+          "p95": 2.7964999999999995,
+          "maximum": 3.3057,
+          "count": 144
+        }
+      },
+      "measurement_kind": "paced_file_replay_with_host_scheduled_exposure",
+      "physical_exposure_latency_verified": false,
+      "source_rate_hz": 10,
+      "detector_workers": 4,
+      "pose_workers": 4,
+      "legacy_details": false,
+      "association_history": false,
+      "stage_processing_ms": {
+        "detector_ms": {
+          "mean": 19.70767152629883,
+          "p95": 20.947649993468076,
+          "maximum": 30.839000013656914,
+          "count": 144
+        },
+        "pose_ms": {
+          "mean": 32.46918472319117,
+          "p95": 34.27961499110097,
+          "maximum": 38.288199983071536,
+          "count": 144
+        },
+        "person_selection_ms": {
+          "mean": 0.1686229160340089,
+          "p95": 0.17725498182699084,
+          "maximum": 0.3564000071492046,
+          "count": 144
+        },
+        "fusion_ms": {
+          "mean": 26.085291666378097,
+          "p95": 28.272474998084363,
+          "maximum": 40.57119999197312,
+          "count": 144
+        },
+        "state_ms": {
+          "mean": 7.62938888874487,
+          "p95": 8.982215014111716,
+          "maximum": 15.60130002326332,
+          "count": 144
+        }
+      },
+      "warmup_seconds": 0.3242158000066411,
+      "queue_capacity_packets": 1,
+      "output_deadline_ms": 150.0,
+      "limitation": "Real exposure and synchronization require SDK clock mapping; replay measures actual computation and scheduling only.",
+      "valid_deliveries": 144,
+      "planner_follow_count": 0,
+      "state_rate_hz": 9.960194428815667,
+      "states_saved": false
+    },
+    "online_verified_default": {
+      "processed": 54,
+      "stale_before": 1,
+      "stale_after": 35,
+      "latency_ms": {
+        "mean": 156.48616544444448,
+        "p95": 175.814687,
+        "maximum": 183.035733,
+        "count": 54
+      },
+      "processing_ms": {
+        "mean": 112.03746851851848,
+        "p95": 115.753945,
+        "maximum": 121.3767,
+        "count": 54
+      },
+      "submitted": 144,
+      "replaced": 89,
+      "metrics_window": {
+        "capacity": 4096,
+        "samples": 54,
+        "truncated": false,
+        "scope": "most recent processed packets"
+      },
+      "wall_seconds": 6.127567699993961,
+      "source": {
+        "input_frames": 144,
+        "drop_expired_before_decode": true,
+        "skipped_before_decode": 0,
+        "decode_ms": {
+          "mean": 20.148791666666668,
+          "p95": 27.00452,
+          "maximum": 31.2435,
+          "count": 144
+        },
+        "start_lateness_ms": {
+          "mean": 0.52056875,
+          "p95": 0.91081,
+          "maximum": 6.158533,
+          "count": 144
+        }
+      },
+      "measurement_kind": "paced_file_replay_with_host_scheduled_exposure",
+      "physical_exposure_latency_verified": false,
+      "source_rate_hz": 24,
+      "detector_workers": 1,
+      "pose_workers": 1,
+      "legacy_details": false,
+      "association_history": false,
+      "stage_processing_ms": {
+        "detector_ms": {
+          "mean": 34.75114814689193,
+          "p95": 36.01967999857152,
+          "maximum": 36.614100012229756,
+          "count": 54
+        },
+        "pose_ms": {
+          "mean": 42.80664259352273,
+          "p95": 44.76441498845815,
+          "maximum": 46.43380001652986,
+          "count": 54
+        },
+        "person_selection_ms": {
+          "mean": 0.18902592516193786,
+          "p95": 0.21780499810120085,
+          "maximum": 0.27829999453388155,
+          "count": 54
+        },
+        "fusion_ms": {
+          "mean": 28.622951852243947,
+          "p95": 31.977750011719763,
+          "maximum": 34.84730000491254,
+          "count": 54
+        },
+        "state_ms": {
+          "mean": 5.641372220620893,
+          "p95": 7.562834987766107,
+          "maximum": 8.196599985240027,
+          "count": 54
+        }
+      },
+      "warmup_seconds": 0.3165500000177417,
+      "queue_capacity_packets": 1,
+      "output_deadline_ms": 150.0,
+      "limitation": "Real exposure and synchronization require SDK clock mapping; replay measures actual computation and scheduling only.",
+      "valid_deliveries": 19,
+      "planner_follow_count": 0,
+      "state_rate_hz": 8.812632131351764,
+      "states_saved": false
+    },
+    "online_verified_legacy": {
+      "processed": 53,
+      "stale_before": 1,
+      "stale_after": 35,
+      "latency_ms": {
+        "mean": 157.31066858490567,
+        "p95": 176.7973798,
+        "maximum": 181.2261,
+        "count": 53
+      },
+      "processing_ms": {
+        "mean": 114.31640188679245,
+        "p95": 119.01394,
+        "maximum": 120.635,
+        "count": 53
+      },
+      "submitted": 144,
+      "replaced": 90,
+      "metrics_window": {
+        "capacity": 4096,
+        "samples": 53,
+        "truncated": false,
+        "scope": "most recent processed packets"
+      },
+      "wall_seconds": 6.139667800016468,
+      "source": {
+        "input_frames": 144,
+        "drop_expired_before_decode": false,
+        "skipped_before_decode": 0,
+        "decode_ms": {
+          "mean": 23.075266666666668,
+          "p95": 30.844165,
+          "maximum": 36.1993,
+          "count": 144
+        },
+        "start_lateness_ms": {
+          "mean": 0.5760347222222221,
+          "p95": 1.5901280999999954,
+          "maximum": 9.938133,
+          "count": 144
+        }
+      },
+      "measurement_kind": "paced_file_replay_with_host_scheduled_exposure",
+      "physical_exposure_latency_verified": false,
+      "source_rate_hz": 24,
+      "detector_workers": 1,
+      "pose_workers": 1,
+      "legacy_details": false,
+      "association_history": false,
+      "stage_processing_ms": {
+        "detector_ms": {
+          "mean": 35.53023962260066,
+          "p95": 37.57687998586334,
+          "maximum": 39.309200015850365,
+          "count": 53
+        },
+        "pose_ms": {
+          "mean": 43.928477358521086,
+          "p95": 47.29566003661603,
+          "maximum": 48.455200041644275,
+          "count": 53
+        },
+        "person_selection_ms": {
+          "mean": 0.18589245320192344,
+          "p95": 0.20660000736825168,
+          "maximum": 0.31030000536702573,
+          "count": 53
+        },
+        "fusion_ms": {
+          "mean": 28.97194905683205,
+          "p95": 31.702739972388372,
+          "maximum": 32.819800020661205,
+          "count": 53
+        },
+        "state_ms": {
+          "mean": 5.672394341398206,
+          "p95": 7.3152200086042285,
+          "maximum": 8.07179999537766,
+          "count": 53
+        }
+      },
+      "warmup_seconds": 0.5226190999965183,
+      "queue_capacity_packets": 1,
+      "output_deadline_ms": 150.0,
+      "limitation": "Real exposure and synchronization require SDK clock mapping; replay measures actual computation and scheduling only.",
+      "valid_deliveries": 18,
+      "planner_follow_count": 0,
+      "state_rate_hz": 8.632388872873193,
+      "states_saved": false
+    },
+    "online_verified_occlusion": {
+      "processed": 39,
+      "stale_before": 48,
+      "stale_after": 37,
+      "latency_ms": {
+        "mean": 176.0909965384615,
+        "p95": 240.21614330000003,
+        "maximum": 250.586633,
+        "count": 39
+      },
+      "processing_ms": {
+        "mean": 88.42932564102564,
+        "p95": 144.08823,
+        "maximum": 152.5656,
+        "count": 39
+      },
+      "submitted": 92,
+      "replaced": 5,
+      "metrics_window": {
+        "capacity": 4096,
+        "samples": 39,
+        "truncated": false,
+        "scope": "most recent processed packets"
+      },
+      "wall_seconds": 6.126138799998444,
+      "source": {
+        "input_frames": 144,
+        "drop_expired_before_decode": true,
+        "skipped_before_decode": 52,
+        "decode_ms": {
+          "mean": 65.98302717391304,
+          "p95": 86.585785,
+          "maximum": 95.2531,
+          "count": 92
+        },
+        "start_lateness_ms": {
+          "mean": 30.000047445652175,
+          "p95": 47.99440485,
+          "maximum": 52.944567,
+          "count": 92
+        }
+      },
+      "measurement_kind": "paced_file_replay_with_host_scheduled_exposure",
+      "physical_exposure_latency_verified": false,
+      "source_rate_hz": 24,
+      "detector_workers": 4,
+      "pose_workers": 4,
+      "legacy_details": false,
+      "association_history": false,
+      "stage_processing_ms": {
+        "detector_ms": {
+          "mean": 19.924684613495348,
+          "p95": 21.204169985139742,
+          "maximum": 26.155699975788593,
+          "count": 39
+        },
+        "pose_ms": {
+          "mean": 37.68841282222778,
+          "p95": 92.67320996441414,
+          "maximum": 98.3303000102751,
+          "count": 39
+        },
+        "person_selection_ms": {
+          "mean": 0.24346666834436548,
+          "p95": 0.18151000258512798,
+          "maximum": 3.446799993980676,
+          "count": 39
+        },
+        "fusion_ms": {
+          "mean": 25.292923076985737,
+          "p95": 29.74478998221457,
+          "maximum": 33.0248000100255,
+          "count": 39
+        },
+        "state_ms": {
+          "mean": 5.242838460850553,
+          "p95": 6.650530008482747,
+          "maximum": 6.998099997872487,
+          "count": 39
+        }
+      },
+      "warmup_seconds": 0.3228943000140134,
+      "queue_capacity_packets": 1,
+      "output_deadline_ms": 150.0,
+      "limitation": "Real exposure and synchronization require SDK clock mapping; replay measures actual computation and scheduling only.",
+      "valid_deliveries": 2,
+      "planner_follow_count": 0,
+      "state_rate_hz": 6.366163300121426,
+      "states_saved": false
+    },
+    "online_verified_parallel": {
+      "processed": 69,
+      "stale_before": 1,
+      "stale_after": 5,
+      "latency_ms": {
+        "mean": 132.15718501449274,
+        "p95": 150.445293,
+        "maximum": 152.093,
+        "count": 69
+      },
+      "processing_ms": {
+        "mean": 87.44399999999999,
+        "p95": 92.89162,
+        "maximum": 100.626,
+        "count": 69
+      },
+      "submitted": 144,
+      "replaced": 74,
+      "metrics_window": {
+        "capacity": 4096,
+        "samples": 69,
+        "truncated": false,
+        "scope": "most recent processed packets"
+      },
+      "wall_seconds": 6.116502300021239,
+      "source": {
+        "input_frames": 144,
+        "drop_expired_before_decode": true,
+        "skipped_before_decode": 0,
+        "decode_ms": {
+          "mean": 21.516138888888886,
+          "p95": 28.193765,
+          "maximum": 33.5076,
+          "count": 144
+        },
+        "start_lateness_ms": {
+          "mean": 0.5069020833333333,
+          "p95": 1.1631969999999994,
+          "maximum": 6.612533,
+          "count": 144
+        }
+      },
+      "measurement_kind": "paced_file_replay_with_host_scheduled_exposure",
+      "physical_exposure_latency_verified": false,
+      "source_rate_hz": 24,
+      "detector_workers": 4,
+      "pose_workers": 4,
+      "legacy_details": false,
+      "association_history": false,
+      "stage_processing_ms": {
+        "detector_ms": {
+          "mean": 19.68268695687268,
+          "p95": 20.700139983091503,
+          "maximum": 28.94170000217855,
+          "count": 69
+        },
+        "pose_ms": {
+          "mean": 32.40693333614415,
+          "p95": 33.31194000784308,
+          "maximum": 38.2806999841705,
+          "count": 69
+        },
+        "person_selection_ms": {
+          "mean": 0.17065362265819442,
+          "p95": 0.19871999975293875,
+          "maximum": 0.2379999787081033,
+          "count": 69
+        },
+        "fusion_ms": {
+          "mean": 28.22076956584604,
+          "p95": 32.46387999388389,
+          "maximum": 34.63069998542778,
+          "count": 69
+        },
+        "state_ms": {
+          "mean": 6.928063765846436,
+          "p95": 8.208179991925135,
+          "maximum": 14.219300006516278,
+          "count": 69
+        }
+      },
+      "warmup_seconds": 0.31355469999834895,
+      "queue_capacity_packets": 1,
+      "output_deadline_ms": 150.0,
+      "limitation": "Real exposure and synchronization require SDK clock mapping; replay measures actual computation and scheduling only.",
+      "valid_deliveries": 64,
+      "planner_follow_count": 0,
+      "state_rate_hz": 11.280957092055766,
+      "states_saved": false
+    }
+  },
+  "parallel_detection_parity": {
+    "frames": 144,
+    "max_keypoint_difference_px": 0.0,
+    "max_score_difference": 0.0,
+    "person_counts_identical": true,
+    "coverage_identical": true,
+    "passed": true,
+    "scope": "same hybrid model; body remains batch 1; four detector workers",
+    "pose_workers": 4
+  },
+  "runtime": {
+    "vision": {
+      "python": "C:\\Users\\TanWei\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\multiview-pose-sim\\venv-py311-cuda\\Scripts\\python.exe",
+      "python_version": "3.11.9",
+      "device": "cuda",
+      "render_device": "OPTIX",
+      "dependency_lock_sha256": "05f908829c736553f36b587e11022838a8c6bac6dbdd61a7aaae7f83bbec34d2",
+      "blender": "C:\\Users\\TanWei\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\multiview-pose-sim\\blender-4.5.3-windows-x64\\blender.exe",
+      "asset": "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\assets\\CesiumMan.glb"
+    },
+    "robot": {
+      "python": "C:\\Users\\TanWei\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\multiview-pose-sim\\venv-py311-robot\\Scripts\\python.exe",
+      "python_version": "3.11.9",
+      "device": "cuda",
+      "render_device": "MuJoCo OpenGL",
+      "dependency_lock_sha256": "98a85a8c1d58de4741ead90fd812c21a197fe9617d42cac556e22ab8dafde323",
+      "asset_manifest_sha256": "042d821249f0f9eb9eb83b0b4d4fa9c3f014b710de4babf686604401af574210"
+    },
+    "environments_modified": false,
+    "new_weights_cached_outside_repository": true
+  },
+  "validation": {
+    "robot_tests": {
+      "total": 249,
+      "passed": 249,
+      "skipped": 0
+    },
+    "vision_tests": {
+      "total": 249,
+      "passed": 223,
+      "skipped": 26
+    },
+    "new_tests": 21,
+    "diff_check": "passed; pre-existing requirements-lock line-ending warning",
+    "inputs": {
+      "verified_files": 32,
+      "all_match": true,
+      "input_sha256": {
+        "outputs\\public_datasets\\mpi_long_detections\\s1_long\\detections.jsonl": "07f181eab7e629245930cfd5ec364e0d09fe368d318451e95f61ef17e8e3ae2e",
+        "outputs\\public_datasets\\mpi_long_person_candidates\\s1_long.jsonl": "69423876e1848a63fc95ea47bec3836bea4102b0920f2f35327054876e1a483e",
+        "outputs\\public_datasets\\mpi_long\\inputs\\s1_long\\cameras.json": "2ae5b55e954f140752ed95012602b1506d7e8dd41f41a7d75af1d343382b74a5",
+        "outputs\\public_datasets\\mpi_long_detections\\s2_long\\detections.jsonl": "092c157bc62b3d32217669edfea7db5fdce7eed2a1528ec38504fe6013a60b6f",
+        "outputs\\public_datasets\\mpi_long_person_candidates\\s2_long.jsonl": "3f876ab6405890e910ddcffcdccbc9555dda79026170d114724d30f3b6e9ff7d",
+        "outputs\\public_datasets\\mpi_long\\inputs\\s2_long\\cameras.json": "2ae5b55e954f140752ed95012602b1506d7e8dd41f41a7d75af1d343382b74a5",
+        "outputs\\public_datasets\\mpi_long_detections\\s4_long\\detections.jsonl": "7fecd44f9306ce1e21d267fab7cb6a960fe204dababd64660b5b48d2fca6b6ab",
+        "outputs\\public_datasets\\mpi_long_person_candidates\\s4_long.jsonl": "6c842337937e4f82e0fd936580c1714b64a42a4722dbb2dcae59e2ec4e95e4a8",
+        "outputs\\public_datasets\\mpi_long\\inputs\\s4_long\\cameras.json": "2ae5b55e954f140752ed95012602b1506d7e8dd41f41a7d75af1d343382b74a5",
+        "outputs\\public_datasets\\mpi_long_detections\\s6_long\\detections.jsonl": "f189b744d5341e76bd4c306cbe299a9c765a697499690de296b722717a6c0403",
+        "outputs\\public_datasets\\mpi_long_person_candidates\\s6_long.jsonl": "7bf503f6776cae7c8619c8980667ef619466f8d146ca2e3e757a65415270a71e",
+        "outputs\\public_datasets\\mpi_long\\inputs\\s6_long\\cameras.json": "2ae5b55e954f140752ed95012602b1506d7e8dd41f41a7d75af1d343382b74a5",
+        "outputs\\public_datasets\\mpi_long\\inputs\\s1_long\\source.json": "ccc24c32744e3462349dc5398036875000054a9421f7d58e4679fe6f2e64014c",
+        "outputs\\public_datasets\\mpi_long\\inputs\\s2_long\\source.json": "73fa9bd5e1a066ea63133cb658104cc4b3b79bfc3bd23afe397fef630a8ae70f",
+        "outputs\\public_datasets\\mpi_long\\inputs\\s4_long\\source.json": "429442be7fcc70cc88cb4d870e900d4806340a9b3b6027d4b7d8e2d639f9a24f",
+        "outputs\\public_datasets\\mpi_long\\inputs\\s6_long\\source.json": "9810dc03b03e7e99513a12c7966080a92154651008a0f8d0c962cddffa594df0",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S1\\Seq1\\imageSequence\\video_0.avi": "2f14a8907587743a66fa681ec5e7bda46bc2e9c08a7bf758d4ced7a0e697e34d",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S1\\Seq1\\imageSequence\\video_2.avi": "4b92640396188d1a783d30d998a54c9d5a7e65ffbdce05a2b985774257a298d7",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S1\\Seq1\\imageSequence\\video_5.avi": "4e553b07d816c78700f2306c802eb4fd368777c1bb20e28ed9d8db6deb4c9861",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S1\\Seq1\\imageSequence\\video_7.avi": "481bd930e4c94accf9acbe7888fa2847183c442fe6e6d2a765db90a760cd11a3",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S2\\Seq2\\imageSequence\\video_0.avi": "e0b1be016dd6cbbb1ac16a3acc35031ded17534927fba6cbe2ccbd709df28cc3",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S2\\Seq2\\imageSequence\\video_2.avi": "1c913aa4c21985384055fb0fa9b6afb08dd2189ecf1bc15e7eedd292eb7483b1",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S2\\Seq2\\imageSequence\\video_5.avi": "d6bae85c71b5ebadb38b7d3917e7c0fdba76a4235b25d095fb9cab083ca0771f",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S2\\Seq2\\imageSequence\\video_7.avi": "5a3dbebd071318eb0169989b588889f94761275393f0e8d1d40369b2ffed5e5a",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S4\\Seq1\\imageSequence\\video_0.avi": "ce9f5a2501c1c10fc0af2211c4d5eefb2d31df5305fad7464eba53063314c1ad",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S4\\Seq1\\imageSequence\\video_2.avi": "22a81f591f0d93997eeaf851c1586fa71c13a2cafcc0def4949945a12cce0b0f",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S4\\Seq1\\imageSequence\\video_5.avi": "599248b9d1b415daa38a5e483c5722908fbaae15644063744f9cc32c0a45ee94",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S4\\Seq1\\imageSequence\\video_7.avi": "a2e273f1e0fbb46928de7b5315ea451f62aeb260e6c77802795c8e8ecd0479a1",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S6\\Seq2\\imageSequence\\video_0.avi": "490ab5a3c3260f590004c1638ebf6f70956002d9ec65f183ab537d441a12b62a",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S6\\Seq2\\imageSequence\\video_2.avi": "a361d86e4082a2672afdbf72307cb62bb7280f9dd6f49994634353305f8caa97",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S6\\Seq2\\imageSequence\\video_5.avi": "942670b78c9a569eb800a3bc670b940a84bfeb4ecf4bb58ee5efd7bebe455734",
+        "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\outputs\\public_datasets\\mpi_inf_3dhp\\S6\\Seq2\\imageSequence\\video_7.avi": "4a097f063315d39084e1c9f783733f6672dba54ce0ff3f879ff5b173104c45ba"
+      }
+    }
+  },
+  "post_scoring_changes": "Model checksum enforcement and JSON manifest normalization; persisted already-used calibration std floors; file replay source deadline accounting, bounded no-state memory, and validated 4/4 worker configuration. No offline pose algorithm parameter tuning.",
+  "limitations": [
+    "No physical exposure-to-output latency or actual G1 validation. Online timing includes file I/O and scheduled host time; slowed 10 Hz replay is not full-speed human motion capture.",
+    "No independent anatomical rotation, contact force, full foot orientation or physical foot-slip truth. Default ground is unknown; support remains unknown.",
+    "Joint local covariance propagation ignores unknown cross-correlations and systematic detector/calibration/joint-definition bias. Empirical intervals give no hardware safety permission.",
+    "Reference-block calibration uses 20 dependent one-second blocks. High coverage obtained with broad radii is not useful fine-control accuracy.",
+    "Online input-stall repair bounds backlog but did not yield any timely outputs under injected 40ms/group delay; deadlines still reject every new motion in that stress case.",
+    "Controller untouched; previous full imitation 0/10 remains historical evidence, not a rerun or an improvement in this round. No SOTA or best-possible claim."
+  ],
+  "research_sources": [
+    "https://arxiv.org/abs/2608.30521",
+    "https://arxiv.org/abs/2309.07910",
+    "https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/02418.pdf",
+    "https://arxiv.org/abs/2303.07399"
+  ],
+  "final_code_sha256": {
+    "pose_sim/joint_window.py": "ec2e548cb9bd44261d59ff757b69819aa5ce4161c91bf2f303182cf7fae54bdc",
+    "pose_sim/body_head_experiment.py": "8a8ec2923e68ba4721359b9ef9d6336cb39433ea102c8a5f3af5745e68b28c85",
+    "pose_sim/kinematic_observability.py": "6aca79a4c220cbc056f6e5e03845aea74f3678ed2b27050fe6da99637703e0d6",
+    "pose_sim/landmark_velocity.py": "4e234496199af0a3fc80197a2ddb3aa57ddb62c4de404b0a5a7c0f120c13c211",
+    "pose_sim/empirical_bounds.py": "1e619225081e330316937fcbf281517f2b8eeec25f3258ef8adeeeb9aa4f867b",
+    "pose_sim/human_motion.py": "3e4077d904dbcca98d55e42d9c4cc3227c1c94a89bb2789e15437341554f7515",
+    "pose_sim/multiview_temporal.py": "a0d92ca7b49c67d712354fa451bfcb450016e2dbcbd3b79afc8db30ce82986e8",
+    "pose_sim/streaming_vision.py": "e3d6cf9d7b5e63b5b2d7e1314359980b8800d4bade36868b38097e791852d569",
+    "scripts/benchmark_joint_vision.py": "63658f88eec7258b24351394424394e8d571bce047e604ad3daba994187c4c49",
+    "scripts/benchmark_kinematic_state.py": "64c8912676598153a9f0cad71747aec67e3b5cce62ee967f1bf5c3d100012aa4",
+    "scripts/calibrate_visual_bounds.py": "e55eae2c2352e42942e1bd1d5335b93ad20d77eb535fdb2bbab9fa7561c08e93",
+    "scripts/benchmark_body_head.py": "1bd586bc24aa1b9e75adf70d5e46c1e42be51920ef6b2ff84c73b3041d03a989",
+    "scripts/audit_body_head_scores.py": "6e01f6703419bf9b53e0df4d0b51b377e114e8e2bde0e81b4b2fa4ff830ffe92",
+    "scripts/stream_vision.py": "fdd96302a5143014567e4cb0b23f63a65e8abeaf429b147aaddd67ab3608bddf",
+    "tests/test_joint_window.py": "7bb62f850755bc537ca59bad7a23aa4c6902e880b42126c97796a7a125ad599e",
+    "tests/test_kinematic_observability.py": "416071813bdf93574b3dcc4f63f0484d837a0cfee00f1725d1969f53800555ec",
+    "tests/test_empirical_bounds.py": "bd5b263c0d074dacfe150061f1c175844c4d1aff7379eeaf7b8d24b0189d455e",
+    "tests/test_body_head_experiment.py": "e7bf25548c3bbac4e456ec2b8ee877d6c360a3fe793ba02468d261b98aeeb8e2",
+    "tests/test_replay_deadline.py": "d80b2a0ecc9937b8841345308e4fe93463a1cdfe528ce661ed9a0c9e9d4f2386",
+    "config/vision_joint_window.json": "e393aa28045588421b7a0b82787dc1955918a8b97cd4844c8cd0a5a5cd8e6e4c",
+    "config/vision_motion.json": "02cb973690b858ff396649e70fafd4ba116067249a955dba5add89ff49f5fc60",
+    "assets/model_checksums.json": "23c29a737d8b43609a8fd6da1f2ec7757f81bc6957d947ee39416eb7fe5d66b8"
+  },
+  "evidence_sha256": {
+    "outputs/vision_joint_round/development/report.json": "ce96e38de0600f097e0fdcacb72d6c6f7b7eaab909401eebd91bda7922fc5ad0",
+    "outputs/vision_joint_round/calibration/report.json": "504d4a9cd9af1ba98716aa6c39b0963ca4e58e940aeef8767d9c1d9391953f58",
+    "outputs/vision_joint_round/heldout/report.json": "f68f8f5fd5097515e71156fc76c3f9a17d463269a0953d48b912e470624b730a",
+    "outputs/vision_joint_round/selection.json": "db881da7a0a1b2e2d325a469677efddcee16bb4c57c9815eec0163be37333f9e",
+    "outputs/vision_joint_round/body_head_development/report.json": "1a9dc330c9f90859427a367421647afc7faa9a016c646087be159997647523b4",
+    "outputs/vision_joint_round/body_head_development/tail_audit.json": "6d8de7b9866c7411b6e589dbb3dd543ef1c9bc072dd54470c1e53a7e02306a78",
+    "outputs/vision_joint_round/body_head_assessment/report.json": "9a1169e62c4c7948f506d4613603bfc031d6aeb5cb89d3c20a81e3f9d8ac3aaf",
+    "outputs/vision_joint_round/body_head_assessment/tail_audit.json": "1e2b3deca89d85b0b0104f26c9567f211eed0ad12af1c9f9151a03127270ee4e",
+    "outputs/vision_joint_round/body_head_selection.json": "d5a1794554cad1b7796dbe326dfc6a76f5dac2b5b04c1665d349d1b4f1388ac5",
+    "outputs/vision_joint_round/body_head_freeze_serialization_fix.json": "db37f0b18be4958e2957bf4836bff7590d0da68163f783a4da0aa39852d03d75",
+    "outputs/vision_joint_round/body_head_gpu_proof.json": "e019e67dee5c2fafdb1c1b6e910d477a32b6c4ba5339267a85ee682e4290344c",
+    "outputs/vision_joint_round/kinematic_state/report.json": "0c8bd5857aeef0164d9a2b9afd867aa7be8cc153c62edbbedc437bc34a3b4743",
+    "outputs/vision_joint_round/uncertainty_audit.json": "1254531adfd40fa98749c51c11f30d24ef007283c14485d729293b399909edac",
+    "outputs/vision_joint_round/parallel_detection_parity.json": "d05f9d2b1069245f277deda2ef82f6fb3608470d5e43fb2e0fc71e11c78acdd0",
+    "outputs/vision_joint_round/inputs_verified.json": "1f0941e55cf7b07ab5ddee18ef5d42d1eda0252fd8a1f93872a4572f1a1d1e6f",
+    "outputs/vision_joint_round/cleanup_status.json": "f7e979f277f12b94334f0f123bed8addc17d9eaa80f840909c764a5fcd837b5c",
+    "outputs/vision_joint_round/regression_robot.log": "95cb369ccebf8a59134ae06d50a874faec88fd6bf5bb77b09bad2edb4bdd2d2f",
+    "outputs/vision_joint_round/regression_vision.log": "566f167289f779da8829d06d3f9abfb843e7e1bdd1f274aecb4c4c2da9061868",
+    "outputs/vision_joint_round/online_10hz/timing.json": "c34ce33300cf95d60eeffcb2e251aac74f5dbcb7617a33c46fc18fc9c63bfb7c",
+    "outputs/vision_joint_round/online_24hz/timing.json": "15f70c44472760ebb04482f6b350cab40ec0268f5adea9d51a5152f6fa5ef5d6",
+    "outputs/vision_joint_round/online_24hz_parallel/timing.json": "8c47f5ea3d12361329e0e191c72a63454c0eb0abc963e9ca1f29c0ae505c6802",
+    "outputs/vision_joint_round/online_final_default_10hz/timing.json": "95f26eb1636686f8f64781da8534d7c96d426e9a29ca41450737fb5662a086ac",
+    "outputs/vision_joint_round/online_stall_fixed/timing.json": "6c9bc131c4e110327481741b4eb310fbc1517d7d35259f854bbb1c3b379ae27a",
+    "outputs/vision_joint_round/online_stall_legacy/timing.json": "fc25754568a015ed3edce3127b11ce6637821efe27ff96b5006fcdad9284ebb3",
+    "outputs/vision_joint_round/online_verified_10hz/timing.json": "2c67d2a94284e9390e2488ddaf9e4c99751d3de955eea0eb89b976a944eec06f",
+    "outputs/vision_joint_round/online_verified_default/timing.json": "3b27e2573f5ea8c1f7bce5033e33a2d2938dd7f09be17b7167c11460243121a1",
+    "outputs/vision_joint_round/online_verified_legacy/timing.json": "c6d5d149a6f3a5fd8b681b258c79cfc1161d84d27572a8f25b366cbd12005105",
+    "outputs/vision_joint_round/online_verified_occlusion/timing.json": "455089b7c717139e3670e4e9ed06cfcc2b297f845702707b45d2b5d00965f8c6",
+    "outputs/vision_joint_round/online_verified_parallel/timing.json": "0de81bd795bb9e5799700b61a8a4b2c3ba091cc9c52e9499b5a33d6914d339c7"
+  },
+  "cleanup": {
+    "numeric_evidence_bytes": 7878421,
+    "duplicated_rgb_videos": 0,
+    "generated_full_state_trajectories": 0,
+    "empty_failed_directory": {
+      "action": "Remove empty failed body_head_heldout directory",
+      "status": "automatic approval review rejected",
+      "reason": "blocked by policy",
+      "retried": false,
+      "preserved": true
+    },
+    "historical_rejected_cleanup_not_retried": true
+  },
+  "next_priority": "Preserve multimodal pixel evidence and jointly test cross-view identity/occlusion hypotheses; separate detector/joint-definition bias from body scale; acquire independent rotation/contact and physical clock references."
+}

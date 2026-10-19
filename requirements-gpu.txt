@@ -1,0 +1,4 @@
+-r requirements-common.txt
+onnxruntime-gpu[cuda,cudnn]==1.22.0
+# Match the cuDNN generation used with ORT 1.22; do not float to newer engine APIs.
+nvidia-cudnn-cu12==9.10.2.21

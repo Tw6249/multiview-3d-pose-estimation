@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "uncalibrated_kinematic_hypotheses",
+  "height_score_scale_m": 0.035,
+  "speed_score_scale_m_s": 0.2,
+  "minimum_stationary_score": 0.65,
+  "maximum_position_std_m": 0.03,
+  "maximum_velocity_std_m_s": 0.35,
+  "minimum_swing_height_m": 0.08,
+  "swing_uncertainty_multiplier": 2.0,
+  "confirmation_frames": 3,
+  "maximum_gap_s": 0.15
+}

@@ -1,0 +1,954 @@
+{
+  "date": "2026-10-18",
+  "status": "candidate_improves_position_but_fails_coverage_acceptance_default_unchanged",
+  "scope": "PMPose-S no-mask same-box ablation; not full BBoxMaskPose; all algorithms frozen before first reference access.",
+  "frames": 2500,
+  "camera_crops": 9472,
+  "summary": {
+    "development": {
+      "frames": 1000,
+      "position_targets": 12000,
+      "methods": {
+        "medium": {
+          "coverage": 0.856,
+          "all_target_success": 0.7355833333333334,
+          "current_all_target_success": 0.7224166666666667,
+          "current_observations": 9975,
+          "available": 10272,
+          "common_position_error_mm": {
+            "mean": 66.69336152780785,
+            "p95": 130.93240121754238,
+            "maximum": 836.9463929891969,
+            "count": 10161
+          },
+          "over_500mm": 31
+        },
+        "pmpose_s": {
+          "coverage": 0.8529166666666667,
+          "all_target_success": 0.7505833333333334,
+          "current_all_target_success": 0.7358333333333333,
+          "current_observations": 9963,
+          "available": 10235,
+          "common_position_error_mm": {
+            "mean": 64.2555590526377,
+            "p95": 124.86795782529757,
+            "maximum": 767.6367415806341,
+            "count": 10161
+          },
+          "over_500mm": 11
+        }
+      },
+      "evidence": "outputs\\frontier_research_20261018\\pmpose\\development\\report.json",
+      "sha256": "c27f71993993dc8eb19b51e050eb797978ed5d505de0a8a4ac2486dbbd668b1c",
+      "default_acceptance": {
+        "coverage_nondecreasing": false,
+        "success_nondecreasing": true,
+        "mean_nondecreasing_accuracy": true,
+        "p95_nondecreasing_accuracy": true,
+        "severe_errors_nonincreasing": true
+      }
+    },
+    "heldout": {
+      "frames": 1500,
+      "position_targets": 18000,
+      "methods": {
+        "medium": {
+          "coverage": 0.9947222222222222,
+          "all_target_success": 0.9498888888888889,
+          "current_all_target_success": 0.9414444444444444,
+          "current_observations": 17720,
+          "available": 17905,
+          "common_position_error_mm": {
+            "mean": 49.50509533211713,
+            "p95": 97.07196594652152,
+            "maximum": 403.86802719355535,
+            "count": 17848
+          },
+          "over_500mm": 0
+        },
+        "pmpose_s": {
+          "coverage": 0.9942222222222222,
+          "all_target_success": 0.9586111111111111,
+          "current_all_target_success": 0.9511111111111111,
+          "current_observations": 17746,
+          "available": 17896,
+          "common_position_error_mm": {
+            "mean": 46.95672696426974,
+            "p95": 90.86889291354827,
+            "maximum": 326.5716019607586,
+            "count": 17848
+          },
+          "over_500mm": 0
+        }
+      },
+      "evidence": "outputs\\frontier_research_20261018\\pmpose\\heldout\\report.json",
+      "sha256": "4bd8daba95d527be973d2832c3297d5fff7e9ea8c79aedd0450ed53c6b0876ce",
+      "default_acceptance": {
+        "coverage_nondecreasing": false,
+        "success_nondecreasing": true,
+        "mean_nondecreasing_accuracy": true,
+        "p95_nondecreasing_accuracy": true,
+        "severe_errors_nonincreasing": true
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "s1_long",
+      "frames": 500,
+      "crops": 1561,
+      "reference_sha256": "76adee51671649ac68a4833104aabb039aece263408137739e3821188653377c",
+      "all_output_error": {
+        "medium": {
+          "all_error_mm": {
+            "mean": 70.27883677232963,
+            "p95": 146.3923100725829,
+            "maximum": 836.9463929891969,
+            "count": 4290
+          },
+          "over_500mm": 29
+        },
+        "pmpose_s": {
+          "all_error_mm": {
+            "mean": 62.89691710582252,
+            "p95": 128.32597123113132,
+            "maximum": 689.7343362005503,
+            "count": 4248
+          },
+          "over_500mm": 9
+        }
+      },
+      "projected_reference_pixel_error": {
+        "medium": {
+          "mean": 18.338473857201503,
+          "p95": 48.15658049831243,
+          "maximum": 399.5257746179478,
+          "count": 15868
+        },
+        "pmpose_s": {
+          "mean": 16.657683854460934,
+          "p95": 42.936152354641656,
+          "maximum": 407.834532847414,
+          "count": 15868
+        }
+      },
+      "distribution_audit": {
+        "scope": "Approximate projected 3D reference; in-image joints; not independent probability calibration. HDR uses every 25th frame and conditions on crop inclusion.",
+        "presence_samples": 15868,
+        "presence_brier": 0.001416521283880689,
+        "predicted_presence_mean": 0.9965121208687965,
+        "observed_crop_inclusion": 0.9959667254852533,
+        "visibility_summary": {
+          "mean": 0.8646128347549032,
+          "p95": 0.9966216802597045,
+          "maximum": 0.9998613595962524,
+          "count": 15868
+        },
+        "visibility_calibration": null,
+        "spatial_samples": 648,
+        "hdr": {
+          "0.5": {
+            "coverage": 0.36574074074074076,
+            "mean_heatmap_area_fraction": 0.0015884211033950634
+          },
+          "0.9": {
+            "coverage": 0.566358024691358,
+            "mean_heatmap_area_fraction": 0.003772123360339505
+          },
+          "0.95": {
+            "coverage": 0.5879629629629629,
+            "mean_heatmap_area_fraction": 0.004346305941358024
+          }
+        }
+      },
+      "kinematics": {
+        "medium": {
+          "hip_relative_position_error_mm": {
+            "mean": 112.28746686374274,
+            "p95": 179.14294154977165,
+            "maximum": 866.2747269348022,
+            "count": 3900
+          },
+          "torso_landmark_frame_error_deg": {
+            "mean": 19.972593997757595,
+            "p95": 47.39007473871558,
+            "maximum": 81.14381831842869,
+            "count": 315
+          },
+          "hinge_flexion_error_deg": {
+            "mean": 7.41948436508332,
+            "p95": 18.956600548507595,
+            "maximum": 129.24924221676187,
+            "count": 1248
+          },
+          "differentiated_reference_velocity_error_m_s": {
+            "mean": 0.40117853477731785,
+            "p95": 1.063563459695909,
+            "maximum": 5.316463184454571,
+            "count": 4267
+          },
+          "descriptive_phase_lag_ms": {
+            "left_wrist": 0.0
+          },
+          "full_anatomical_rotation_error": null,
+          "foot_contact_accuracy": null,
+          "foot_slip_error": null
+        },
+        "pmpose_s": {
+          "hip_relative_position_error_mm": {
+            "mean": 99.37691187803892,
+            "p95": 168.6570774206902,
+            "maximum": 576.9992898996866,
+            "count": 3887
+          },
+          "torso_landmark_frame_error_deg": {
+            "mean": 18.14752253981994,
+            "p95": 38.56323530602156,
+            "maximum": 71.34454697683499,
+            "count": 306
+          },
+          "hinge_flexion_error_deg": {
+            "mean": 6.2249804493591885,
+            "p95": 15.954736137635539,
+            "maximum": 108.5043233232882,
+            "count": 1228
+          },
+          "differentiated_reference_velocity_error_m_s": {
+            "mean": 0.3781570859039434,
+            "p95": 0.9364941134100182,
+            "maximum": 3.16239665881168,
+            "count": 4225
+          },
+          "descriptive_phase_lag_ms": {
+            "left_wrist": 0.0
+          },
+          "full_anatomical_rotation_error": null,
+          "foot_contact_accuracy": null,
+          "foot_slip_error": null
+        }
+      }
+    },
+    {
+      "id": "s2_long",
+      "frames": 500,
+      "crops": 1999,
+      "reference_sha256": "946230b84d3049fea1fe84c0eaf9a832b5ceacd460f8bcea21a3270968c0c5e8",
+      "all_output_error": {
+        "medium": {
+          "all_error_mm": {
+            "mean": 65.82754587128987,
+            "p95": 124.8545387000606,
+            "maximum": 791.2547624047317,
+            "count": 5982
+          },
+          "over_500mm": 2
+        },
+        "pmpose_s": {
+          "all_error_mm": {
+            "mean": 65.88808281913695,
+            "p95": 123.04799862175938,
+            "maximum": 767.6367415806341,
+            "count": 5987
+          },
+          "over_500mm": 2
+        }
+      },
+      "projected_reference_pixel_error": {
+        "medium": {
+          "mean": 14.333528473288691,
+          "p95": 31.03072079821191,
+          "maximum": 215.34318994582796,
+          "count": 23987
+        },
+        "pmpose_s": {
+          "mean": 14.046422756878398,
+          "p95": 29.687064985899706,
+          "maximum": 193.56134382713773,
+          "count": 23987
+        }
+      },
+      "distribution_audit": {
+        "scope": "Approximate projected 3D reference; in-image joints; not independent probability calibration. HDR uses every 25th frame and conditions on crop inclusion.",
+        "presence_samples": 23987,
+        "presence_brier": 0.0001639278892502111,
+        "predicted_presence_mean": 0.9992795078553747,
+        "observed_crop_inclusion": 0.9999583107516572,
+        "visibility_summary": {
+          "mean": 0.9447414164791739,
+          "p95": 0.9989525973796844,
+          "maximum": 0.9998325109481812,
+          "count": 23987
+        },
+        "visibility_calibration": null,
+        "spatial_samples": 960,
+        "hdr": {
+          "0.5": {
+            "coverage": 0.35208333333333336,
+            "mean_heatmap_area_fraction": 0.0016120062934027776
+          },
+          "0.9": {
+            "coverage": 0.5760416666666667,
+            "mean_heatmap_area_fraction": 0.0038102891710069487
+          },
+          "0.95": {
+            "coverage": 0.6041666666666666,
+            "mean_heatmap_area_fraction": 0.004384358723958329
+          }
+        }
+      },
+      "kinematics": {
+        "medium": {
+          "hip_relative_position_error_mm": {
+            "mean": 82.37177709575124,
+            "p95": 147.511863296416,
+            "maximum": 802.6098314856841,
+            "count": 5919
+          },
+          "torso_landmark_frame_error_deg": {
+            "mean": 16.153046978444124,
+            "p95": 32.628925473281264,
+            "maximum": 71.10079951359096,
+            "count": 461
+          },
+          "hinge_flexion_error_deg": {
+            "mean": 10.222142826686467,
+            "p95": 21.613077465186866,
+            "maximum": 63.160541295434975,
+            "count": 1891
+          },
+          "differentiated_reference_velocity_error_m_s": {
+            "mean": 0.4552945321343276,
+            "p95": 1.1171016113283632,
+            "maximum": 10.032420966175007,
+            "count": 5962
+          },
+          "descriptive_phase_lag_ms": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "full_anatomical_rotation_error": null,
+          "foot_contact_accuracy": null,
+          "foot_slip_error": null
+        },
+        "pmpose_s": {
+          "hip_relative_position_error_mm": {
+            "mean": 78.85792340662009,
+            "p95": 139.71772149089185,
+            "maximum": 800.185768194564,
+            "count": 5899
+          },
+          "torso_landmark_frame_error_deg": {
+            "mean": 18.956674447229194,
+            "p95": 43.708433683704186,
+            "maximum": 73.76013976693982,
+            "count": 457
+          },
+          "hinge_flexion_error_deg": {
+            "mean": 10.237398814939588,
+            "p95": 22.09478250486998,
+            "maximum": 62.409373398535244,
+            "count": 1913
+          },
+          "differentiated_reference_velocity_error_m_s": {
+            "mean": 0.445203422190367,
+            "p95": 1.1052176194741992,
+            "maximum": 9.981847570848991,
+            "count": 5964
+          },
+          "descriptive_phase_lag_ms": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "full_anatomical_rotation_error": null,
+          "foot_contact_accuracy": null,
+          "foot_slip_error": null
+        }
+      }
+    },
+    {
+      "id": "s4_long",
+      "frames": 750,
+      "crops": 2948,
+      "reference_sha256": "dd5c523eeef8aac5a07d6fdaedb0793940cabdd7f9a122b9f535313fa53961b3",
+      "all_output_error": {
+        "medium": {
+          "all_error_mm": {
+            "mean": 43.826571292994025,
+            "p95": 86.06015188001597,
+            "maximum": 403.86802719355535,
+            "count": 8915
+          },
+          "over_500mm": 0
+        },
+        "pmpose_s": {
+          "all_error_mm": {
+            "mean": 40.35330701020094,
+            "p95": 75.96273653914832,
+            "maximum": 259.40107234382043,
+            "count": 8937
+          },
+          "over_500mm": 0
+        }
+      },
+      "projected_reference_pixel_error": {
+        "medium": {
+          "mean": 12.865970837707797,
+          "p95": 38.90563787157578,
+          "maximum": 438.96779909633733,
+          "count": 33460
+        },
+        "pmpose_s": {
+          "mean": 12.016107692614666,
+          "p95": 37.868936070078774,
+          "maximum": 257.99015883022366,
+          "count": 33460
+        }
+      },
+      "distribution_audit": {
+        "scope": "Approximate projected 3D reference; in-image joints; not independent probability calibration. HDR uses every 25th frame and conditions on crop inclusion.",
+        "presence_samples": 33460,
+        "presence_brier": 0.0003216564522220717,
+        "predicted_presence_mean": 0.9979351432503017,
+        "observed_crop_inclusion": 0.9998206814106396,
+        "visibility_summary": {
+          "mean": 0.8062457628491503,
+          "p95": 0.9971038401126862,
+          "maximum": 0.9998049139976501,
+          "count": 33460
+        },
+        "visibility_calibration": null,
+        "spatial_samples": 1330,
+        "hdr": {
+          "0.5": {
+            "coverage": 0.4699248120300752,
+            "mean_heatmap_area_fraction": 0.001703722196115284
+          },
+          "0.9": {
+            "coverage": 0.6481203007518797,
+            "mean_heatmap_area_fraction": 0.004092017152255635
+          },
+          "0.95": {
+            "coverage": 0.6706766917293233,
+            "mean_heatmap_area_fraction": 0.004705611685463666
+          }
+        }
+      },
+      "kinematics": {
+        "medium": {
+          "hip_relative_position_error_mm": {
+            "mean": 63.18935845335533,
+            "p95": 105.36321563384381,
+            "maximum": 359.2185454651629,
+            "count": 8903
+          },
+          "torso_landmark_frame_error_deg": {
+            "mean": 10.942251652955992,
+            "p95": 20.532758703649822,
+            "maximum": 37.63142543997383,
+            "count": 722
+          },
+          "hinge_flexion_error_deg": {
+            "mean": 5.480061543717001,
+            "p95": 14.14824472057581,
+            "maximum": 38.02863663366318,
+            "count": 2905
+          },
+          "differentiated_reference_velocity_error_m_s": {
+            "mean": 0.21288488570853736,
+            "p95": 0.610877968877177,
+            "maximum": 2.546677010058789,
+            "count": 8891
+          },
+          "descriptive_phase_lag_ms": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "full_anatomical_rotation_error": null,
+          "foot_contact_accuracy": null,
+          "foot_slip_error": null
+        },
+        "pmpose_s": {
+          "hip_relative_position_error_mm": {
+            "mean": 56.92284017064102,
+            "p95": 96.50860864717002,
+            "maximum": 261.96070386723295,
+            "count": 8929
+          },
+          "torso_landmark_frame_error_deg": {
+            "mean": 10.960010740001314,
+            "p95": 19.871455008653115,
+            "maximum": 30.94455964459695,
+            "count": 734
+          },
+          "hinge_flexion_error_deg": {
+            "mean": 4.69898443859436,
+            "p95": 12.821181365182179,
+            "maximum": 34.731352586118525,
+            "count": 2923
+          },
+          "differentiated_reference_velocity_error_m_s": {
+            "mean": 0.17913753463793833,
+            "p95": 0.4885583008347324,
+            "maximum": 3.2088711371859304,
+            "count": 8913
+          },
+          "descriptive_phase_lag_ms": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "full_anatomical_rotation_error": null,
+          "foot_contact_accuracy": null,
+          "foot_slip_error": null
+        }
+      }
+    },
+    {
+      "id": "s6_long",
+      "frames": 750,
+      "crops": 2964,
+      "reference_sha256": "eef32f1608b5c9a51a733378e97c8f41c95986faf5db6233492ace5f16679c42",
+      "all_output_error": {
+        "medium": {
+          "all_error_mm": {
+            "mean": 55.316603962756645,
+            "p95": 108.69379863810163,
+            "maximum": 329.51633532342674,
+            "count": 8990
+          },
+          "over_500mm": 0
+        },
+        "pmpose_s": {
+          "all_error_mm": {
+            "mean": 53.65764266393036,
+            "p95": 106.5671433677251,
+            "maximum": 326.5716019607586,
+            "count": 8959
+          },
+          "over_500mm": 0
+        }
+      },
+      "projected_reference_pixel_error": {
+        "medium": {
+          "mean": 15.939628923318743,
+          "p95": 47.00022779050097,
+          "maximum": 298.42714090920333,
+          "count": 35544
+        },
+        "pmpose_s": {
+          "mean": 15.252256933664384,
+          "p95": 41.80185838330929,
+          "maximum": 409.3237490267517,
+          "count": 35544
+        }
+      },
+      "distribution_audit": {
+        "scope": "Approximate projected 3D reference; in-image joints; not independent probability calibration. HDR uses every 25th frame and conditions on crop inclusion.",
+        "presence_samples": 35544,
+        "presence_brier": 8.313029998420216e-07,
+        "predicted_presence_mean": 0.999563856363538,
+        "observed_crop_inclusion": 1.0,
+        "visibility_summary": {
+          "mean": 0.838742720599429,
+          "p95": 0.9962503373622894,
+          "maximum": 0.9992678165435791,
+          "count": 35544
+        },
+        "visibility_calibration": null,
+        "spatial_samples": 1427,
+        "hdr": {
+          "0.5": {
+            "coverage": 0.3524877365101612,
+            "mean_heatmap_area_fraction": 0.0017088132883672027
+          },
+          "0.9": {
+            "coverage": 0.5592151366503153,
+            "mean_heatmap_area_fraction": 0.004087601830763836
+          },
+          "0.95": {
+            "coverage": 0.5879467414155571,
+            "mean_heatmap_area_fraction": 0.004705338632912876
+          }
+        }
+      },
+      "kinematics": {
+        "medium": {
+          "hip_relative_position_error_mm": {
+            "mean": 65.29100591665846,
+            "p95": 129.68763256589534,
+            "maximum": 380.92570143593116,
+            "count": 8946
+          },
+          "torso_landmark_frame_error_deg": {
+            "mean": 10.74647935300191,
+            "p95": 21.72110407618846,
+            "maximum": 49.07792533323035,
+            "count": 697
+          },
+          "hinge_flexion_error_deg": {
+            "mean": 8.087534748212159,
+            "p95": 23.860631893125795,
+            "maximum": 116.68901032199155,
+            "count": 2897
+          },
+          "differentiated_reference_velocity_error_m_s": {
+            "mean": 0.28856106144530747,
+            "p95": 0.859808005751579,
+            "maximum": 5.034225101253376,
+            "count": 8967
+          },
+          "descriptive_phase_lag_ms": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "full_anatomical_rotation_error": null,
+          "foot_contact_accuracy": null,
+          "foot_slip_error": null
+        },
+        "pmpose_s": {
+          "hip_relative_position_error_mm": {
+            "mean": 62.03528621196878,
+            "p95": 119.56069934238741,
+            "maximum": 348.12636589726367,
+            "count": 8530
+          },
+          "torso_landmark_frame_error_deg": {
+            "mean": 12.541800154042408,
+            "p95": 24.286301056699823,
+            "maximum": 45.87073728802303,
+            "count": 668
+          },
+          "hinge_flexion_error_deg": {
+            "mean": 8.119418439139512,
+            "p95": 23.7398209757608,
+            "maximum": 114.80371461778233,
+            "count": 2872
+          },
+          "differentiated_reference_velocity_error_m_s": {
+            "mean": 0.2820605414280572,
+            "p95": 0.8230549555980129,
+            "maximum": 2.886546682255003,
+            "count": 8935
+          },
+          "descriptive_phase_lag_ms": {
+            "left_wrist": 0.0,
+            "right_wrist": 0.0,
+            "left_ankle": 0.0,
+            "right_ankle": 0.0
+          },
+          "full_anatomical_rotation_error": null,
+          "foot_contact_accuracy": null,
+          "foot_slip_error": null
+        }
+      }
+    }
+  ],
+  "performance": {
+    "repeat": {
+      "medium": {
+        "method": "medium",
+        "model": {
+          "mode": "balanced",
+          "url": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/rtmpose-m_simcc-body7_pt-body7_420e-256x192-e48f03d0_20230504.zip",
+          "input_size": [
+            192,
+            256
+          ],
+          "sha256": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c",
+          "providers": [
+            "CUDAExecutionProvider",
+            "CPUExecutionProvider"
+          ],
+          "onnxruntime": "1.22.0",
+          "cuda_use_tf32": false,
+          "intra_op_threads": 4,
+          "inter_op_threads": 1
+        },
+        "crop_count": 4,
+        "repeats": 20,
+        "timings_ms": {
+          "serial": {
+            "mean": 15.646235004533082,
+            "p95": 18.08471500989981,
+            "maximum": 18.389000004390255,
+            "count": 20
+          }
+        },
+        "raw_timings_ms": {
+          "serial": [
+            14.64720000512898,
+            14.88560001598671,
+            14.267599995946512,
+            14.593500003684312,
+            15.631499991286546,
+            18.068700010189787,
+            17.00600000913255,
+            14.535199996316805,
+            16.7537999805063,
+            17.94210000662133,
+            16.433500015409663,
+            17.189000005600974,
+            14.622300019254908,
+            14.439399994444102,
+            14.485400024568662,
+            14.16550000431016,
+            14.518700016196817,
+            14.683199988212436,
+            18.389000004390255,
+            15.667500003473833
+          ]
+        },
+        "maximum_batch_pixel_difference": null,
+        "gpu_snapshot_after": "NVIDIA GeForce RTX 4090, 595.97, P2, 2580 MHz, 10251 MHz, 75.54 W",
+        "input": {
+          "frame_id": 0,
+          "timestamp_ns": 180000000000,
+          "boxes": {
+            "0": [
+              236.65847778320312,
+              543.8155517578125,
+              794.6376953125,
+              855.0418090820312
+            ],
+            "2": [
+              386.810791015625,
+              511.2842712402344,
+              869.6277465820312,
+              854.2822265625
+            ],
+            "5": [
+              293.16326904296875,
+              409.28973388671875,
+              578.4996948242188,
+              876.1246337890625
+            ],
+            "7": [
+              321.9876403808594,
+              464.7568359375,
+              1029.4580078125,
+              869.3294067382812
+            ]
+          },
+          "source_sha256": "ccc24c32744e3462349dc5398036875000054a9421f7d58e4679fe6f2e64014c"
+        },
+        "code_sha256": {
+          "scripts\\audit_pmpose_latency.py": "d4a7379db41c3976c8d248e4bc06bae62af86acc6a0507b85c23a2cb2e933575",
+          "pose_sim\\probabilistic_pose.py": "f928257c278f68f1c785d69e81c9c34ec15abe362b00606ee7328ac14231a61a"
+        },
+        "scope": "Fixed-input microbenchmark with CPU scoring in background; includes crop prep, decode, output copy; not exposure-to-state latency or throughput guarantee. PMPose includes mass extraction, RTMPose includes point extraction."
+      },
+      "pmpose": {
+        "method": "pmpose_s",
+        "model": {
+          "model": "PMPose-S-1.0.0",
+          "sha256": "7255986ab80a4e2c7b60f135fd4b0ffb9438991f21ac1c23a7c54cd1ecf79bee",
+          "source_revision": "49a070a6f8396147323b1c4959474077dbe2ce8e",
+          "torch": "2.1.2+cu121",
+          "cuda": "12.1",
+          "gpu": "NVIDIA GeForce RTX 4090",
+          "mask_mode": "none_continue_on_failure",
+          "flip_test": true,
+          "dtype": "float32",
+          "calibrated": false,
+          "batch_mode": "current_camera_crops",
+          "tf32": false,
+          "cpu_threads": 4,
+          "dependencies": {
+            "numpy": "1.26.4",
+            "scipy": "1.14.1",
+            "opencv-python": "4.9.0.80",
+            "mmcv": "2.1.0",
+            "mmengine": "0.10.7",
+            "mmpretrain": "1.2.0",
+            "sparsemax": "0.1.9"
+          }
+        },
+        "crop_count": 4,
+        "repeats": 20,
+        "timings_ms": {
+          "serial": {
+            "mean": 64.24370500317309,
+            "p95": 67.20617499231594,
+            "maximum": 70.95059999846853,
+            "count": 20
+          },
+          "batch": {
+            "mean": 23.185574999661185,
+            "p95": 25.867669988656417,
+            "maximum": 27.263600000878796,
+            "count": 20
+          }
+        },
+        "raw_timings_ms": {
+          "serial": [
+            65.32570000854321,
+            63.51300000096671,
+            61.86479999450967,
+            63.93730000127107,
+            64.8728999949526,
+            65.47530001262203,
+            62.85070002195425,
+            64.53510001301765,
+            66.64180001826026,
+            65.9946000087075,
+            62.526099995011464,
+            62.62620000052266,
+            62.894800008507445,
+            70.95059999846853,
+            61.69529998442158,
+            63.742300000740215,
+            67.00909999199212,
+            62.327399995410815,
+            62.52980002318509,
+            63.56129999039695
+          ],
+          "batch": [
+            25.158300006296486,
+            22.388999990653247,
+            23.172999994130805,
+            22.30140002211556,
+            27.263600000878796,
+            22.2238999849651,
+            22.51430001342669,
+            22.745199996279553,
+            22.91140001034364,
+            21.936099976301193,
+            23.097099998267367,
+            22.232500021345913,
+            25.794199988013133,
+            22.2183000005316,
+            21.39559999341145,
+            22.451400000136346,
+            21.94829998188652,
+            23.55320000788197,
+            22.97510000062175,
+            25.429600005736575
+          ]
+        },
+        "maximum_batch_pixel_difference": 0.0001220703125,
+        "gpu_snapshot_after": "NVIDIA GeForce RTX 4090, 595.97, P2, 2700 MHz, 10251 MHz, 150.97 W",
+        "input": {
+          "frame_id": 0,
+          "timestamp_ns": 180000000000,
+          "boxes": {
+            "0": [
+              236.65847778320312,
+              543.8155517578125,
+              794.6376953125,
+              855.0418090820312
+            ],
+            "2": [
+              386.810791015625,
+              511.2842712402344,
+              869.6277465820312,
+              854.2822265625
+            ],
+            "5": [
+              293.16326904296875,
+              409.28973388671875,
+              578.4996948242188,
+              876.1246337890625
+            ],
+            "7": [
+              321.9876403808594,
+              464.7568359375,
+              1029.4580078125,
+              869.3294067382812
+            ]
+          },
+          "source_sha256": "ccc24c32744e3462349dc5398036875000054a9421f7d58e4679fe6f2e64014c"
+        },
+        "code_sha256": {
+          "scripts\\audit_pmpose_latency.py": "d4a7379db41c3976c8d248e4bc06bae62af86acc6a0507b85c23a2cb2e933575",
+          "pose_sim\\probabilistic_pose.py": "f928257c278f68f1c785d69e81c9c34ec15abe362b00606ee7328ac14231a61a"
+        },
+        "scope": "Fixed-input microbenchmark with CPU scoring in background; includes crop prep, decode, output copy; not exposure-to-state latency or throughput guarantee. PMPose includes mass extraction, RTMPose includes point extraction."
+      }
+    },
+    "initial_preflight": {
+      "frames": 4,
+      "crops": 16,
+      "max_pixel_difference": 0.0001220703125,
+      "max_score_difference": 3.5762786865234375e-07,
+      "sequential_and_batch_ms": [
+        [
+          1641.610300022876,
+          290.34259999752976
+        ],
+        [
+          555.9011999866925,
+          176.09410002478398
+        ],
+        [
+          518.5292000242043,
+          196.0430000035558
+        ],
+        [
+          603.3226999861654,
+          197.00230000307783
+        ]
+      ],
+      "model": {
+        "model": "PMPose-S-1.0.0",
+        "sha256": "7255986ab80a4e2c7b60f135fd4b0ffb9438991f21ac1c23a7c54cd1ecf79bee",
+        "source_revision": "49a070a6f8396147323b1c4959474077dbe2ce8e",
+        "torch": "2.1.2+cu121",
+        "cuda": "12.1",
+        "gpu": "NVIDIA GeForce RTX 4090",
+        "mask_mode": "none_continue_on_failure",
+        "flip_test": true,
+        "dtype": "float32",
+        "calibrated": false
+      },
+      "device": "cuda:0"
+    },
+    "warning": "Initial measurements were 160-190ms/group, later repeat 23ms/group under unchanged model. Large run-time variability unresolved; no deterministic latency guarantee. Background CPU scoring/tests contaminate full-run timing; use fixed-crop audit as limited microbenchmark."
+  },
+  "verification": {
+    "new_unit_tests": 4,
+    "vision_tests_run": 257,
+    "vision_tests_passed": 231,
+    "vision_tests_skipped": 26,
+    "vision_tests_log": "outputs\\frontier_research_20261018\\pmpose\\vision-tests.log",
+    "default_pipeline_changed": false,
+    "existing_environments_modified": false,
+    "new_isolated_cuda_environment": true,
+    "hardware_commands_sent": false,
+    "commits_or_pushes": false
+  },
+  "limitations": [
+    "S4/S6 were viewed in earlier rounds; not an untouched independent test set.",
+    "12 approximate body correspondences and markerless reference; not independent Vicon or full joint rotations.",
+    "Kinematic diagnostics have method-specific availability; not paired anatomical rotation validation.",
+    "Visibility lacks ground truth. Crop-presence positives exceed 99.5%; low Brier score is not evidence of robust missing/occluded-joint detection.",
+    "Nominal 90% HDR coverage is only 55.9%-64.8% on sampled approximate projections; do not use as control confidence.",
+    "No segmentation, distribution-level multiview fusion, real camera latency, dynamics or hardware validation in this experiment."
+  ],
+  "next": [
+    "Separate coverage loss from current-observation quality on development data; do not retune to S4/S6.",
+    "Calibrate spatial uncertainty on reserved development blocks with joint-definition bias recorded; obtain truly independent subjects for confirmation.",
+    "Then compare predicted segmentation and calibrated distribution-level multiview fusion as separate ablations.",
+    "Repeat online timing under controlled host conditions before any default integration."
+  ],
+  "retained_artifacts": {
+    "output_directory": "outputs\\frontier_research_20261018\\pmpose",
+    "total_bytes": 4062756,
+    "large_weights_and_environment": "External runtime/research-pmpose and venv-py311-pmpose; no video copies; no obsolete experiment products created."
+  },
+  "source_sha256": {
+    "pose_sim/probabilistic_pose.py": "f928257c278f68f1c785d69e81c9c34ec15abe362b00606ee7328ac14231a61a",
+    "scripts/benchmark_pmpose.py": "3f548b873200771b152718a4a32d462d3358197fa113752780760270d06ad5eb",
+    "scripts/audit_pmpose_latency.py": "d4a7379db41c3976c8d248e4bc06bae62af86acc6a0507b85c23a2cb2e933575",
+    "tests/test_probabilistic_pose.py": "4fea3982d13c8eb3138691c3fa6741e9f78fcb32f6b2caa8037335e3ad0528a5",
+    "requirements-pmpose-lock.txt": "c051e3a09102192afd4d3ae43142a096c481e9e90b044ff2639d7bfa32984079"
+  }
+}

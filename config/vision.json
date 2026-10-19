@@ -1,0 +1,9 @@
+{
+  "model_kind": "hybrid",
+  "mode": "performance",
+  "detector": "default",
+  "detector_postprocess": "cpu",
+  "batch": true,
+  "cross_view_person_selection": true,
+  "state_config": "config/vision_state.json"
+}

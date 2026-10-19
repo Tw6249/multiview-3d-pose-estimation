@@ -4,11 +4,14 @@ import json
 import math
 from pathlib import Path
 import sys
+import time
 import bpy
 from mathutils import Vector
 from bpy_extras.object_utils import world_to_camera_view
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from pose_sim.showcase_scene import sample_motion
 BONES = {
     5: 'Skeleton_arm_joint_L__4_', 6: 'Skeleton_arm_joint_R',
     7: 'Skeleton_arm_joint_L__3_', 8: 'Skeleton_arm_joint_R__2_',
@@ -28,13 +31,16 @@ def material(name, color):
 
 
 def main():
+    started = time.perf_counter()
     p = argparse.ArgumentParser()
     p.add_argument('--output', required=True)
     p.add_argument('--config', default=str(ROOT/'config/demo.json'))
     p.add_argument('--frames', type=int)
     p.add_argument('--asset', default=str(ROOT/'assets/CesiumMan.glb'))
+    p.add_argument('--render-device', choices=['CPU', 'CUDA', 'OPTIX'], default='OPTIX')
     args = p.parse_args(sys.argv[sys.argv.index('--')+1:])
     cfg = json.loads(Path(args.config).read_text())
+    cfg['render_device'] = args.render_device
     if args.frames:
         cfg['frames'] = args.frames
     out = Path(args.output).resolve()
@@ -43,6 +49,9 @@ def main():
         raise RuntimeError('Session already exists; use a new output folder')
     bpy.ops.object.select_all(action='SELECT')
     bpy.ops.object.delete(use_global=False)
+    # glTF importer converts seconds to scene frames at import time.
+    # Set FPS first; changing it afterwards silently changes walking speed.
+    bpy.context.scene.render.fps = cfg['fps']
     bpy.ops.import_scene.gltf(filepath=str(Path(args.asset).resolve()))
     imported = list(bpy.context.scene.objects)
     rigs = [o for o in imported if o.type == 'ARMATURE']
@@ -78,6 +87,7 @@ def main():
             o.parent = wrapper
     wrapper.scale = (scale,)*3
     wrapper.location = (-scale*(minimum.x+maximum.x)/2, -scale*(minimum.y+maximum.y)/2, -scale*minimum.z)
+    wrapper_origin = wrapper.location.copy()
     bpy.context.view_layer.update()
     (out/'scene_metadata.json').write_text(json.dumps({'asset': str(Path(args.asset).resolve()),
         'normalization': 'evaluated animated mesh vertices at frame zero',
@@ -87,22 +97,51 @@ def main():
     bpy.ops.mesh.primitive_plane_add(size=12)
     floor = bpy.context.object
     floor.name = 'Floor_z0'
-    floor.data.materials.append(material('Floor', (0.32, 0.36, 0.41)))
+    appearance = cfg.get('appearance', {})
+    floor.data.materials.append(material('Floor', appearance.get('floor_color', (0.32, 0.36, 0.41))))
+    for i, box in enumerate(appearance.get('boxes', [])):
+        bpy.ops.mesh.primitive_cube_add(size=1, location=box['center_m'])
+        obj = bpy.context.object
+        obj.name = f'Scene_box_{i}'
+        obj.dimensions = box['size_m']
+        obj.data.materials.append(material(obj.name, box.get('color', (0.3, 0.3, 0.3))))
     for name, pos, energy, size in [('Key', (2, -3, 5), 900, 4), ('Fill', (-3, 1, 4), 700, 4), ('Rim', (1, 3, 4), 600, 3)]:
         data = bpy.data.lights.new(name, 'AREA')
-        data.energy, data.shape, data.size = energy, 'DISK', size
+        data.energy, data.shape, data.size = energy * appearance.get('light_scale', 1.0), 'DISK', size
         obj = bpy.data.objects.new(name, data)
         scene.collection.objects.link(obj)
         obj.location = pos
         obj.rotation_euler = (Vector((0, 0, 0.9))-obj.location).to_track_quat('-Z', 'Y').to_euler()
     scene.world.use_nodes = True
-    scene.world.node_tree.nodes['Background'].inputs[0].default_value = (0.25, 0.25, 0.25, 1)
-    scene.world.node_tree.nodes['Background'].inputs[1].default_value = 0.5
+    scene.world.node_tree.nodes['Background'].inputs[0].default_value = (*appearance.get('world_color', (0.25, 0.25, 0.25)), 1)
+    scene.world.node_tree.nodes['Background'].inputs[1].default_value = appearance.get('world_strength', 0.5)
     scene.render.engine = cfg['engine']
+    render_runtime = {'backend': args.render_device, 'blender_version': bpy.app.version_string, 'devices': []}
     if cfg['engine'] == 'CYCLES':
-        scene.cycles.device = 'CPU'
+        if args.render_device == 'CPU':
+            scene.cycles.device = 'CPU'
+        else:
+            preferences = bpy.context.preferences.addons['cycles'].preferences
+            preferences.compute_device_type = args.render_device
+            preferences.get_devices()
+            for device in preferences.devices:
+                device.use = device.type == args.render_device
+                if device.use:
+                    render_runtime['devices'].append({'name': device.name, 'type': device.type})
+            if not render_runtime['devices']:
+                raise RuntimeError(f'No {args.render_device} rendering device found; use --render-device CPU explicitly')
+            scene.cycles.device = 'GPU'
         scene.cycles.samples = cfg['render_samples']
+        scene.cycles.seed = cfg.get('render_seed', 0)
+        scene.cycles.use_animated_seed = False
         scene.cycles.use_denoising = True
+        scene.cycles.denoiser = 'OPTIX' if args.render_device == 'OPTIX' else 'OPENIMAGEDENOISE'
+        scene.cycles.denoising_use_gpu = args.render_device != 'CPU'
+        render_runtime['denoiser'] = scene.cycles.denoiser
+    else:
+        raise ValueError('This reproducible renderer requires the CYCLES engine')
+    (out/'render_runtime.json').write_text(json.dumps(render_runtime, indent=2))
+    print('RENDER_DEVICE', json.dumps(render_runtime), flush=True)
     w, h = cfg['width'], cfg['height']
     scene.render.resolution_x, scene.render.resolution_y = w, h
     scene.render.resolution_percentage = 100
@@ -136,9 +175,20 @@ def main():
         'units': 'metre', 'camera_axes': 'OpenCV: X-right Y-down Z-forward', 'cameras': cams}, indent=2))
     (out/'config.json').write_text(json.dumps(cfg, indent=2))
     max_projection_error = 0.0
+    render_times = []
     with (out/'frames.jsonl').open('w') as frames, (out/'ground_truth.jsonl').open('w') as truths:
         for fi in range(cfg['frames']):
-            scene.frame_set(fi)
+            sample_frame, translation, yaw = sample_motion(cfg, fi)
+            scene.frame_set(math.floor(sample_frame), subframe=sample_frame % 1)
+            # Authored animation trajectory affects rendered pixels only. The
+            # perception/control modules never read this animation parameter.
+            wrapper.rotation_euler.z = yaw
+            # Rotate the normalization offset too, keeping the mesh centered on
+            # the authored path instead of orbiting its original asset origin.
+            c, s = math.cos(yaw), math.sin(yaw)
+            wrapper.location = Vector((c*wrapper_origin.x-s*wrapper_origin.y,
+                                       s*wrapper_origin.x+c*wrapper_origin.y,
+                                       wrapper_origin.z)) + Vector(translation)
             bpy.context.view_layer.update()
             joints = [None]*17
             for j, bone in BONES.items():
@@ -149,7 +199,9 @@ def main():
                 scene.camera = cam
                 rel = f'images/{cid}/{fi:06d}.png'
                 scene.render.filepath = str(out/rel)
+                render_begin = time.perf_counter()
                 bpy.ops.render.render(write_still=True)
+                render_times.append(time.perf_counter()-render_begin)
                 packet['views'][cid] = {'image': rel, 'timestamp_ns': packet['timestamp_ns']}
                 uv = [None]*17
                 c = cams[cid]
@@ -182,6 +234,10 @@ def main():
                 area.spaces.active.region_3d.view_perspective = 'CAMERA'
                 area.spaces.active.shading.color_type = 'MATERIAL'
     bpy.ops.wm.save_as_mainfile(filepath=str(out/'scene.blend'))
+    render_runtime.update(image_count=len(render_times), total_render_seconds=sum(render_times),
+                          mean_render_seconds_per_image=sum(render_times)/len(render_times),
+                          wall_seconds=time.perf_counter()-started)
+    (out/'render_runtime.json').write_text(json.dumps(render_runtime, indent=2))
     print('SESSION_READY', str(out), flush=True)
 
 

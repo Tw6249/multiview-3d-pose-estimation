@@ -1,0 +1,448 @@
+{
+  "verified_at_utc": "2026-10-16T08:59:57.641310+00:00",
+  "checks_passed": true,
+  "frame_count": 12,
+  "image_count": 48,
+  "python": "3.11.9",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "gpu": "NVIDIA GeForce RTX 4090, 595.97, 24564 MiB",
+  "base_git_commit": "c4b889e0bf4bde4411360474a6f1a6c99b220e56",
+  "packages": {
+    "colorama": "0.4.6",
+    "coloredlogs": "15.0.1",
+    "contourpy": "1.3.3",
+    "cycler": "0.12.1",
+    "flatbuffers": "25.12.19",
+    "fonttools": "4.67.0",
+    "humanfriendly": "10.0",
+    "kiwisolver": "1.5.1",
+    "matplotlib": "3.9.4",
+    "mpmath": "1.3.0",
+    "numpy": "1.26.4",
+    "nvidia-cublas-cu12": "12.9.2.10",
+    "nvidia-cuda-nvrtc-cu12": "12.9.86",
+    "nvidia-cuda-runtime-cu12": "12.9.79",
+    "nvidia-cudnn-cu12": "9.10.2.21",
+    "nvidia-cufft-cu12": "11.4.1.4",
+    "nvidia-curand-cu12": "10.3.10.19",
+    "nvidia-nvjitlink-cu12": "12.9.86",
+    "onnxruntime-gpu": "1.22.0",
+    "opencv-contrib-python": "4.11.0.86",
+    "packaging": "26.3",
+    "pillow": "11.1.0",
+    "protobuf": "7.36.2",
+    "pyparsing": "3.3.3",
+    "pyreadline3": "3.5.6",
+    "python-dateutil": "2.9.0.post0",
+    "rtmlib": "0.0.13",
+    "scipy": "1.14.1",
+    "six": "1.17.0",
+    "sympy": "1.14.0",
+    "tqdm": "4.67.1"
+  },
+  "source_sha256": {
+    ".python-version": "61141e9590171b900fdf709e7ea8f050d5c2a69198d4a4a1977d7c45186307e5",
+    "assets/model_checksums.json": "d4600570d036a31aa66de6bdec2f3cb40239b77f252fda6e27b3ec4bf1424263",
+    "pose_sim/__init__.py": "30261f49a3828c3b9dd628bfe1b7a7905730ad2ee26b067bf71e2ba175049fb9",
+    "pose_sim/evaluate.py": "c1227a1522105a3f39f6ae776353c75f3979d04f1373ce694d4795923c37a855",
+    "pose_sim/geometry.py": "34806b56a0afa442d485a8ad3229c8275fd7aadd4e10cedc4520c2c96143866b",
+    "pose_sim/pipeline.py": "ddb727de5b2ff37d945642082d58cd95bd9a9ed496f59c1b1377d05197704f31",
+    "pose_sim/preview.py": "a84c9903b4033cc90963f2a5ef05a12baf5e148519b36a188843c5dfd4c1911e",
+    "pose_sim/runtime.py": "7f1fc2e37471519214e510601662ad17f61a4a416131e5de350faad487c7f35c",
+    "requirements-common.txt": "e23e3a0035cd2e78ca79d4fe49215b83414b0ea225ef2a7c19fba62d67fa9f30",
+    "requirements-gpu-lock.txt": "05f908829c736553f36b587e11022838a8c6bac6dbdd61a7aaae7f83bbec34d2",
+    "requirements-gpu.txt": "a19be2f0095efe9cd81374568a9e3fb3bf67a2b122f966e73c1b31dfd08fe453",
+    "requirements-lock.txt": "84b7b3c30253a2937cece5628a98043f137cda878d92a531a210fef2c08f8f1a",
+    "requirements.txt": "c3f6cbf15aa6d7955e593d57abeb77e98f33de67ea20b947ff78288e547a6a00",
+    "run.ps1": "715dcce22395586f19a00adc1b094d7319925529b4f486402cad01b69a788a0b",
+    "scripts/benchmark.py": "c278396b79a5ec255aa5d1760b4dbdc3179d934f78df74f8bb92a6335a2c1813",
+    "scripts/bootstrap.py": "e1b44f605ae5efc9d59b4f79bd57458aed2d0c1982ba0b88529d02d04b78dda0",
+    "scripts/import_real.py": "a2024af6400c9928879ed8853047badf17b06d815fea766904b593f2b63e22bd",
+    "scripts/inspect_scene.py": "5eedf6bc139d3b9f4538136b9c27c704ae50ccb9299d2afea1114d810bd658fd",
+    "scripts/render_scene.py": "ed73c63a347a67eeab054dd1b42cc87c1f87baa7f8666b6fed1ba4df0b37d3bb",
+    "scripts/run_blender.py": "58069224dab0e8b3d81b17ea1bb0d4de77edfd9f1b81338039dec38a785e6161",
+    "scripts/verify_session.py": "399e4cca8c0f0591327fc52461c5f3d85e49907273c3a3b284b21a71dd17fc6a",
+    "tests/test_geometry.py": "0a66a1060244989697e4ee0a66989eee93638dc4a06e76fc34a7176e16aae305",
+    "tests/test_import_real.py": "1088cb7031286472c8bccaa87bb377f6cd74c9755c11e913f95be8b7eb0a95b7",
+    "tests/test_real_contract.py": "d5e3a0221acd9b977318da6011f5a89839bd9ab165192e1ebd48023e49feb117",
+    "tests/test_runtime.py": "ee76d10b73230ce02b0a5e189d72cd896584610757642edce07de92536456c34"
+  },
+  "input_and_result_sha256": {
+    "images/cam00/000000.png": "40dba7067bc34288b822776652a8172b11070406c5746844edc1eed8bf796591",
+    "images/cam01/000000.png": "afae3723d0d2ede1206b1a3864a7108409479ed0c2c0540a026585c6bca46413",
+    "images/cam02/000000.png": "0265875a76273bca851c36c30c9cd3ab8d7fa41288a3f12927115898d8d94a1d",
+    "images/cam03/000000.png": "91531330025426c730ac4c9bf01c7a5056a71001fe839e30a5e480a661f71a4e",
+    "images/cam00/000001.png": "5fea7e84206e0f7972f5e6cb3706f6f891e20aaa7c805886056477ac2e1eca54",
+    "images/cam01/000001.png": "e9ebd47c70ac1e47346327f168caf0e428af9e8e7dfca830aecc7151a2ef1eb7",
+    "images/cam02/000001.png": "18a1e92d368021a4c98fe6b1e50273dc303c6e2b107955d365dba97b0b935f0c",
+    "images/cam03/000001.png": "f8791d867c50e0002f177e1e2e546ad7bf40ec5c1d8e459e418f559e0608b7b6",
+    "images/cam00/000002.png": "c00f9c0cba2ed3b31ff452221b111c429fad81fff4919514f8b2b57da7658e08",
+    "images/cam01/000002.png": "5fa0cb77c37c2aefb881ca24f991a1235928b636ba9725a24e9bf1c2b2d87e10",
+    "images/cam02/000002.png": "bd2502034b5fa8210c292a126538bb0f31e7a89d047064e92ba6545a4aaa290f",
+    "images/cam03/000002.png": "24f6e9d9d12c44da21ea3fd4a3ae97dd674a356aa40ab23f4dea08cc8cc30e2a",
+    "images/cam00/000003.png": "7f7cabbae06409c85e3823854b1bc9ce28307e90f92a8b7bca9ed68a644273f9",
+    "images/cam01/000003.png": "b58aa0e5985b55ddfeb60ea8bc69cdf029b651a9e09ce95dd10e89e4214d1685",
+    "images/cam02/000003.png": "5085ad842fe4c8c0548de046ab624ae5fde34a4edace7d1c17523fbfd1442027",
+    "images/cam03/000003.png": "3cdc476680b2a4fbc7f5c77b797cff62f89f28a42da8d60d433bf2abc19f890a",
+    "images/cam00/000004.png": "955f863d53b46c89de1936aa15decceb71f2b1f654b4515e5e3ba97c6d02a0cd",
+    "images/cam01/000004.png": "5122594b5a6a9dbc4c6a883cdadf78373120feba385cef649aeb4b3935c2e410",
+    "images/cam02/000004.png": "ddf121c93cd86b89b3fad27d692c5f0b24b619e17e92e0b1efdda8a4467d850a",
+    "images/cam03/000004.png": "7512887335138c4e8093d6b2b04629004234e53ee5cfbb819846c123f7f65529",
+    "images/cam00/000005.png": "2bb3b093d0b454e0330cbea24efd6928942874d188c7d3de4f061f6c8426ca99",
+    "images/cam01/000005.png": "43ad323773b0aa722512338826e5b7ffd37e8837945332416a7c5cadcb344604",
+    "images/cam02/000005.png": "a712ae0573d83f0d02413b89e030dfea47d3a360fe9745ecb22d163f29fdb19b",
+    "images/cam03/000005.png": "336e259cebaf90b50ff7a521b4045b5c2a422e03a1e0a3aecaffa4a4fa23f5d7",
+    "images/cam00/000006.png": "0821f931d9ea0f3ab62d0d60a765d83afa2f6aa3c247fd729d533bde7d0810aa",
+    "images/cam01/000006.png": "24e00cdca08b5a461c1abf3c2169b4c139be07a3d2484b60b2ed313977905acf",
+    "images/cam02/000006.png": "ee5a95cc9a607debdefe7c26976269ab4177231aa725b797940c8382c1c71596",
+    "images/cam03/000006.png": "8c51c3a4a78777299d4839896b4ee72dd70c25b6fb3f767ef99977787e3d7a5c",
+    "images/cam00/000007.png": "d3d5814c913ab753761565997d8e3e1800ccbc71b2a765001396eff2b95fcf60",
+    "images/cam01/000007.png": "7b73688899142203f7e9f91d707780c9d87c06c7d4853f707eea21168eccc652",
+    "images/cam02/000007.png": "eb063a3d9a2e81f04df504e31c54c01bc3a4570ca0556055e29321f053ddf7e0",
+    "images/cam03/000007.png": "4d03e005a78955670a6144cf5424bc33faafa6f03f44ee51aa8ff057f1e57965",
+    "images/cam00/000008.png": "39655a1291b2d97ed663fd1d468d0170430aac78b5af3ebfe2ba93243e559857",
+    "images/cam01/000008.png": "5f9dafc73cc029dd3962a48fa848e8a75ed64a716064a794fcbe2dc710ec3b36",
+    "images/cam02/000008.png": "4cfc5071087484efb3a1fdd8e506363cfcfe50fec6f25f7164f29f79f77cc0f7",
+    "images/cam03/000008.png": "78b6ed4d8e59f2044c9733abaf085a02129e4f0f51d8234c17f03749d2955209",
+    "images/cam00/000009.png": "7490fd0598a76a271674db1956a8e05426e61a3fd95a3ef130fd835bab5b371f",
+    "images/cam01/000009.png": "df419b0824d55401c3d698682927e299f36150184a250167141a1831a76cf615",
+    "images/cam02/000009.png": "10d00b0130b5d3ecc8117af8536e21b11eb31fd53f4f233df10b6387802cf6a6",
+    "images/cam03/000009.png": "6a9c3983773cf5fc4c9bf0199ead8ce93210d7d3b2585d89c2a181409a63f8a4",
+    "images/cam00/000010.png": "424f0ccc6b1c057283afbb6afbf81700c9423e2cebcad0f08aa3348dd3f7a68d",
+    "images/cam01/000010.png": "c991658cb445cac26878f8eea46ce46e354a7a9e4fee98d30ea79c79cf47cf25",
+    "images/cam02/000010.png": "188a8ddb84f3e42fd8fac06c447f9afb00168f391837eb9fb37b2dc5411f5d05",
+    "images/cam03/000010.png": "8f96c2236517d512696acbb594cf4c4f5caf65dc24246e717b86fcda1a3064cd",
+    "images/cam00/000011.png": "8ac8aed35349bdc8af9062d26452cb1cf591396cdd380798c180bb91050b34e1",
+    "images/cam01/000011.png": "f363ef4b28c5b5270c1ca67d1a7b3671af28ad740c4f1d5ea62044b2fc21f5a9",
+    "images/cam02/000011.png": "67b88c1bfdd0468510ee68b0f65ccce3a56016399971d8c48314abf014e4a67e",
+    "images/cam03/000011.png": "d0a77910907b82f5b0693a2cce784a4fa2856a210c8fc1d1e718a126bb0f7768",
+    "cameras.json": "83116de9963c91423b9eefab1d3069d95790e838c55f2caddf0bd9d766b6257b",
+    "frames.jsonl": "73fc9c9c50156669bbcf16a907626af0f2edc5f4c3d2a529cdc991c48c0dd02c",
+    "config.json": "cdf1743c0fd6d4760d5cd1c0efd77a1699407944020d431356852f2d53ae76ce",
+    "detections.jsonl": "1a4f123f9d87776f9769ece5a2c8433bb7b50a2a4d455ba205717e4d04a95ae3",
+    "poses3d.jsonl": "80d40226e8d7cf7542db930381501fa139c806b402a4592d969c4573e771cbc3",
+    "ground_truth.jsonl": "6858a71325d2acb7e3dcd419e6087d813aea8e51e54cd4fc43ecf5fcce3fd7ab"
+  },
+  "asset_sha256": "b7001eaeea8254bd44773bcd247e78696d94169388fbb2a1800fc69434e777d9",
+  "metrics": {
+    "frames": 12,
+    "camera_count": 4,
+    "detected_joint_reconstruction_rate": 0.9754901960784313,
+    "body12_proxy_coverage": 0.9930555555555556,
+    "body12_proxy_mpjpe_mm": 53.89110329647812,
+    "body12_proxy_median_mm": 38.00653566653295,
+    "body12_proxy_p95_mm": 142.91880519797576,
+    "mean_inlier_reprojection_px": 2.9322683846968842,
+    "oracle_geometry_max_error_mm": 0.00013139479760454912,
+    "oracle_valid_fraction": 1.0,
+    "per_joint_proxy_error_mm": {
+      "nose": null,
+      "left_eye": null,
+      "right_eye": null,
+      "left_ear": null,
+      "right_ear": null,
+      "left_shoulder": 76.92142069509656,
+      "right_shoulder": 50.87934660137742,
+      "left_elbow": 37.5545968623926,
+      "right_elbow": 92.48028193154936,
+      "left_wrist": 44.37502437476724,
+      "right_wrist": 32.44970939305721,
+      "left_hip": 99.94330392601887,
+      "right_hip": 94.28894374915738,
+      "left_knee": 38.41029504305769,
+      "right_knee": 31.131488187767882,
+      "left_ankle": 33.28087084531443,
+      "right_ankle": 13.260438577250389
+    },
+    "limitations": [
+      "Stylized CesiumMan sample; not a real-world accuracy benchmark.",
+      "Only 12 rig joint centres have proxy ground truth; face landmarks have no GT.",
+      "COCO anatomical landmarks and rig centres differ; proxy MPJPE includes definition mismatch.",
+      "Oracle projection test only verifies geometry and never substitutes for image detections.",
+      "One person, fixed calibrated cameras, ideal global-shutter pinhole render; no real-device validation yet."
+    ]
+  },
+  "render_validation": {
+    "max_projection_difference_px": 5.394494059001533e-05,
+    "passed": true
+  },
+  "render_runtime": {
+    "backend": "OPTIX",
+    "blender_version": "4.5.3 LTS",
+    "devices": [
+      {
+        "name": "NVIDIA GeForce RTX 4090",
+        "type": "OPTIX"
+      }
+    ],
+    "denoiser": "OPTIX",
+    "image_count": 48,
+    "total_render_seconds": 31.75924859997758,
+    "mean_render_seconds_per_image": 0.661651012499533,
+    "wall_seconds": 31.956850599999598
+  },
+  "inference_timing": {
+    "backend": "onnxruntime_cuda",
+    "device": "cuda",
+    "onnxruntime_version": "1.22.0",
+    "libraries": {
+      "onnxruntime-gpu": "1.22.0",
+      "nvidia-cudnn-cu12": "9.10.2.21",
+      "nvidia-cuda-runtime-cu12": "12.9.79",
+      "nvidia-cublas-cu12": "12.9.2.10"
+    },
+    "models": {
+      "det_model": {
+        "providers": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "onnx_file": "yolox_m_8xb8-300e_humanart-c2c7a14a.onnx",
+        "sha256": "3dea6513388889f0fff4b77bf7a26013600321b9eb9ceb0e9a400a82572f5f23"
+      },
+      "pose_model": {
+        "providers": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "onnx_file": "rtmpose-m_simcc-body7_pt-body7_420e-256x192-e48f03d0_20230504.onnx",
+        "sha256": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c"
+      }
+    },
+    "intra_op_threads": 4,
+    "inter_op_threads": 1,
+    "thread_spinning": false,
+    "cuda_use_tf32": false,
+    "initialization_seconds": 0.4564146000047913,
+    "mode": "balanced",
+    "warmup_iterations": 3,
+    "warmup_seconds": 0.3821265000005951,
+    "image_count": 48,
+    "mean_seconds_per_image": 0.022745677083700382,
+    "p95_seconds_per_image": 0.030105804998311215,
+    "mean_seconds_per_packet_with_image_io": 0.11041640000136492,
+    "processing_seconds": 1.3268742000000202,
+    "wall_seconds": 2.3744226999988314,
+    "profiles": {},
+    "note": "Offline serial views, after warmup; initialization and warmup separate. No capture, reconstruction, or display latency included."
+  },
+  "local_session": "outputs/gpu_session02",
+  "local_benchmark": "outputs/benchmark03",
+  "benchmark": {
+    "mode": "balanced",
+    "timings": {
+      "cpu": {
+        "backend": "onnxruntime_cpu",
+        "device": "cpu",
+        "onnxruntime_version": "1.22.0",
+        "libraries": {
+          "onnxruntime-gpu": "1.22.0",
+          "nvidia-cudnn-cu12": "9.10.2.21",
+          "nvidia-cuda-runtime-cu12": "12.9.79",
+          "nvidia-cublas-cu12": "12.9.2.10"
+        },
+        "models": {
+          "det_model": {
+            "providers": [
+              "CPUExecutionProvider"
+            ],
+            "onnx_file": "yolox_m_8xb8-300e_humanart-c2c7a14a.onnx",
+            "sha256": "3dea6513388889f0fff4b77bf7a26013600321b9eb9ceb0e9a400a82572f5f23"
+          },
+          "pose_model": {
+            "providers": [
+              "CPUExecutionProvider"
+            ],
+            "onnx_file": "rtmpose-m_simcc-body7_pt-body7_420e-256x192-e48f03d0_20230504.onnx",
+            "sha256": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c"
+          }
+        },
+        "intra_op_threads": 4,
+        "inter_op_threads": 1,
+        "thread_spinning": false,
+        "cuda_use_tf32": null,
+        "initialization_seconds": 0.678820100001758,
+        "mode": "balanced",
+        "warmup_iterations": 3,
+        "warmup_seconds": 0.47046039999986533,
+        "image_count": 48,
+        "mean_seconds_per_image": 1.128895764583073,
+        "p95_seconds_per_image": 1.3706176550014788,
+        "mean_seconds_per_packet_with_image_io": 4.592548516666284,
+        "processing_seconds": 55.11986330000218,
+        "wall_seconds": 56.38292419999925,
+        "profiles": {},
+        "note": "Offline serial views, after warmup; initialization and warmup separate. No capture, reconstruction, or display latency included."
+      },
+      "cuda": {
+        "backend": "onnxruntime_cuda",
+        "device": "cuda",
+        "onnxruntime_version": "1.22.0",
+        "libraries": {
+          "onnxruntime-gpu": "1.22.0",
+          "nvidia-cudnn-cu12": "9.10.2.21",
+          "nvidia-cuda-runtime-cu12": "12.9.79",
+          "nvidia-cublas-cu12": "12.9.2.10"
+        },
+        "models": {
+          "det_model": {
+            "providers": [
+              "CUDAExecutionProvider",
+              "CPUExecutionProvider"
+            ],
+            "onnx_file": "yolox_m_8xb8-300e_humanart-c2c7a14a.onnx",
+            "sha256": "3dea6513388889f0fff4b77bf7a26013600321b9eb9ceb0e9a400a82572f5f23"
+          },
+          "pose_model": {
+            "providers": [
+              "CUDAExecutionProvider",
+              "CPUExecutionProvider"
+            ],
+            "onnx_file": "rtmpose-m_simcc-body7_pt-body7_420e-256x192-e48f03d0_20230504.onnx",
+            "sha256": "5c0a4bf67953e6d2ac43ce15e77dc9d5d354ae18430a47d2c5963a7bc5683e3c"
+          }
+        },
+        "intra_op_threads": 4,
+        "inter_op_threads": 1,
+        "thread_spinning": false,
+        "cuda_use_tf32": false,
+        "initialization_seconds": 0.44279660000029253,
+        "mode": "balanced",
+        "warmup_iterations": 3,
+        "warmup_seconds": 0.35252549999859184,
+        "image_count": 48,
+        "mean_seconds_per_image": 0.022536933332958142,
+        "p95_seconds_per_image": 0.02843726499704644,
+        "mean_seconds_per_packet_with_image_io": 0.10987464166585899,
+        "processing_seconds": 1.32016200000362,
+        "wall_seconds": 2.321699799998896,
+        "profiles": {},
+        "note": "Offline serial views, after warmup; initialization and warmup separate. No capture, reconstruction, or display latency included."
+      }
+    },
+    "metrics": {
+      "cpu": {
+        "frames": 12,
+        "camera_count": 4,
+        "detected_joint_reconstruction_rate": 0.9754901960784313,
+        "body12_proxy_coverage": 0.9930555555555556,
+        "body12_proxy_mpjpe_mm": 53.89876120186045,
+        "body12_proxy_median_mm": 38.006531549928205,
+        "body12_proxy_p95_mm": 142.91878720879964,
+        "mean_inlier_reprojection_px": 2.93984958731509,
+        "oracle_geometry_max_error_mm": 0.00013139479760454912,
+        "oracle_valid_fraction": 1.0,
+        "per_joint_proxy_error_mm": {
+          "nose": null,
+          "left_eye": null,
+          "right_eye": null,
+          "left_ear": null,
+          "right_ear": null,
+          "left_shoulder": 76.92461846145956,
+          "right_shoulder": 50.87876482732694,
+          "left_elbow": 37.55525854969387,
+          "right_elbow": 92.48191384723889,
+          "left_wrist": 44.37493027788478,
+          "right_wrist": 32.53382121540634,
+          "left_hip": 99.94491563556863,
+          "right_hip": 94.28950527964741,
+          "left_knee": 38.41029964716517,
+          "right_knee": 31.13154479572532,
+          "left_ankle": 33.280794274005615,
+          "right_ankle": 13.260603700548229
+        },
+        "limitations": [
+          "Stylized CesiumMan sample; not a real-world accuracy benchmark.",
+          "Only 12 rig joint centres have proxy ground truth; face landmarks have no GT.",
+          "COCO anatomical landmarks and rig centres differ; proxy MPJPE includes definition mismatch.",
+          "Oracle projection test only verifies geometry and never substitutes for image detections.",
+          "One person, fixed calibrated cameras, ideal global-shutter pinhole render; no real-device validation yet."
+        ]
+      },
+      "cuda": {
+        "frames": 12,
+        "camera_count": 4,
+        "detected_joint_reconstruction_rate": 0.9754901960784313,
+        "body12_proxy_coverage": 0.9930555555555556,
+        "body12_proxy_mpjpe_mm": 53.89110329647812,
+        "body12_proxy_median_mm": 38.00653566653295,
+        "body12_proxy_p95_mm": 142.91880519797576,
+        "mean_inlier_reprojection_px": 2.9322683846968842,
+        "oracle_geometry_max_error_mm": 0.00013139479760454912,
+        "oracle_valid_fraction": 1.0,
+        "per_joint_proxy_error_mm": {
+          "nose": null,
+          "left_eye": null,
+          "right_eye": null,
+          "left_ear": null,
+          "right_ear": null,
+          "left_shoulder": 76.92142069509656,
+          "right_shoulder": 50.87934660137742,
+          "left_elbow": 37.5545968623926,
+          "right_elbow": 92.48028193154936,
+          "left_wrist": 44.37502437476724,
+          "right_wrist": 32.44970939305721,
+          "left_hip": 99.94330392601887,
+          "right_hip": 94.28894374915738,
+          "left_knee": 38.41029504305769,
+          "right_knee": 31.131488187767882,
+          "left_ankle": 33.28087084531443,
+          "right_ankle": 13.260438577250389
+        },
+        "limitations": [
+          "Stylized CesiumMan sample; not a real-world accuracy benchmark.",
+          "Only 12 rig joint centres have proxy ground truth; face landmarks have no GT.",
+          "COCO anatomical landmarks and rig centres differ; proxy MPJPE includes definition mismatch.",
+          "Oracle projection test only verifies geometry and never substitutes for image detections.",
+          "One person, fixed calibrated cameras, ideal global-shutter pinhole render; no real-device validation yet."
+        ]
+      }
+    },
+    "inference_speedup": 50.09092177293569,
+    "comparable_3d_points": 199,
+    "mean_cpu_cuda_3d_difference_mm": 0.08108260527452253,
+    "max_cpu_cuda_3d_difference_mm": 12.976445900504599,
+    "mean_cpu_cuda_body12_difference_mm": 0.02072606442017829,
+    "max_cpu_cuda_body12_difference_mm": 2.573499822210967,
+    "cuda_operator_evidence": {
+      "det_model": {
+        "file": "profiles/det_model_2026-10-16_16-58-50.json",
+        "node_events_by_provider": {
+          "CUDAExecutionProvider": 2191,
+          "CPUExecutionProvider": 28
+        }
+      },
+      "pose_model": {
+        "file": "profiles/pose_model_2026-10-16_16-58-50.json",
+        "node_events_by_provider": {
+          "CUDAExecutionProvider": 1295,
+          "CPUExecutionProvider": 14
+        }
+      }
+    },
+    "note": "Same images and model hashes, independent processes, fixed thread pools, TF32 off; three warmup iterations. Profile run separate from measured runs. Offline inference only."
+  },
+  "tests": {
+    "cpu": {
+      "passed": 11,
+      "log": "outputs/tests-cpu.log"
+    },
+    "cuda": {
+      "passed": 11,
+      "log": "outputs/tests-gpu.log"
+    }
+  },
+  "precision_note": "use_tf32=0 is the requested CUDA provider option; ORT 1.22 can retry unsupported cuDNN plans with Tensor Cores allowed. Numerical agreement is measured, not bitwise equivalence.",
+  "video_validation": {
+    "codec": "mpeg4",
+    "frames": 12,
+    "width": 1400,
+    "height": 800,
+    "duration_seconds": 1.0
+  },
+  "limitations": [
+    "Stylized simulation and rig-centre proxies; not measured real-device accuracy.",
+    "Offline serial views; full capture/reconstruction/display latency not measured.",
+    "Rendered images and runtime binaries are local outputs, not committed to Git."
+  ]
+}

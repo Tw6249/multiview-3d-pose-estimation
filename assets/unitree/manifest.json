@@ -1,0 +1,16 @@
+{
+  "repository": "https://github.com/unitreerobotics/unitree_ros",
+  "commit": "5994d4faef0a9cadd3287f8de0199a67eeb2a259",
+  "files": {
+    "g1_29dof.urdf": {"upstream_path":"robots/g1_description/g1_29dof.urdf","sha256":"e1dc89366bf96aa33ba4ef211884f6d81320ddd2ac6f8b1ad82986e64008be31"},
+    "g1_23dof.urdf": {"upstream_path":"robots/g1_description/g1_23dof.urdf","sha256":"5d5a7380ec2f747e82dfd7c61fe70515715d413c3521a02911ef5dd9a007e374"},
+    "LICENSE": {"upstream_path":"LICENSE","sha256":"84aac59fd3246e3ddc49d1387644e8fcf43b0def4f0b9fe687f372e90446df2d"}
+  },
+  "sdk_repository": "https://github.com/unitreerobotics/unitree_sdk2_python",
+  "sdk_commit": "814556d15970dd2ecf1c9984e845ca02ab07e206",
+  "sdk_reference_files": {
+    "unitree_sdk2py/g1/loco/g1_loco_client.py":"5fbc07b30994676cd2f7994a2389b24e9b51e2c13dfde7e565bfd77898300ce2",
+    "unitree_sdk2py/g1/loco/g1_loco_api.py":"0127e2b266ced4bce67fc264c1858e53ee9e0d9301ac06f3d58af4903e50c908"
+  },
+  "note": "Unmodified upstream URDF and license. Meshes are not included; these files are used for kinematics and joint limits. Hardware revision, waist lock, hands and mode_machine remain unconfirmed."
+}

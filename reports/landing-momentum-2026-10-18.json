@@ -1,0 +1,1185 @@
+{
+  "date": "2026-10-18",
+  "status": "coordinate_contract_corrected_centroidal_planning_diagnostic_only",
+  "hardware_enabled": false,
+  "outcome": "Root feedforward frame corrected, causal same-side landing windows and one-transition centroidal QP implemented. Whole-body imitation still fails every case.",
+  "configurations": {
+    "config/g1_root_tracking.json": {
+      "schema_version": 1,
+      "target": "unitree_g1_29dof",
+      "hardware_enabled": false,
+      "velocity_frame": "source_heading",
+      "position_gain_s_inv": 2.0,
+      "maximum_position_feedback_axis_m_s": 0.3,
+      "maximum_velocity_axis_m_s": 1.5,
+      "heading_gain_s_inv": 2.0,
+      "maximum_heading_feedback_rad_s": 0.6
+    },
+    "config/g1_landing_planner.json": {
+      "schema_version": 1,
+      "target": "unitree_g1_29dof",
+      "hardware_enabled": false,
+      "status": "diagnostic_only_not_a_controller",
+      "maximum_robot_age_s": 0.04,
+      "maximum_source_age_s": 0.25,
+      "minimum_landing_time_s": 0.04,
+      "maximum_landing_time_s": 0.45,
+      "landing_time_samples": 5,
+      "after_landing_seconds": 0.15,
+      "source_landing_corridor_m": 0.08,
+      "friction_coefficient": 0.6,
+      "maximum_angular_momentum_kg_m2_s": 3.0,
+      "maximum_angular_momentum_rate_nm": 12.0,
+      "minimum_com_height_m": 0.3,
+      "maximum_com_height_m": 1.0,
+      "velocity_cost_scale_m_s": 0.15,
+      "position_cost_scale_m": 0.04,
+      "landing_cost_scale_m": 0.04,
+      "momentum_cost_weight": 0.1,
+      "timing_cost_scale_s": 0.08,
+      "solver_max_iterations": 100,
+      "constraint_tolerance": 1e-05,
+      "source_phase": {
+        "maximum_gap_s": 0.12,
+        "history_samples": 5,
+        "minimum_descent_leg_s": 0.05,
+        "minimum_peak_clearance_leg_fraction": 0.04,
+        "minimum_current_clearance_leg_fraction": 0.015,
+        "clearance_residual_multiplier": 3.0,
+        "maximum_fit_residual_leg_fraction": 0.025,
+        "landing_time_uncertainty_s": 0.06,
+        "minimum_remaining_s": 0.04,
+        "maximum_remaining_s": 0.45
+      }
+    }
+  },
+  "summary": {
+    "cases": 10,
+    "source_frames": 3210,
+    "accepted_frames": 2568,
+    "baseline_balance_passed": 3,
+    "corrected_balance_passed": 5,
+    "baseline_stopping_passed": 4,
+    "corrected_stopping_passed": 4,
+    "whole_imitation_passed": 0,
+    "path_p95_improved_cases": 4,
+    "path_p95_worsened_cases": 6,
+    "maximum_feedforward_frame_error_before_m_s": 1.9706923096059823,
+    "maximum_feedforward_frame_error_after_m_s": 4.577566798522237e-16,
+    "source_phase_hypotheses_before": 1,
+    "source_phase_hypotheses_after": 31,
+    "visual_input_planner_results": {
+      "no_feasible_candidate:": 4,
+      "unknown:Source stance lacks current robot support": 23,
+      "unknown:COM height outside constant-height model": 2,
+      "unknown:Observed landing window expired or outside horizon": 2
+    },
+    "analytical_model_feasible_counts": {
+      "fixed": 12,
+      "position": 54,
+      "joint": 81
+    }
+  },
+  "root_frame_cases": [
+    {
+      "id": "rgb_verified",
+      "frames": 96,
+      "accepted": 90,
+      "tracking_ticks": 185,
+      "historical_baseline_reproduced": true,
+      "source_coverage_preserved": true,
+      "before": {
+        "source_reference_leg_rmse_rad": 0.27117029552608296,
+        "root_path_error_p95_m": 1.3665363772343428,
+        "balance_passed": true,
+        "stopping_passed": true,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 0.1579003851015531,
+          "maximum": 0.4105086138177155
+        }
+      },
+      "after": {
+        "source_reference_leg_rmse_rad": 0.2935126465509124,
+        "root_path_error_p95_m": 2.2514758379733846,
+        "balance_passed": true,
+        "stopping_passed": true,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 1.060141033390864e-16,
+          "maximum": 3.433175098891678e-16
+        }
+      }
+    },
+    {
+      "id": "01_straight",
+      "frames": 144,
+      "accepted": 137,
+      "tracking_ticks": 284,
+      "historical_baseline_reproduced": true,
+      "source_coverage_preserved": true,
+      "before": {
+        "source_reference_leg_rmse_rad": 0.2601717502835301,
+        "root_path_error_p95_m": 0.9348257030456725,
+        "balance_passed": false,
+        "stopping_passed": false,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 0.06910361126096078,
+          "maximum": 0.16265250383047342
+        }
+      },
+      "after": {
+        "source_reference_leg_rmse_rad": 0.28070417280980603,
+        "root_path_error_p95_m": 3.513476762009329,
+        "balance_passed": true,
+        "stopping_passed": true,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 7.505565420008514e-17,
+          "maximum": 3.3335590258932494e-16
+        }
+      }
+    },
+    {
+      "id": "02_turning",
+      "frames": 144,
+      "accepted": 112,
+      "tracking_ticks": 232,
+      "historical_baseline_reproduced": true,
+      "source_coverage_preserved": true,
+      "before": {
+        "source_reference_leg_rmse_rad": 0.37561702638090183,
+        "root_path_error_p95_m": 4.090528590146338,
+        "balance_passed": false,
+        "stopping_passed": false,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 0.9996943408538832,
+          "maximum": 1.4501389478066962
+        }
+      },
+      "after": {
+        "source_reference_leg_rmse_rad": 0.28674623414029327,
+        "root_path_error_p95_m": 1.4156984779194763,
+        "balance_passed": true,
+        "stopping_passed": true,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 9.964073722720384e-17,
+          "maximum": 3.433175098891678e-16
+        }
+      }
+    },
+    {
+      "id": "03_occlusion",
+      "frames": 144,
+      "accepted": 116,
+      "tracking_ticks": 240,
+      "historical_baseline_reproduced": true,
+      "source_coverage_preserved": true,
+      "before": {
+        "source_reference_leg_rmse_rad": 0.27672995868613814,
+        "root_path_error_p95_m": 0.6391430891855419,
+        "balance_passed": false,
+        "stopping_passed": false,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 0.09889515252878019,
+          "maximum": 0.32629524310748725
+        }
+      },
+      "after": {
+        "source_reference_leg_rmse_rad": 0.2553754322031256,
+        "root_path_error_p95_m": 1.5968725768275107,
+        "balance_passed": true,
+        "stopping_passed": false,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 6.898716550720227e-17,
+          "maximum": 3.3422138886441676e-16
+        }
+      }
+    },
+    {
+      "id": "04_low_light",
+      "frames": 144,
+      "accepted": 130,
+      "tracking_ticks": 268,
+      "historical_baseline_reproduced": true,
+      "source_coverage_preserved": true,
+      "before": {
+        "source_reference_leg_rmse_rad": 0.3024152567070972,
+        "root_path_error_p95_m": 3.605960737319493,
+        "balance_passed": false,
+        "stopping_passed": false,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 0.172236743877201,
+          "maximum": 0.3481168349019848
+        }
+      },
+      "after": {
+        "source_reference_leg_rmse_rad": 0.4187267070986764,
+        "root_path_error_p95_m": 2.3220013780296376,
+        "balance_passed": false,
+        "stopping_passed": false,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 8.964863261148699e-17,
+          "maximum": 3.3766115072321297e-16
+        }
+      }
+    },
+    {
+      "id": "05_shorter_body",
+      "frames": 144,
+      "accepted": 114,
+      "tracking_ticks": 237,
+      "historical_baseline_reproduced": true,
+      "source_coverage_preserved": true,
+      "before": {
+        "source_reference_leg_rmse_rad": 0.26269580690605643,
+        "root_path_error_p95_m": 2.749206275794448,
+        "balance_passed": true,
+        "stopping_passed": true,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 0.21234314909610563,
+          "maximum": 0.5973557201439326
+        }
+      },
+      "after": {
+        "source_reference_leg_rmse_rad": 0.2630076306729492,
+        "root_path_error_p95_m": 1.6653536760856047,
+        "balance_passed": true,
+        "stopping_passed": false,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 7.015933418286162e-17,
+          "maximum": 2.482534153247273e-16
+        }
+      }
+    },
+    {
+      "id": "06_faster",
+      "frames": 144,
+      "accepted": 98,
+      "tracking_ticks": 203,
+      "historical_baseline_reproduced": true,
+      "source_coverage_preserved": true,
+      "before": {
+        "source_reference_leg_rmse_rad": 0.3045674102666402,
+        "root_path_error_p95_m": 2.498512386582467,
+        "balance_passed": true,
+        "stopping_passed": true,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 1.1905558934372173,
+          "maximum": 1.9706923096059823
+        }
+      },
+      "after": {
+        "source_reference_leg_rmse_rad": 0.4040644478313488,
+        "root_path_error_p95_m": 3.187483674155488,
+        "balance_passed": false,
+        "stopping_passed": false,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 1.1546892709830485e-16,
+          "maximum": 4.577566798522237e-16
+        }
+      }
+    },
+    {
+      "id": "public_s2_long",
+      "frames": 750,
+      "accepted": 590,
+      "tracking_ticks": 1179,
+      "historical_baseline_reproduced": true,
+      "source_coverage_preserved": true,
+      "before": {
+        "source_reference_leg_rmse_rad": 0.16076035493551935,
+        "root_path_error_p95_m": 0.6425971097637232,
+        "balance_passed": false,
+        "stopping_passed": true,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 0.06779994448926537,
+          "maximum": 0.40494125006675513
+        }
+      },
+      "after": {
+        "source_reference_leg_rmse_rad": 0.1735155868289124,
+        "root_path_error_p95_m": 1.5023599442693996,
+        "balance_passed": false,
+        "stopping_passed": true,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 3.807364191709584e-17,
+          "maximum": 4.577566798522237e-16
+        }
+      }
+    },
+    {
+      "id": "public_s4_long",
+      "frames": 750,
+      "accepted": 669,
+      "tracking_ticks": 1338,
+      "historical_baseline_reproduced": true,
+      "source_coverage_preserved": true,
+      "before": {
+        "source_reference_leg_rmse_rad": 0.5936371700747626,
+        "root_path_error_p95_m": 3.2614126909448444,
+        "balance_passed": false,
+        "stopping_passed": false,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 0.04682689310022361,
+          "maximum": 0.9845793956960489
+        }
+      },
+      "after": {
+        "source_reference_leg_rmse_rad": 0.5942445649370772,
+        "root_path_error_p95_m": 3.8988714302716874,
+        "balance_passed": false,
+        "stopping_passed": false,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 5.538968195754793e-18,
+          "maximum": 1.5700924586837752e-16
+        }
+      }
+    },
+    {
+      "id": "public_s6_long",
+      "frames": 750,
+      "accepted": 512,
+      "tracking_ticks": 1024,
+      "historical_baseline_reproduced": true,
+      "source_coverage_preserved": true,
+      "before": {
+        "source_reference_leg_rmse_rad": 0.6658832445999673,
+        "root_path_error_p95_m": 5.211673061717223,
+        "balance_passed": false,
+        "stopping_passed": false,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 0.02707123331585056,
+          "maximum": 0.26762844752424725
+        }
+      },
+      "after": {
+        "source_reference_leg_rmse_rad": 0.6626843703450359,
+        "root_path_error_p95_m": 5.134973271604025,
+        "balance_passed": false,
+        "stopping_passed": false,
+        "passed": false,
+        "root_feedforward_frame_error_m_s": {
+          "mean": 7.79721238241162e-18,
+          "maximum": 5.594315114139762e-17
+        }
+      }
+    }
+  ],
+  "source_phase_and_planner_cases": [
+    {
+      "id": "rgb_verified",
+      "frames": 96,
+      "source_phase_counts": {
+        "unknown:Insufficient continuous source motion": 24,
+        "unknown:Require exactly one source support hypothesis": 66,
+        "unknown:Missing, noncurrent or mismatched source observations": 6
+      },
+      "controller_unique_source_frames": 89,
+      "diagnostic_did_not_change_execution": true,
+      "planning_counts": {
+        "fixed": {},
+        "position": {},
+        "joint": {}
+      }
+    },
+    {
+      "id": "01_straight",
+      "frames": 144,
+      "source_phase_counts": {
+        "unknown:Insufficient continuous source motion": 21,
+        "unknown:Require exactly one source support hypothesis": 111,
+        "unknown:Missing, noncurrent or mismatched source observations": 7,
+        "unknown:Swing is not observably descending": 3,
+        "unknown:Landing outside bounded extrapolation horizon": 2
+      },
+      "controller_unique_source_frames": 136,
+      "diagnostic_did_not_change_execution": true,
+      "planning_counts": {
+        "fixed": {},
+        "position": {},
+        "joint": {}
+      }
+    },
+    {
+      "id": "02_turning",
+      "frames": 144,
+      "source_phase_counts": {
+        "unknown:Insufficient continuous source motion": 38,
+        "unknown:Require exactly one source support hypothesis": 74,
+        "unknown:Missing, noncurrent or mismatched source observations": 32
+      },
+      "controller_unique_source_frames": 111,
+      "diagnostic_did_not_change_execution": true,
+      "planning_counts": {
+        "fixed": {},
+        "position": {},
+        "joint": {}
+      }
+    },
+    {
+      "id": "03_occlusion",
+      "frames": 144,
+      "source_phase_counts": {
+        "unknown:Insufficient continuous source motion": 21,
+        "unknown:Require exactly one source support hypothesis": 95,
+        "unknown:Missing, noncurrent or mismatched source observations": 28
+      },
+      "controller_unique_source_frames": 115,
+      "diagnostic_did_not_change_execution": true,
+      "planning_counts": {
+        "fixed": {},
+        "position": {},
+        "joint": {}
+      }
+    },
+    {
+      "id": "04_low_light",
+      "frames": 144,
+      "source_phase_counts": {
+        "unknown:Insufficient continuous source motion": 25,
+        "unknown:Require exactly one source support hypothesis": 105,
+        "unknown:Missing, noncurrent or mismatched source observations": 14
+      },
+      "controller_unique_source_frames": 129,
+      "diagnostic_did_not_change_execution": true,
+      "planning_counts": {
+        "fixed": {},
+        "position": {},
+        "joint": {}
+      }
+    },
+    {
+      "id": "05_shorter_body",
+      "frames": 144,
+      "source_phase_counts": {
+        "unknown:Insufficient continuous source motion": 52,
+        "unknown:Missing, noncurrent or mismatched source observations": 30,
+        "unknown:Require exactly one source support hypothesis": 57,
+        "unknown:Swing is not observably descending": 5
+      },
+      "controller_unique_source_frames": 113,
+      "diagnostic_did_not_change_execution": true,
+      "planning_counts": {
+        "fixed": {},
+        "position": {},
+        "joint": {}
+      }
+    },
+    {
+      "id": "06_faster",
+      "frames": 144,
+      "source_phase_counts": {
+        "unknown:Insufficient continuous source motion": 38,
+        "unknown:Require exactly one source support hypothesis": 60,
+        "unknown:Missing, noncurrent or mismatched source observations": 46
+      },
+      "controller_unique_source_frames": 97,
+      "diagnostic_did_not_change_execution": true,
+      "planning_counts": {
+        "fixed": {},
+        "position": {},
+        "joint": {}
+      }
+    },
+    {
+      "id": "public_s2_long",
+      "frames": 750,
+      "source_phase_counts": {
+        "unknown:Missing, noncurrent or mismatched source observations": 160,
+        "unknown:Insufficient continuous source motion": 147,
+        "unknown:Require exactly one source support hypothesis": 235,
+        "unknown:Swing is not observably descending": 60,
+        "unknown:Insufficient observed swing clearance above noise": 123,
+        "unknown:Unreliable source descent fit": 16,
+        "hypothesis:": 6,
+        "unknown:Landing outside bounded extrapolation horizon": 3
+      },
+      "controller_unique_source_frames": 590,
+      "diagnostic_did_not_change_execution": true,
+      "planning_counts": {
+        "fixed": {
+          "no_feasible_candidate:": 4,
+          "unknown:Source stance lacks current robot support": 2
+        },
+        "position": {
+          "no_feasible_candidate:": 4,
+          "unknown:Source stance lacks current robot support": 2
+        },
+        "joint": {
+          "no_feasible_candidate:": 4,
+          "unknown:Source stance lacks current robot support": 2
+        }
+      }
+    },
+    {
+      "id": "public_s4_long",
+      "frames": 750,
+      "source_phase_counts": {
+        "unknown:Insufficient continuous source motion": 67,
+        "unknown:Require exactly one source support hypothesis": 276,
+        "unknown:Missing, noncurrent or mismatched source observations": 81,
+        "unknown:Insufficient observed swing clearance above noise": 62,
+        "unknown:Swing is not observably descending": 217,
+        "unknown:Landing outside bounded extrapolation horizon": 15,
+        "hypothesis:": 25,
+        "unknown:Unreliable source descent fit": 7
+      },
+      "controller_unique_source_frames": 669,
+      "diagnostic_did_not_change_execution": true,
+      "planning_counts": {
+        "fixed": {
+          "unknown:Source stance lacks current robot support": 21,
+          "unknown:COM height outside constant-height model": 2,
+          "unknown:Observed landing window expired or outside horizon": 2
+        },
+        "position": {
+          "unknown:Source stance lacks current robot support": 21,
+          "unknown:COM height outside constant-height model": 2,
+          "unknown:Observed landing window expired or outside horizon": 2
+        },
+        "joint": {
+          "unknown:Source stance lacks current robot support": 21,
+          "unknown:COM height outside constant-height model": 2,
+          "unknown:Observed landing window expired or outside horizon": 2
+        }
+      }
+    },
+    {
+      "id": "public_s6_long",
+      "frames": 750,
+      "source_phase_counts": {
+        "unknown:Insufficient continuous source motion": 173,
+        "unknown:Require exactly one source support hypothesis": 267,
+        "unknown:Insufficient observed swing clearance above noise": 34,
+        "unknown:Missing, noncurrent or mismatched source observations": 238,
+        "unknown:Unreliable source descent fit": 1,
+        "unknown:Swing is not observably descending": 35,
+        "unknown:Landing outside bounded extrapolation horizon": 2
+      },
+      "controller_unique_source_frames": 512,
+      "diagnostic_did_not_change_execution": true,
+      "planning_counts": {
+        "fixed": {},
+        "position": {},
+        "joint": {}
+      }
+    }
+  ],
+  "analytic_validation": {
+    "cases": 81,
+    "feasible_counts": {
+      "fixed": 12,
+      "position": 54,
+      "joint": 81
+    },
+    "units": "vx,vy m/s; Lx,Ly kg*m^2/s",
+    "grid": [
+      [
+        0.1,
+        -0.1,
+        -1.0,
+        -1.0
+      ],
+      [
+        0.1,
+        -0.1,
+        -1.0,
+        0
+      ],
+      [
+        0.1,
+        -0.1,
+        -1.0,
+        1.0
+      ],
+      [
+        0.1,
+        -0.1,
+        0,
+        -1.0
+      ],
+      [
+        0.1,
+        -0.1,
+        0,
+        0
+      ],
+      [
+        0.1,
+        -0.1,
+        0,
+        1.0
+      ],
+      [
+        0.1,
+        -0.1,
+        1.0,
+        -1.0
+      ],
+      [
+        0.1,
+        -0.1,
+        1.0,
+        0
+      ],
+      [
+        0.1,
+        -0.1,
+        1.0,
+        1.0
+      ],
+      [
+        0.1,
+        0,
+        -1.0,
+        -1.0
+      ],
+      [
+        0.1,
+        0,
+        -1.0,
+        0
+      ],
+      [
+        0.1,
+        0,
+        -1.0,
+        1.0
+      ],
+      [
+        0.1,
+        0,
+        0,
+        -1.0
+      ],
+      [
+        0.1,
+        0,
+        0,
+        0
+      ],
+      [
+        0.1,
+        0,
+        0,
+        1.0
+      ],
+      [
+        0.1,
+        0,
+        1.0,
+        -1.0
+      ],
+      [
+        0.1,
+        0,
+        1.0,
+        0
+      ],
+      [
+        0.1,
+        0,
+        1.0,
+        1.0
+      ],
+      [
+        0.1,
+        0.1,
+        -1.0,
+        -1.0
+      ],
+      [
+        0.1,
+        0.1,
+        -1.0,
+        0
+      ],
+      [
+        0.1,
+        0.1,
+        -1.0,
+        1.0
+      ],
+      [
+        0.1,
+        0.1,
+        0,
+        -1.0
+      ],
+      [
+        0.1,
+        0.1,
+        0,
+        0
+      ],
+      [
+        0.1,
+        0.1,
+        0,
+        1.0
+      ],
+      [
+        0.1,
+        0.1,
+        1.0,
+        -1.0
+      ],
+      [
+        0.1,
+        0.1,
+        1.0,
+        0
+      ],
+      [
+        0.1,
+        0.1,
+        1.0,
+        1.0
+      ],
+      [
+        0.4,
+        -0.1,
+        -1.0,
+        -1.0
+      ],
+      [
+        0.4,
+        -0.1,
+        -1.0,
+        0
+      ],
+      [
+        0.4,
+        -0.1,
+        -1.0,
+        1.0
+      ],
+      [
+        0.4,
+        -0.1,
+        0,
+        -1.0
+      ],
+      [
+        0.4,
+        -0.1,
+        0,
+        0
+      ],
+      [
+        0.4,
+        -0.1,
+        0,
+        1.0
+      ],
+      [
+        0.4,
+        -0.1,
+        1.0,
+        -1.0
+      ],
+      [
+        0.4,
+        -0.1,
+        1.0,
+        0
+      ],
+      [
+        0.4,
+        -0.1,
+        1.0,
+        1.0
+      ],
+      [
+        0.4,
+        0,
+        -1.0,
+        -1.0
+      ],
+      [
+        0.4,
+        0,
+        -1.0,
+        0
+      ],
+      [
+        0.4,
+        0,
+        -1.0,
+        1.0
+      ],
+      [
+        0.4,
+        0,
+        0,
+        -1.0
+      ],
+      [
+        0.4,
+        0,
+        0,
+        0
+      ],
+      [
+        0.4,
+        0,
+        0,
+        1.0
+      ],
+      [
+        0.4,
+        0,
+        1.0,
+        -1.0
+      ],
+      [
+        0.4,
+        0,
+        1.0,
+        0
+      ],
+      [
+        0.4,
+        0,
+        1.0,
+        1.0
+      ],
+      [
+        0.4,
+        0.1,
+        -1.0,
+        -1.0
+      ],
+      [
+        0.4,
+        0.1,
+        -1.0,
+        0
+      ],
+      [
+        0.4,
+        0.1,
+        -1.0,
+        1.0
+      ],
+      [
+        0.4,
+        0.1,
+        0,
+        -1.0
+      ],
+      [
+        0.4,
+        0.1,
+        0,
+        0
+      ],
+      [
+        0.4,
+        0.1,
+        0,
+        1.0
+      ],
+      [
+        0.4,
+        0.1,
+        1.0,
+        -1.0
+      ],
+      [
+        0.4,
+        0.1,
+        1.0,
+        0
+      ],
+      [
+        0.4,
+        0.1,
+        1.0,
+        1.0
+      ],
+      [
+        0.7,
+        -0.1,
+        -1.0,
+        -1.0
+      ],
+      [
+        0.7,
+        -0.1,
+        -1.0,
+        0
+      ],
+      [
+        0.7,
+        -0.1,
+        -1.0,
+        1.0
+      ],
+      [
+        0.7,
+        -0.1,
+        0,
+        -1.0
+      ],
+      [
+        0.7,
+        -0.1,
+        0,
+        0
+      ],
+      [
+        0.7,
+        -0.1,
+        0,
+        1.0
+      ],
+      [
+        0.7,
+        -0.1,
+        1.0,
+        -1.0
+      ],
+      [
+        0.7,
+        -0.1,
+        1.0,
+        0
+      ],
+      [
+        0.7,
+        -0.1,
+        1.0,
+        1.0
+      ],
+      [
+        0.7,
+        0,
+        -1.0,
+        -1.0
+      ],
+      [
+        0.7,
+        0,
+        -1.0,
+        0
+      ],
+      [
+        0.7,
+        0,
+        -1.0,
+        1.0
+      ],
+      [
+        0.7,
+        0,
+        0,
+        -1.0
+      ],
+      [
+        0.7,
+        0,
+        0,
+        0
+      ],
+      [
+        0.7,
+        0,
+        0,
+        1.0
+      ],
+      [
+        0.7,
+        0,
+        1.0,
+        -1.0
+      ],
+      [
+        0.7,
+        0,
+        1.0,
+        0
+      ],
+      [
+        0.7,
+        0,
+        1.0,
+        1.0
+      ],
+      [
+        0.7,
+        0.1,
+        -1.0,
+        -1.0
+      ],
+      [
+        0.7,
+        0.1,
+        -1.0,
+        0
+      ],
+      [
+        0.7,
+        0.1,
+        -1.0,
+        1.0
+      ],
+      [
+        0.7,
+        0.1,
+        0,
+        -1.0
+      ],
+      [
+        0.7,
+        0.1,
+        0,
+        0
+      ],
+      [
+        0.7,
+        0.1,
+        0,
+        1.0
+      ],
+      [
+        0.7,
+        0.1,
+        1.0,
+        -1.0
+      ],
+      [
+        0.7,
+        0.1,
+        1.0,
+        0
+      ],
+      [
+        0.7,
+        0.1,
+        1.0,
+        1.0
+      ]
+    ],
+    "latency_ms": {
+      "fixed": {
+        "mean": 2.2149641996674974,
+        "p95": 5.481300002429634
+      },
+      "position": {
+        "mean": 1.8923469139320523,
+        "p95": 7.405299984384328
+      },
+      "joint": {
+        "mean": 11.869409875038805,
+        "p95": 27.918500010855496
+      }
+    },
+    "scope": "Synthetic simplified-model states. Counts are not human perception accuracy, physics tracking success or empirical contact truth."
+  },
+  "implementation_contract": {
+    "root_velocity": "Rotate source-heading XY velocity through aligned world into current robot heading before adding robot-heading feedback. Source joint references and exposure times unchanged.",
+    "phase": "Use only past/current same-side ankle descent, current clearance above fit noise, recent peak clearance, and opposite support hypothesis. Unknown stays unknown; no periodic gait generator.",
+    "optimizer": "Enumerate source-permitted landing times; optimize landing point within +/-0.08 m heading-local corridor, stance CoP convex weights and piecewise horizontal angular-momentum rates. Exact constant-CMP flow, sampled inner friction pyramid, zero terminal horizontal momentum and terminal DCM relation.",
+    "clock": "Source exposure ns separately mapped into offline robot time; subtract simulated 120 ms perception delay, reject expired landing windows.",
+    "feedback": "MuJoCo angular momentum matrix checked against independent sum of body inertial/orbital momenta on a private state copy.",
+    "actuation": "Landing planner is diagnostic only. It cannot write joint references, actuator commands, source timestamps or robot state."
+  },
+  "tests": [
+    {
+      "environment": "robot",
+      "returncode": 0,
+      "summary": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 212 tests in 10.711s",
+        "",
+        "OK"
+      ]
+    },
+    {
+      "environment": "vision",
+      "returncode": 0,
+      "summary": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 212 tests in 6.522s",
+        "",
+        "OK (skipped=26)"
+      ]
+    }
+  ],
+  "research": [
+    {
+      "title": "Direct Dynamic Retargeting for Humanoid Imitation Learning from Videos",
+      "url": "https://arxiv.org/abs/2605.23762",
+      "note": "2026-05 task-space physics sampling motivates checking dynamic feasibility before accepting retargeting; not reproduced."
+    },
+    {
+      "title": "Kinodynamic Motion Retargeting for Humanoid Locomotion via Multi-Contact Whole-Body Trajectory Optimization",
+      "url": "https://arxiv.org/abs/2603.09956v2",
+      "note": "2026-07 revision uses rigid-body dynamics/contact complementarity and measured GRFs. Our input has no GRF truth; cannot claim equivalent contact observability."
+    },
+    {
+      "title": "A Whole-Body Motion Imitation Framework from Human Data for Full-Size Humanoid Robot",
+      "url": "https://arxiv.org/abs/2508.00362",
+      "note": "Contact-aware retargeting, centroidal MPC and whole-body control are separate layers. Our small one-transition QP is not that full controller."
+    }
+  ],
+  "limitations": [
+    "All ten source clips are known regression data, not new independent tests.",
+    "Root coordinate correction improves balance count but worsens path P95 in six of ten cases. No overall performance claim.",
+    "Thirty-one landing hypotheses do not establish correct human contact labels. Twenty-three lack corresponding loaded robot support, two have low COM, two expire, four have no feasible candidate.",
+    "Planner constant height and point touchdown assumptions omit vertical COM dynamics, yaw momentum, foot/hand orientation, swing trajectory, collision, joint torque and whole-body reachability.",
+    "Angular momentum/rate bounds are experimental model settings, not measured G1 hardware capabilities.",
+    "QP feasibility is not full-body executability; model uncertainty was not robustified. No planner command was emitted.",
+    "Analytic model joint solve P95 exceeds 20 ms; not validated as a complete online controller. Actual camera exposure latency remains unmeasured.",
+    "Root-frame correction is now default; transition mode remains legacy. Earlier recovery results used the legacy velocity frame and require explicit matching profile to reproduce."
+  ],
+  "reproducibility": {
+    "final_files_sha256": {
+      "motion_control/root_tracking.py": "22a51241b42cf5e6ed6807de658273d9e8c6f4234a86b5f3f87f8aaa10a895d2",
+      "motion_control/humanoid_replay.py": "bc4b0a2c6a4087e5bc903403f164663e31cbac24dd9fd1850c5aa7cfa36e3292",
+      "motion_control/support_feedback.py": "0a10eef649fe75beac310fe40a0522be46d4da48f0f670710c77787d7ffcda95",
+      "motion_control/landing_planner.py": "15c343f66735f044491a873f944a449338071fdf69f69fb502f82c1428e5be9d",
+      "pose_sim/source_phase.py": "f16b18dc454b466c8d2e0394f6f7c19a504ebf011f2bbab3cfb64b8f9f2382a6",
+      "scripts/benchmark_root_frame.py": "217dbdc01791a057bddedd959cc69716c896646f8294ac5c8c9c35bfb121e6c4",
+      "scripts/benchmark_landing_planner.py": "d3885b265a1de9b7e0ef622927a6aeb70ff0555c6e31a4a0f94d67775d72a3b0",
+      "scripts/benchmark_landing_model.py": "3a2f9842f45fbfbd31886589054099890cb29e235283ddaa1bb370a4f7f45592",
+      "tests/test_root_tracking.py": "81e355fceeba1c568124ce04191521ed579f4fa68f8c873a271fd3c5b4285f7e",
+      "tests/test_landing_planner.py": "33735b23ac1b5516cbf4ef1aa07ffa4fec21ca60ede31dffd7b1c78cfe5ebdc8",
+      "config/g1_root_tracking.json": "1096411dd6ca15d1bacd8886ca60b1ac3e7b9d27d7f06acab1476db434b1ccc5",
+      "config/g1_landing_planner.json": "37be28f269e9c8748a4f5a1a5c7eec6e2ff2e449d1623d2b36fb5c37c0524d92"
+    },
+    "run_manifests": [
+      "outputs\\centroidal_revision\\root_frame\\freeze.json",
+      "outputs\\centroidal_revision\\landing_audit\\freeze.json",
+      "outputs\\centroidal_revision\\analytic_model\\freeze.json"
+    ],
+    "post_benchmark_changes": "Only constructor rejection of invalid configuration values and corresponding tests were added after the recorded landing benchmarks; valid configuration and optimization behavior unchanged.",
+    "all_source_hashes_verified": true,
+    "environment_changed": false,
+    "gpu_path": "Existing CUDA visual inference and OptiX unchanged; small centroidal problems run on CPU.",
+    "generated_bytes": 5109316,
+    "cleanup": "Only numeric regression/negative/ablation reports; no input, model, video or per-tick trace copied. No retry of previously blocked cleanup.",
+    "committed": false,
+    "pushed": false
+  }
+}

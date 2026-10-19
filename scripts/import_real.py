@@ -5,16 +5,26 @@ Image paths are relative to the CSV. Timestamps must share the same exposure clo
 No device access or collection happens in this importer.
 """
 import argparse
+from bisect import bisect_left, bisect_right
 import csv
 import json
+import math
 from pathlib import Path
 import shutil
 import sys
-import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from pose_sim.pipeline import write_jsonl
+from pose_sim.sensors import validate_calibration
+
+
+def nearest_unused_index(times, timestamp_ns, max_skew_ns, used):
+    """Choose an unused frame within the anchor tolerance; ties prefer earlier exposure."""
+    lo = bisect_left(times, timestamp_ns - max_skew_ns)
+    hi = bisect_right(times, timestamp_ns + max_skew_ns)
+    return min((i for i in range(lo, hi) if i not in used),
+               key=lambda i: (abs(times[i] - timestamp_ns), times[i]), default=None)
 
 
 def main():
@@ -25,7 +35,12 @@ def main():
     p.add_argument('--max-skew-ms', type=float, default=5)
     p.add_argument('--fps', type=float, default=30)
     a = p.parse_args()
+    if not math.isfinite(a.max_skew_ms) or a.max_skew_ms < 0:
+        p.error('--max-skew-ms must be finite and non-negative')
+    if not math.isfinite(a.fps) or a.fps <= 0:
+        p.error('--fps must be finite and positive')
     cal = json.loads(a.calibration.read_text(encoding='utf-8'))
+    validate_calibration(cal)
     groups = {cid: [] for cid in cal['cameras']}
     with a.csv.open(encoding='utf-8-sig', newline='') as f:
         for r in csv.DictReader(f):
@@ -37,7 +52,7 @@ def main():
         times = [r[0] for r in groups[cid]]
         if len(times) != len(set(times)):
             raise ValueError('Duplicate timestamps: '+cid)
-    anchor = next(iter(groups))
+    anchor = next(iter(groups), None)
     if len(groups) < 2 or not groups[anchor]:
         raise ValueError('At least two calibrated cameras and anchor images are required')
     if a.output.exists():
@@ -48,16 +63,17 @@ def main():
     (a.output/'cameras.json').write_text(json.dumps(cal, indent=2))
     (a.output/'config.json').write_text(json.dumps(cfg, indent=2))
     rows, used = [], {cid: set() for cid in groups}
-    timestamps = {cid: np.array([r[0] for r in seq], dtype=np.int64) for cid, seq in groups.items()}
+    timestamps = {cid: [r[0] for r in seq] for cid, seq in groups.items()}
+    max_skew_ns = int(a.max_skew_ms * 1_000_000)
     for frame_id, (ts, _) in enumerate(groups[anchor]):
         views = {}
         for cid, seq in groups.items():
             if not seq:
                 continue
-            index = int(np.argmin(np.abs(timestamps[cid]-ts)))
-            t, path = seq[index]
-            if abs(t-ts) > a.max_skew_ms*1e6 or index in used[cid]:
+            index = nearest_unused_index(timestamps[cid], ts, max_skew_ns, used[cid])
+            if index is None:
                 continue
+            t, path = seq[index]
             used[cid].add(index)
             target = a.output/'images'/cid/f'{frame_id:06d}{path.suffix}'
             target.parent.mkdir(parents=True, exist_ok=True)

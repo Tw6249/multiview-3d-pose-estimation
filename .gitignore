@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 .runtime.json
+.robot-runtime.json
 outputs/
 assets/*.glb
 *.blend1

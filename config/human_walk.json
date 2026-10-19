@@ -1,0 +1,10 @@
+{
+  "width":640,"height":640,"fx":750.0,"fy":750.0,
+  "fps":24,"frames":96,"animation_loop_seconds":2.0,
+  "camera_radius_m":4.5,"camera_height_m":1.55,
+  "camera_angles_deg":[35,125,215,305],"target_height_m":0.9,
+  "human_height_m":1.75,"render_samples":12,"engine":"CYCLES",
+  "human_translation_m_s":[0,-0.83,0],
+  "confidence_threshold":0.35,"ransac_threshold_px":8.0,
+  "max_sync_error_ms":5.0,"min_triangulation_angle_deg":1.0
+}
