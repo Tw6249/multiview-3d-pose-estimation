@@ -1,0 +1,448 @@
+{
+  "date": "2026-10-19",
+  "base_commit": "e924d8673cba11f752f7cfa538949a2cf92d88a4",
+  "new_real_frames": 900,
+  "new_synthetic_frames": 96,
+  "total_rgb_images": 3984,
+  "real_data": "development only; frozen test not reused",
+  "metrics": {
+    "poses3d": {
+      "targets": 10800,
+      "valid": 10581,
+      "coverage": 0.9797222222222223,
+      "error_mm": {
+        "count": 10581,
+        "mean": 66.68977490208292,
+        "p50": 59.2482282728987,
+        "p95": 132.18497732286636,
+        "maximum": 1304.069958669862
+      },
+      "all_target_within_100mm": 0.840462962962963,
+      "over_500mm": 26,
+      "common_target_error_mm": {
+        "count": 10548,
+        "mean": 66.21433694439783,
+        "p50": 59.16858248372102,
+        "p95": 131.32015421054925,
+        "maximum": 1304.069958669862
+      }
+    },
+    "fused": {
+      "targets": 10800,
+      "valid": 10569,
+      "coverage": 0.9786111111111111,
+      "error_mm": {
+        "count": 10569,
+        "mean": 65.98961724667555,
+        "p50": 59.20111156626376,
+        "p95": 131.51112829661227,
+        "maximum": 1304.0700169030165
+      },
+      "all_target_within_100mm": 0.8427777777777777,
+      "over_500mm": 20,
+      "common_target_error_mm": {
+        "count": 10548,
+        "mean": 65.77091639728322,
+        "p50": 59.15182325533616,
+        "p95": 130.95960791860068,
+        "maximum": 1304.0700169030165
+      }
+    },
+    "states3d": {
+      "targets": 10800,
+      "valid": 10688,
+      "coverage": 0.9896296296296296,
+      "error_mm": {
+        "count": 10688,
+        "mean": 65.60767162603614,
+        "p50": 58.91165669473598,
+        "p95": 130.8485963384398,
+        "maximum": 1002.4373570028229
+      },
+      "all_target_within_100mm": 0.8544444444444445,
+      "over_500mm": 23,
+      "current_coverage": 0.9695370370370371,
+      "predicted_or_missing_fraction": 0.030462962962962963,
+      "current_error_mm": {
+        "count": 10471,
+        "mean": 63.47544095615484,
+        "p50": 58.45855924993092,
+        "p95": 126.17417173451936,
+        "maximum": 963.3409495172442
+      },
+      "current_over_150mm": 210,
+      "common_target_error_mm": {
+        "count": 10548,
+        "mean": 64.5152415836265,
+        "p50": 58.659145953776346,
+        "p95": 128.50837400305448,
+        "maximum": 963.3409495172442
+      }
+    }
+  },
+  "two_d_px": {
+    "count": 38706,
+    "mean": 14.349343004216873,
+    "p50": 11.20878023589988,
+    "p95": 33.24987979650896,
+    "maximum": 459.53169106334565
+  },
+  "gaussian_nominal95_empirical": 0.4067178143712575,
+  "fault_cases": [
+    {
+      "id": "view_dropout",
+      "type": "view_dropout",
+      "duration_ms": 320,
+      "start_frame": 60,
+      "end_frame": 68,
+      "start_ns": 22400000000,
+      "end_ns": 22720000000,
+      "cameras": [
+        "0"
+      ],
+      "affected_joints": [
+        "left_shoulder",
+        "right_shoulder",
+        "left_elbow",
+        "right_elbow",
+        "left_wrist",
+        "right_wrist",
+        "left_hip",
+        "right_hip",
+        "left_knee",
+        "right_knee",
+        "left_ankle",
+        "right_ankle"
+      ],
+      "landmarks": null,
+      "params": {},
+      "applied_frames": 8,
+      "current_coverage_during": 0.9583333333333334,
+      "false_current_over_150mm_during": 2,
+      "clean_false_current_over_150mm_during": 0,
+      "false_current_over_150mm_after": 4,
+      "recovery_ms": 0,
+      "clean_recovery_ms": 0,
+      "recovery_step_excess_mm": {
+        "count": 312,
+        "mean": 17.491660675903226,
+        "p50": 13.323448422601563,
+        "p95": 46.67580640566181,
+        "maximum": 87.57201008773791
+      },
+      "maximum_prediction_age_ms": 80.0
+    },
+    {
+      "id": "limb_dropout",
+      "type": "limb_dropout",
+      "duration_ms": 320,
+      "start_frame": 60,
+      "end_frame": 68,
+      "start_ns": 22400000000,
+      "end_ns": 22720000000,
+      "cameras": [
+        "0",
+        "2",
+        "5",
+        "7"
+      ],
+      "affected_joints": [
+        "left_knee",
+        "left_ankle"
+      ],
+      "landmarks": [
+        "left_knee",
+        "left_ankle",
+        "left_big_toe",
+        "left_small_toe",
+        "left_heel"
+      ],
+      "params": {
+        "side": "left",
+        "limb": "leg"
+      },
+      "applied_frames": 8,
+      "current_coverage_during": 0.0,
+      "false_current_over_150mm_during": 0,
+      "clean_false_current_over_150mm_during": 0,
+      "false_current_over_150mm_after": 0,
+      "recovery_ms": 0,
+      "clean_recovery_ms": 0,
+      "recovery_step_excess_mm": {
+        "count": 52,
+        "mean": 16.174902571056386,
+        "p50": 10.854265593705783,
+        "p95": 41.849412605374404,
+        "maximum": 83.40817430544848
+      },
+      "maximum_prediction_age_ms": 80.0
+    },
+    {
+      "id": "body_gap",
+      "type": "body_gap",
+      "duration_ms": 320,
+      "start_frame": 60,
+      "end_frame": 68,
+      "start_ns": 22400000000,
+      "end_ns": 22720000000,
+      "cameras": [
+        "0",
+        "2",
+        "5",
+        "7"
+      ],
+      "affected_joints": [
+        "left_shoulder",
+        "right_shoulder",
+        "left_elbow",
+        "right_elbow",
+        "left_wrist",
+        "right_wrist",
+        "left_hip",
+        "right_hip",
+        "left_knee",
+        "right_knee",
+        "left_ankle",
+        "right_ankle"
+      ],
+      "landmarks": null,
+      "params": {},
+      "applied_frames": 8,
+      "current_coverage_during": 0.0,
+      "false_current_over_150mm_during": 0,
+      "clean_false_current_over_150mm_during": 0,
+      "false_current_over_150mm_after": 4,
+      "recovery_ms": 0,
+      "clean_recovery_ms": 0,
+      "recovery_step_excess_mm": {
+        "count": 312,
+        "mean": 19.667779910987612,
+        "p50": 14.235444473340216,
+        "p95": 56.401109747932885,
+        "maximum": 113.90549739406903
+      },
+      "maximum_prediction_age_ms": 80.0
+    },
+    {
+      "id": "view_outlier",
+      "type": "view_outlier",
+      "duration_ms": 320,
+      "start_frame": 60,
+      "end_frame": 68,
+      "start_ns": 22400000000,
+      "end_ns": 22720000000,
+      "cameras": [
+        "0"
+      ],
+      "affected_joints": [
+        "left_wrist"
+      ],
+      "landmarks": [
+        "left_wrist"
+      ],
+      "params": {
+        "offset_px": 100.0,
+        "direction_rad": 0.0,
+        "score": 0.99
+      },
+      "applied_frames": 8,
+      "current_coverage_during": 1.0,
+      "false_current_over_150mm_during": 0,
+      "clean_false_current_over_150mm_during": 0,
+      "false_current_over_150mm_after": 0,
+      "recovery_ms": 0,
+      "clean_recovery_ms": 0,
+      "recovery_step_excess_mm": {
+        "count": 26,
+        "mean": 22.531917648535856,
+        "p50": 17.436892201440095,
+        "p95": 62.73902848642924,
+        "maximum": 79.6875436858653
+      },
+      "maximum_prediction_age_ms": 80.0
+    },
+    {
+      "id": "view_lr_swap",
+      "type": "view_lr_swap",
+      "duration_ms": 320,
+      "start_frame": 60,
+      "end_frame": 68,
+      "start_ns": 22400000000,
+      "end_ns": 22720000000,
+      "cameras": [
+        "0"
+      ],
+      "affected_joints": [
+        "left_shoulder",
+        "right_shoulder",
+        "left_elbow",
+        "right_elbow",
+        "left_wrist",
+        "right_wrist",
+        "left_hip",
+        "right_hip",
+        "left_knee",
+        "right_knee",
+        "left_ankle",
+        "right_ankle"
+      ],
+      "landmarks": null,
+      "params": {},
+      "applied_frames": 8,
+      "current_coverage_during": 0.9583333333333334,
+      "false_current_over_150mm_during": 0,
+      "clean_false_current_over_150mm_during": 0,
+      "false_current_over_150mm_after": 4,
+      "recovery_ms": 0,
+      "clean_recovery_ms": 0,
+      "recovery_step_excess_mm": {
+        "count": 312,
+        "mean": 17.559083441169815,
+        "p50": 13.429671219243563,
+        "p95": 45.69496960156905,
+        "maximum": 87.57137905775681
+      },
+      "maximum_prediction_age_ms": 80.0
+    },
+    {
+      "id": "all_lr_swap",
+      "type": "all_lr_swap",
+      "duration_ms": 320,
+      "start_frame": 60,
+      "end_frame": 68,
+      "start_ns": 22400000000,
+      "end_ns": 22720000000,
+      "cameras": [
+        "0",
+        "2",
+        "5",
+        "7"
+      ],
+      "affected_joints": [
+        "left_shoulder",
+        "right_shoulder",
+        "left_elbow",
+        "right_elbow",
+        "left_wrist",
+        "right_wrist",
+        "left_hip",
+        "right_hip",
+        "left_knee",
+        "right_knee",
+        "left_ankle",
+        "right_ankle"
+      ],
+      "landmarks": null,
+      "params": {},
+      "applied_frames": 8,
+      "current_coverage_during": 0.6354166666666666,
+      "false_current_over_150mm_during": 52,
+      "clean_false_current_over_150mm_during": 0,
+      "false_current_over_150mm_after": 4,
+      "recovery_ms": 120,
+      "clean_recovery_ms": 0,
+      "recovery_step_excess_mm": {
+        "count": 300,
+        "mean": 45.14530152147784,
+        "p50": 15.766249122080989,
+        "p95": 113.02445664022531,
+        "maximum": 1364.5154553577336
+      },
+      "maximum_prediction_age_ms": 80.0
+    },
+    {
+      "id": "view_time_offset",
+      "type": "view_time_offset",
+      "duration_ms": 320,
+      "start_frame": 60,
+      "end_frame": 68,
+      "start_ns": 22400000000,
+      "end_ns": 22720000000,
+      "cameras": [
+        "0"
+      ],
+      "affected_joints": [
+        "left_shoulder",
+        "right_shoulder",
+        "left_elbow",
+        "right_elbow",
+        "left_wrist",
+        "right_wrist",
+        "left_hip",
+        "right_hip",
+        "left_knee",
+        "right_knee",
+        "left_ankle",
+        "right_ankle"
+      ],
+      "landmarks": null,
+      "params": {
+        "lag_frames": 3
+      },
+      "applied_frames": 8,
+      "current_coverage_during": 0.9583333333333334,
+      "false_current_over_150mm_during": 2,
+      "clean_false_current_over_150mm_during": 0,
+      "false_current_over_150mm_after": 4,
+      "recovery_ms": 0,
+      "clean_recovery_ms": 0,
+      "recovery_step_excess_mm": {
+        "count": 312,
+        "mean": 17.510203999900675,
+        "p50": 13.243747903375263,
+        "p95": 46.67580641211348,
+        "maximum": 87.57201006838352
+      },
+      "maximum_prediction_age_ms": 80.0
+    }
+  ],
+  "robot": {
+    "imitation": {
+      "passed": false,
+      "balance_passed": true,
+      "limb_imitation_passed": false,
+      "root_path_error_p95_m": 0.8430582129806058,
+      "stopping_passed": true
+    },
+    "imitation_dropout": {
+      "passed": false,
+      "balance_passed": true,
+      "limb_imitation_passed": false,
+      "root_path_error_p95_m": 1.7043524131849597,
+      "stopping_passed": true
+    }
+  },
+  "online": {
+    "processed": 48,
+    "replaced": 48,
+    "stale_after": 3,
+    "state_rate_hz": 11.463326871057687,
+    "latency_ms": {
+      "mean": 135.96557083333332,
+      "p95": 152.41807655,
+      "maximum": 178.118067,
+      "count": 48
+    },
+    "planner_follow_count": 0
+  },
+  "regression": {
+    "vision": {
+      "tests_run": 274,
+      "counts": {
+        "passed": 248,
+        "skipped": 26
+      }
+    },
+    "robot": {
+      "tests_run": 274,
+      "counts": {
+        "passed": 274
+      }
+    }
+  },
+  "figure_count": 17,
+  "report": "outputs/mainline_validation_20261019/逐环节验证报告.md",
+  "integration_gap": "Enhanced full human state is not yet connected to the default G1 raw-pose controller",
+  "hardware_verified": false,
+  "algorithm_parameters_changed": false
+}

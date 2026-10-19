@@ -38,6 +38,13 @@ class ReferenceGate:
         return self.latest if 0<=age<=self.max_age_ns else None
 
 
+def read_preview_image(path):
+    """Decode via bytes because OpenCV imread loses Windows Unicode paths."""
+    import cv2
+    path=Path(path)
+    return cv2.imdecode(np.fromfile(path,np.uint8),cv2.IMREAD_COLOR) if path.is_file() else None
+
+
 def replay(session,video=True,delay_ms=120,dropout=None,output_name='imitation',control_dt=.02,
            reference_mode='rate_limit',trajectory_config=None,save_logs=True,
            transition_mode='legacy',transition_config=None,support_diagnostics=False,recovery_config=None,root_tracking_config=None):
@@ -153,7 +160,7 @@ def replay(session,video=True,delay_ms=120,dropout=None,output_name='imitation',
                 canvas=np.full((720,1920,3),245,np.uint8)
                 for k in range(4):
                     path=session/'images'/f'cam{k:02d}'/f'{last_frame:06d}.png'
-                    image=cv2.imread(str(path))
+                    image=read_preview_image(path)
                     if image is not None:
                         y=80+(k//2)*320;x=(k%2)*320
                         canvas[y:y+320,x:x+320]=cv2.resize(image,(320,320))

@@ -53,6 +53,8 @@ python scripts/bootstrap_robot.py              # 机器人环境，写入 .robot
 
 ## 文档
 
+- [主线逐环节验证](docs/mainline_validation.md)：12个环节的重新实测、图文报告与失败边界（2026-10-19）
+- [工业相机选型与预算](docs/camera_selection_2026-10-19.md)：4/6 台配置、型号与公开价格、同步和带宽要求（2026-10-19）
 - [研究日志](docs/research_log.md)：对话约束、每轮决策与结果
 - [视觉模块与复现](docs/vision_pipeline.md)、[联合状态](docs/vision_joint_state.md)
 - 调研：[观测恢复](docs/observation_recovery_research_2026-10-18.md)、[前沿方法](docs/vision_frontier_2026-10-18.md)、[首轮视觉调研](docs/vision_research_2026-10-17.md)、[PMPose 对照](docs/pmpose_experiment.md)、[公开真实数据](docs/public_real_datasets_2026-10-17.md)
