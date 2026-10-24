@@ -3,6 +3,9 @@ __pycache__/
 .runtime.json
 .robot-runtime.json
 outputs/
+data/
 assets/*.glb
 *.blend1
 *.log
+*.aux
+*.synctex.gz

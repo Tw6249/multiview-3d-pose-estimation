@@ -3,7 +3,6 @@ import unittest
 import numpy as np
 from tests.test_motion_frontend import scene
 from pose_sim.auxiliary import associate_details, attachment_checks
-from pose_sim.association_history import AssociationHistory
 from pose_sim.human_motion import HumanMotionEstimator
 from pose_sim.multiview_temporal import MultiViewTemporal
 
@@ -65,44 +64,6 @@ class AuxiliaryTests(unittest.TestCase):
             previous=e.update(pose,cameras,d)
         self.assertIsNone(previous['orientations']['left_foot'])
         self.assertEqual(previous['support']['feet']['left']['state'],'unknown')
-
-    def test_retained_image_paths_recover_when_3d_prior_unavailable(self):
-        cameras,cfg,xyz,rows=scene();fusion=MultiViewTemporal(dict(cameras=cameras),cfg,structured=False,auxiliary=False,history=True)
-        e=HumanMotionEstimator();previous=None
-        for r in rows[:15]:
-            pose,d=fusion.update(r,previous);previous=e.update(pose,cameras,d)
-        r=copy.deepcopy(rows[15])
-        for cid in ('cam00','cam01'):
-            xy=r['views'][cid]['keypoints_px'];xy[13],xy[14]=xy[14],xy[13]
-        pose,d=fusion.update(r,None)
-        self.assertTrue(any(c['group']=='knee' for c in pose['association']['corrections']))
-        np.testing.assert_allclose(np.array(pose['joints_world_m'])[13:15],xyz[15,13:15],atol=.001)
-        self.assertLessEqual(max(len(h['candidates']) for h in fusion.history.groups.values()),4)
-
-    def test_history_reset_and_missing_evidence_do_not_extend_age(self):
-        h=AssociationHistory();_,_,_,rows=scene();h.begin(rows[0],'cal')
-        h.commit('knee',[(0.,(0,))],{(0,):{'c':np.ones((2,2))}},True)
-        h.begin(rows[1],'cal');h.commit('knee',[(0.,(0,))],{(0,):{'c':np.full((2,2),np.nan)}},True)
-        self.assertEqual(h.groups['knee']['timestamp_ns'],rows[0]['timestamp_ns'])
-        h.begin(rows[6],'cal');self.assertEqual(h.groups,{})
-        h.commit('knee',[(0.,(0,))],{(0,):{'c':np.ones((2,2))}},True)
-        r=copy.deepcopy(rows[7]);r['source_id']='different';h.begin(r,'cal');self.assertEqual(h.groups,{})
-
-    def test_experimental_history_is_not_enabled_by_default(self):
-        cameras,cfg,_,_=scene()
-        self.assertIsNone(MultiViewTemporal(dict(cameras=cameras),cfg).history)
-
-    def test_history_cannot_certify_global_swap_without_3d_prior(self):
-        cameras,cfg,_,rows=scene();f=MultiViewTemporal(dict(cameras=cameras),cfg,structured=False,history=True)
-        e=HumanMotionEstimator();previous=None
-        for r in rows[:15]:
-            pose,d=f.update(r,previous);previous=e.update(pose,cameras,d)
-        r=copy.deepcopy(rows[15])
-        for v in r['views'].values():
-            xy=v['keypoints_px'];xy[9],xy[10]=xy[10],xy[9]
-        pose,_=f.update(r,None)
-        self.assertTrue(any(a['group']=='wrist' and a['camera']=='all' for a in pose['association']['ambiguities']))
-        self.assertIsNone(pose['joints_world_m'][9])
 
 
 if __name__=='__main__':unittest.main()

@@ -1,0 +1,460 @@
+{
+  "date": "2026-10-19",
+  "status": "experimental_baseline_not_promoted_to_default_control",
+  "scope": "Six development MPI real-RGB caches, 900 frames / 1800 foot-frames; source reference labels never used by inference; frozen test untouched",
+  "detailed_report": "outputs/foot_contact_baseline_20261019/accepted_baseline/report.json",
+  "inputs_sha256": {
+    "outputs\\mainline_validation_20261019\\inference\\s1_crouch\\states3d.jsonl": "9a0445194fff34310fc6ca6370be04496b3d85201b57b42861940045c29e1dc7",
+    "outputs\\mainline_validation_20261019\\inference\\s1_exercise\\states3d.jsonl": "705b33f3e5ab25ea86a98b850baf244623f2afed72ec7535e0b9c2f30eaaf20c",
+    "outputs\\mainline_validation_20261019\\inference\\s1_walk\\states3d.jsonl": "cf51fe8af834db27d3f2f5179429a67c07e9d765146d4c38059bc496bb6e4a69",
+    "outputs\\mainline_validation_20261019\\inference\\s2_floor\\states3d.jsonl": "e2f72551e1681e81ab5f7d483dd0d12e68cdf7a73f6880fd1b004db5734796a8",
+    "outputs\\mainline_validation_20261019\\inference\\s2_misc\\states3d.jsonl": "559ba9438f38ddd537b6546d51803ef62f1a5907fced9eee16905098b5f7e77d",
+    "outputs\\mainline_validation_20261019\\inference\\s2_sports\\states3d.jsonl": "d6f16bef50e2a08fec61cf1a7559977e04ca5c5f23b3a91ceae87e4b615a85a4"
+  },
+  "code_sha256": {
+    "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\scripts\\benchmark_visual_contact.py": "bfd71ee8488195b9e9cb2eee6e31bd216eaccbef7c086b874c29f87c3d44d466",
+    "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\pose_sim\\ground.py": "9ffc85999053231e3c391f6bddf44fd2896ed7918c803b216067880523bef28f",
+    "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\pose_sim\\foot_contact.py": "174103994925df88772d59e0b9a6abd2b298c8f49c8ac07bfaeced7104af3287",
+    "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\pose_sim\\foot_support.py": "984ee8f000a30b468f07b851e138310cb26df24e8eb2d51f3edef95a2b407232",
+    "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\motion_control\\visual_contact.py": "93b52c9dfd566a25a4bf5bbf7c35ac83c52c0fb7521309674869b8728de4aebb",
+    "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\motion_control\\contact_reference.py": "d459c646b424469466de6bc3a61ec7e0fa3c89b4473885b6a363a1e348154958",
+    "C:\\Users\\TanWei\\Desktop\\三维位姿估计\\motion_control\\humanoid.py": "e733e681d3eb33483a69885ccd69ebf37f94a09effec227abffd42009612bf81"
+  },
+  "configuration": {
+    "schema_version": 1,
+    "status": "experimental_visual_contact_hypotheses",
+    "window_samples": 5,
+    "minimum_window_s": 0.12,
+    "maximum_window_s": 0.24,
+    "maximum_gap_s": 0.08,
+    "confirmation_frames": 2,
+    "minimum_views": 2,
+    "minimum_ray_angle_deg": 5.0,
+    "maximum_reprojection_px": 5.0,
+    "maximum_position_std_m": 0.04,
+    "landmark_above_sole_m": 0.015,
+    "near_plane_tolerance_m": 0.035,
+    "maximum_stationary_speed_m_s": 0.15,
+    "maximum_window_extent_m": 0.04,
+    "maximum_fit_residual_m": 0.015,
+    "minimum_swing_clearance_m": 0.06,
+    "uncertainty_multiplier": 2.0,
+    "ground_domain_margin_m": 0.5
+  },
+  "ground": {
+    "unique_features": 18,
+    "training_features": 13,
+    "inliers": 11,
+    "heldout_features": 5,
+    "heldout_within_50mm_fraction": 0.8,
+    "heldout_error_m": [
+      0.01904462743404017,
+      0.010467732861505815,
+      0.19633235561150622,
+      0.013400010729295368,
+      0.019447304848612425
+    ],
+    "fit_p95_m": 0.009952660073443174,
+    "xy_spread_m": [
+      0.9659615302351098,
+      0.3618508231209372
+    ],
+    "tilt_deg": 0.9974188518829884
+  },
+  "ground_residual_bound_m": 0.019386903236426587,
+  "ground_scope": "Natural cloth texture, calibration-bound, inspected MPI-specific ROI; plane initialisation uses frames 0 and 20 offline. Not a surveyed floor; confidence is not calibrated.",
+  "secondary_scene_validation": {
+    "features": 6,
+    "within_50mm": 5,
+    "scope": "S2 image feature check; duplicate rectification matches are not independent"
+  },
+  "aggregate": {
+    "no_ground": {
+      "unknown": 1800
+    },
+    "ground_only": {
+      "unknown": 1665,
+      "swing": 135
+    },
+    "temporal": {
+      "unknown": 1143,
+      "contact": 560,
+      "swing": 97
+    }
+  },
+  "known_foot_frame_coverage": 0.365,
+  "visual_spotcheck": {
+    "confusion": {
+      "contact->contact": 28,
+      "contact->unknown": 34,
+      "unknown->unknown": 10,
+      "swing->unknown": 8,
+      "swing->swing": 4
+    },
+    "visually_decidable": 74,
+    "predicted_known": 32,
+    "coverage": 0.43243243243243246,
+    "agreement_when_known": 1.0,
+    "correct_over_all_decidable": 0.43243243243243246
+  },
+  "spotcheck_scope": "Codex visual inspection before classifier outputs; 84 foot snapshots, 74 decidable; L/R overlay from detector. No independent human labels, no contact-force truth, no touchdown timing accuracy.",
+  "physical_contact_accuracy": null,
+  "contact_force_accuracy": null,
+  "touchdown_timing_accuracy": null,
+  "tests": {
+    "robot_full_regression": {
+      "run": 305,
+      "passed": 305,
+      "elapsed_s": 82.712
+    },
+    "post_interface_revision_related": {
+      "run": 54,
+      "passed": 54,
+      "elapsed_s": 3.732
+    },
+    "cli_integration_frames": 150,
+    "source_and_code_hashes_verified": true,
+    "notes": "ONNX CUDA provider emitted a cuDNN plan warning during existing RGB contract tests; suite exited 0. Existing environment unchanged.",
+    "local_document_links_checked": 56
+  },
+  "cases": [
+    {
+      "id": "s1_crouch",
+      "frames": 150,
+      "labels": {
+        "no_ground": {
+          "unknown": 300
+        },
+        "ground_only": {
+          "unknown": 300
+        },
+        "temporal": {
+          "unknown": 181,
+          "contact": 119
+        }
+      },
+      "contact_cpu_ms": {
+        "count": 150,
+        "mean": 0.27380933325427276,
+        "p95": 0.4005549912108107,
+        "maximum": 0.5771000287495553
+      },
+      "reference_accepted": {
+        "baseline": 103,
+        "floor_only": 103,
+        "visual_contact": 103
+      },
+      "contact_reference_cpu_ms": {
+        "count": 150,
+        "mean": 5.988866667030379,
+        "p95": 11.623935017269101,
+        "maximum": 13.396600028499961
+      },
+      "reference_sole_center_speed_m_s": {
+        "baseline": {
+          "mean": 0.23926731959250822,
+          "p95": 0.8032868905745857,
+          "maximum": 1.5562632942970207,
+          "count": 81
+        },
+        "contact": {
+          "mean": 0.04189965117290077,
+          "p95": 0.10902106559816391,
+          "maximum": 0.20023327232606977,
+          "count": 81
+        }
+      }
+    },
+    {
+      "id": "s1_exercise",
+      "frames": 150,
+      "labels": {
+        "no_ground": {
+          "unknown": 300
+        },
+        "ground_only": {
+          "unknown": 300
+        },
+        "temporal": {
+          "unknown": 62,
+          "contact": 238
+        }
+      },
+      "contact_cpu_ms": {
+        "count": 150,
+        "mean": 0.30479533209775883,
+        "p95": 0.38511002203449607,
+        "maximum": 0.4523000097833574
+      },
+      "reference_accepted": {
+        "baseline": 114,
+        "floor_only": 114,
+        "visual_contact": 114
+      },
+      "contact_reference_cpu_ms": {
+        "count": 150,
+        "mean": 6.080370001339664,
+        "p95": 10.349244970711878,
+        "maximum": 12.171100010164082
+      },
+      "reference_sole_center_speed_m_s": {
+        "baseline": {
+          "mean": 0.24400788218585803,
+          "p95": 0.5983755893842031,
+          "maximum": 0.7928203311090976,
+          "count": 158
+        },
+        "contact": {
+          "mean": 0.04951605651224351,
+          "p95": 0.13184008071325537,
+          "maximum": 0.17626256680311186,
+          "count": 158
+        }
+      }
+    },
+    {
+      "id": "s1_walk",
+      "frames": 150,
+      "labels": {
+        "no_ground": {
+          "unknown": 300
+        },
+        "ground_only": {
+          "unknown": 291,
+          "swing": 9
+        },
+        "temporal": {
+          "unknown": 245,
+          "contact": 54,
+          "swing": 1
+        }
+      },
+      "contact_cpu_ms": {
+        "count": 150,
+        "mean": 0.2155993354972452,
+        "p95": 0.4968400142388412,
+        "maximum": 1.476600009482354
+      },
+      "reference_accepted": {
+        "baseline": 107,
+        "floor_only": 107,
+        "visual_contact": 107
+      },
+      "contact_reference_cpu_ms": {
+        "count": 150,
+        "mean": 5.898963333650802,
+        "p95": 10.609829999157226,
+        "maximum": 12.060699984431267
+      },
+      "reference_sole_center_speed_m_s": {
+        "baseline": {
+          "mean": 0.30532533750891466,
+          "p95": 0.5434669311374702,
+          "maximum": 0.9255575226010653,
+          "count": 30
+        },
+        "contact": {
+          "mean": 0.035870286322164824,
+          "p95": 0.09120295079222909,
+          "maximum": 0.1316754637569881,
+          "count": 30
+        }
+      }
+    },
+    {
+      "id": "s2_floor",
+      "frames": 150,
+      "labels": {
+        "no_ground": {
+          "unknown": 300
+        },
+        "ground_only": {
+          "unknown": 189,
+          "swing": 111
+        },
+        "temporal": {
+          "unknown": 110,
+          "contact": 98,
+          "swing": 92
+        }
+      },
+      "contact_cpu_ms": {
+        "count": 150,
+        "mean": 0.22592266749901077,
+        "p95": 0.34112497814930964,
+        "maximum": 0.5585000035353005
+      },
+      "reference_accepted": {
+        "baseline": 0,
+        "floor_only": 0,
+        "visual_contact": 0
+      },
+      "contact_reference_cpu_ms": {
+        "count": 150,
+        "mean": 0.004121998402600487,
+        "p95": 0.0037649704609066196,
+        "maximum": 0.1830000546760857
+      },
+      "reference_sole_center_speed_m_s": {
+        "baseline": null,
+        "contact": null
+      }
+    },
+    {
+      "id": "s2_misc",
+      "frames": 150,
+      "labels": {
+        "no_ground": {
+          "unknown": 300
+        },
+        "ground_only": {
+          "unknown": 300
+        },
+        "temporal": {
+          "unknown": 292,
+          "contact": 8
+        }
+      },
+      "contact_cpu_ms": {
+        "count": 150,
+        "mean": 0.12709332979284227,
+        "p95": 0.16989501309581082,
+        "maximum": 0.2443999983370304
+      },
+      "reference_accepted": {
+        "baseline": 145,
+        "floor_only": 145,
+        "visual_contact": 145
+      },
+      "contact_reference_cpu_ms": {
+        "count": 150,
+        "mean": 8.854629332975795,
+        "p95": 11.450150018208657,
+        "maximum": 12.65719998627901
+      },
+      "reference_sole_center_speed_m_s": {
+        "baseline": {
+          "mean": 0.4273500910145004,
+          "p95": 0.6540969950296878,
+          "maximum": 0.6719823912215851,
+          "count": 7
+        },
+        "contact": {
+          "mean": 0.06640322526389068,
+          "p95": 0.11929386900023826,
+          "maximum": 0.12046906077565533,
+          "count": 7
+        }
+      }
+    },
+    {
+      "id": "s2_sports",
+      "frames": 150,
+      "labels": {
+        "no_ground": {
+          "unknown": 300
+        },
+        "ground_only": {
+          "unknown": 285,
+          "swing": 15
+        },
+        "temporal": {
+          "unknown": 253,
+          "contact": 43,
+          "swing": 4
+        }
+      },
+      "contact_cpu_ms": {
+        "count": 150,
+        "mean": 0.18639466492459178,
+        "p95": 0.30961499724071473,
+        "maximum": 0.3960999893024564
+      },
+      "reference_accepted": {
+        "baseline": 127,
+        "floor_only": 126,
+        "visual_contact": 126
+      },
+      "contact_reference_cpu_ms": {
+        "count": 150,
+        "mean": 7.168877999841546,
+        "p95": 11.127689978457054,
+        "maximum": 12.624299968592823
+      },
+      "reference_sole_center_speed_m_s": {
+        "baseline": {
+          "mean": 0.3770709347980512,
+          "p95": 0.8349640633741834,
+          "maximum": 1.1485474600987269,
+          "count": 30
+        },
+        "contact": {
+          "mean": 0.13644513195011923,
+          "p95": 0.2744783800031944,
+          "maximum": 0.29800177631165625,
+          "count": 30
+        }
+      }
+    }
+  ],
+  "walking_dynamics": {
+    "baseline": {
+      "passed": false,
+      "balance_passed": true,
+      "limb_imitation_passed": false,
+      "root_path_passed": false,
+      "stopping_passed": true,
+      "acceptance_fraction": 0.7133333333333334,
+      "source_reference_leg_rmse_rad": 0.25171939979724867,
+      "root_path_error_p95_m": 3.19630103473375,
+      "simulated_contact_tangent_speed_m_s": {
+        "mean": 0.04222227059217358,
+        "p95": 0.1629770161137575,
+        "maximum": 3.8415909257293612,
+        "count": 3023
+      }
+    },
+    "floor_only": {
+      "passed": false,
+      "balance_passed": true,
+      "limb_imitation_passed": false,
+      "root_path_passed": false,
+      "stopping_passed": true,
+      "acceptance_fraction": 0.7133333333333334,
+      "source_reference_leg_rmse_rad": 0.23340206747475678,
+      "root_path_error_p95_m": 2.4325930269776763,
+      "simulated_contact_tangent_speed_m_s": {
+        "mean": 0.03343816729324095,
+        "p95": 0.1388604214414375,
+        "maximum": 1.7893344468049597,
+        "count": 3016
+      }
+    },
+    "visual_contact": {
+      "passed": false,
+      "balance_passed": true,
+      "limb_imitation_passed": false,
+      "root_path_passed": false,
+      "stopping_passed": true,
+      "acceptance_fraction": 0.7133333333333334,
+      "source_reference_leg_rmse_rad": 0.23405669788021946,
+      "root_path_error_p95_m": 2.3961672396339266,
+      "simulated_contact_tangent_speed_m_s": {
+        "mean": 0.03732471972885731,
+        "p95": 0.1458715378322764,
+        "maximum": 1.7893344468049597,
+        "count": 2820
+      }
+    }
+  },
+  "decision": "Retain opt-in baseline. Contact and ground coverage are insufficient; all three walking methods fail full imitation. No hardware enablement.",
+  "hardware_enabled": false,
+  "commit_or_push_performed": false,
+  "cleanup": {
+    "status": "blocked_by_automatic_approval_review",
+    "reason": "blocked by policy",
+    "action": "Delete only task-created temporary probes and superseded evaluation directory",
+    "deleted_files": 0,
+    "superseded_evaluation_bytes": 16110065
+  }
+}

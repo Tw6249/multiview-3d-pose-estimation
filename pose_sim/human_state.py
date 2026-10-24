@@ -20,7 +20,6 @@ from scipy.optimize import least_squares
 
 from .geometry import project
 from .landmarks import BONES
-from .reacquisition import Reacquisition, current_structure_support
 
 DEFAULTS = dict(measurement_floor_m=.018, acceleration_noise_m_s2=10.,
                 innovation_gate=25., max_prediction_ms=100., reset_gap_ms=500.,
@@ -53,7 +52,6 @@ class HumanStateEstimator:
             raise ValueError('track_confirmation_frames must be a positive integer')
         self.last_time = self.signature = None
         self.filters, self.samples, self.lengths = {}, {}, {}
-        self.reacquisition = Reacquisition()
 
     def update(self, row, cameras=None, detection=None):
         names = row['joint_names']
@@ -71,7 +69,6 @@ class HumanStateEstimator:
         reset = self.signature is not None and (signature != self.signature or dt*1000 > self.cfg['reset_gap_ms'])
         if reset:
             self.filters, self.samples, self.lengths = {}, {}, {}
-            self.reacquisition = Reacquisition()
             dt = 0.
         self.last_time, self.signature = t, signature
         measurements, noise, reasons = {}, {}, {}
@@ -96,26 +93,6 @@ class HumanStateEstimator:
             g = np.vstack((np.eye(3)*(.5*dt*dt),np.eye(3)*dt))
             state['x'] = f@state['x']
             state['p'] = f@state['p']@f.T + g@g.T*self.cfg['acceleration_noise_m_s2']**2
-        independent_measurements = dict(measurements)
-        recovery_velocity = {}
-        if self.cfg.get('state_reacquisition', False):
-            quality_by_name = dict(zip(names, row['quality']))
-            self.reacquisition.retain(measurements)
-            for name, z in measurements.items():
-                q = quality_by_name[name]
-                supported = (len(set(q['inlier_cameras'])) >= 3 or
-                             current_structure_support(name, independent_measurements, quality_by_name))
-                for a, b in BONES:
-                    neighbour = b if a == name else a if b == name else None
-                    key = a+'--'+b
-                    if neighbour not in independent_measurements or key not in self.lengths:
-                        continue
-                    tolerance = self._bone_gate_tolerance(key, self.lengths[key])
-                    nq = quality_by_name[neighbour]
-                    if (np.isfinite(tolerance) and len(set(nq['inlier_cameras'])) >= 3
-                            and abs(np.linalg.norm(z-independent_measurements[neighbour])-self.lengths[key]) <= tolerance):
-                        supported = True
-                recovery_velocity[name] = self.reacquisition.observe(name, z, t, noise[name], supported)
         # Mature bone lengths act as an outlier gate. Select the endpoint with
         # poorer temporal agreement, rather than withdrawing an entire person.
         for a,b in BONES:
@@ -132,35 +109,21 @@ class HumanStateEstimator:
             bad = max((a,b),key=deviation)
             del measurements[bad]
             reasons[bad] = 'bone length outlier'
-        accepted = set(); reacquired = set()
+        accepted = set()
         for name, z in measurements.items():
             r = np.eye(3)*noise[name]**2
             state = self.filters.get(name)
             expired = state is not None and (t-state['last_observed'])/1e6 > self.cfg['max_prediction_ms']
             if state is None or expired:
-                velocity = recovery_velocity.get(name) if expired else None
-                state = dict(x=np.r_[z,velocity if velocity is not None else [0.,0.,0.]],
+                state = dict(x=np.r_[z,[0.,0.,0.]],
                              p=np.diag([noise[name]**2]*3+[4.]*3),last_observed=t,observations=1,
                              streak=0,confirmed=False)
                 self.filters[name] = state
-                if expired and self.cfg.get('state_reacquisition', False):
-                    # Fresh image geometry remains available after a gap. Do not
-                    # call it a continuing observed motion or allow it to drive.
-                    reacquired.add(name)
-                    reasons[name] = 'fresh geometry after expired track; control transition required'
-                    continue
             else:
                 innovation = z-state['x'][:3]
                 s = state['p'][:3,:3]+r
                 if innovation@np.linalg.solve(s,innovation) > self.cfg['innovation_gate']:
                     reasons[name] = 'temporal innovation outlier'
-                    velocity = recovery_velocity.get(name)
-                    if velocity is not None:
-                        self.filters[name] = dict(x=np.r_[z,velocity],
-                            p=np.diag([max(.05,noise[name])**2]*3+[4.]*3),last_observed=t,observations=1,
-                            streak=0,confirmed=False)
-                        reacquired.add(name)
-                        reasons[name] = 'continuous current observations overrule history; control transition required'
                     continue
                 gain = np.linalg.solve(s,state['p'][:3,:]).T
                 state['x'] += gain@innovation
@@ -199,13 +162,12 @@ class HumanStateEstimator:
             covariance = state['p'][:3,:3]+np.outer(correction,correction)
             sigma = float(np.sqrt(np.linalg.eigvalsh(covariance).max()))
             points.append(point.tolist()); velocities.append(state['x'][3:].tolist())
-            status = ('reacquiring' if name in reacquired else 'tentative' if name in tentative
-                      else 'filtered' if name in accepted else 'predicted')
+            status = ('tentative' if name in tentative else 'filtered' if name in accepted else 'predicted')
             states.append(dict(status=status,last_observed_timestamp_ns=state['last_observed'],
                                observation_age_ns=age,position_covariance_m2=covariance.tolist(),
                                max_std_m=sigma,structure_correction_m=float(np.linalg.norm(correction)),
                                reason=reasons.get(name) or ('track awaiting confirmation' if name in tentative else None),
-                               track_reinitialized=name in reacquired,
+                               track_reinitialized=False,
                                confirmation_streak=state.get('streak') if name in tentative else None))
             q = copy.deepcopy(row['quality'][i]) if name in accepted else None
             if q is not None:

@@ -1,0 +1,231 @@
+% !TEX program = xelatex
+% -*- coding: utf-8 -*-
+% ============================================================================
+% 周总结与下周计划 LaTeX 模板
+% 样式复刻自：周总结与下周计划.docx
+% 编译方式：xelatex 周总结与下周计划.tex
+% ============================================================================
+\documentclass[UTF8, a4paper, zihao=5, fontset=none]{ctexart}
+
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{tabularray}
+
+% ============================================================================
+% 字体配置（复刻原 Word docDefaults：西文 Times New Roman，中文 宋体/黑体/仿宋）
+% ============================================================================
+\setmainfont{Times New Roman}
+\setsansfont{Arial}
+\setmonofont{Courier New}
+
+\setCJKmainfont[AutoFakeBold=2.5]{SimSun}
+\setCJKsansfont[AutoFakeBold=2.0]{SimHei}
+\setCJKmonofont[AutoFakeBold=2.0]{FangSong}
+
+\setCJKfamilyfont{zhsong}[AutoFakeBold=2.5]{SimSun}
+\setCJKfamilyfont{zhhei}[AutoFakeBold=2.0]{SimHei}
+\setCJKfamilyfont{zhfs}[AutoFakeBold=2.0]{FangSong}
+
+\newcommand{\songti}{\CJKfamily{zhsong}}
+\newcommand{\heiti}{\CJKfamily{zhhei}}
+\newcommand{\fangsong}{\CJKfamily{zhfs}}
+
+% ============================================================================
+% 页面默认设置（第1页：A4 纵向 210mm × 297mm，复刻原 Word 页边距）
+% ============================================================================
+\geometry{
+  a4paper,
+  portrait,
+  top=1.8cm,
+  bottom=1.50cm,
+  left=3.18cm,
+  right=3.18cm
+}
+
+\pagestyle{empty}
+
+% ============================================================================
+% 颜色定义（直接提取自原 Word XML 样式定义）
+% ============================================================================
+\definecolor{planHeaderBg}{HTML}{99CCFF} % 表头浅天蓝底色 (w:fill="99CCFF")
+\definecolor{planBandBg}{HTML}{D9E2F3}   % 隔行浅蓝底色 (w:fill="D9E2F3")
+\definecolor{planBorder}{HTML}{8EAADB}   % 表格边框钢蓝色 (w:color="8EAADB")
+\definecolor{planTextBlue}{HTML}{2F5597} % 计划表深海蓝字色 (w:color="2F5597")
+
+% ============================================================================
+% 可配置元数据宏（每周填写时直接修改此处或下方单元格）
+% ============================================================================
+\newcommand{\Reporter}{谭为}
+\newcommand{\ReportDate}{2026.10.23}
+\newcommand{\PlanDateRange}{2026年10月26日——2026年10月30日}
+
+
+\begin{document}
+
+% ============================================================================
+% 第一页：本周工作总结
+% ============================================================================
+\vspace*{0.5em}
+\begin{center}
+  {\zihao{-3}\bfseries 本周工作总结}
+\end{center}
+\vspace{0.2em}
+
+\noindent
+\begin{tblr}{
+  colspec = {
+    Q[c, m, wd=1.11cm]
+    Q[c, m, wd=0.87cm]
+    Q[l, m, wd=2.75cm]
+    Q[l, m, wd=4.00cm]
+    Q[l, m, wd=4.01cm]
+  },
+  hlines = {0.5pt, solid, black},
+  vlines = {0.5pt, solid, black},
+  rowsep = 2.5pt,
+  colsep = 5.4pt,
+  row{1,2} = {ht=0.75cm},
+  row{3}   = {ht=0.80cm},
+  row{4}   = {ht=0.80cm},
+  row{10}  = {ht=0.61cm},
+  row{12,13,14} = {ht=0.56cm},
+}
+  \SetCell[c=2]{c, m, font=\bfseries} 汇报人： & &
+  \SetCell[c=3]{l, m, font=\bfseries} \Reporter & & \\
+
+  \SetCell[c=2]{c, m, font=\bfseries} 汇报时间： & &
+  \SetCell[c=3]{l, m, font=\bfseries} \ReportDate & & \\
+
+  \SetCell[c=5]{l, m, font=\bfseries} 一．本周工作事项、进度及结果 & & & & \\
+
+  \textbf{序号} & \SetCell[c=4]{c, m, font=\bfseries} 工作事项与结果 & & & \\
+
+  \textbf{1} & \SetCell[c=4]{l, m}
+  {\parbox{12.6cm}{\raggedright\zihao{-5} {\bfseries 主线链路定型：多视角感知、奇异壁垒单调柔化连续重定向与 SONIC 控制}\\
+  1. 打通“四相机无标记感知、三维骨架重建、机器人重定向、全身物理闭环跟踪”完整主线，重定向算法正式命名为“奇异壁垒单调柔化连续重定向算法”。\\
+  2. 运动控制直接使用 SONIC 全身控制策略，未对其做任何改动；前端在肩肘奇异区加入软壁垒，后端生成位置、速度、加速度严格连续的 50 Hz 参考轨迹。}} & & & \\
+
+  \textbf{2} & \SetCell[c=4]{l, m}
+  {\parbox{12.6cm}{\raggedright\zihao{-5} {\bfseries 五类自然动作的闭环跟踪效果（仿真，SONIC 控制）}\\
+  1. 在 120 毫秒因果延迟下，行走转身、快速起蹲、深蹲体操、日常转体挥臂、大跨度体育动作五类序列全部保持平衡并平稳停稳。\\
+  2. 行走转身序列转身摆臂时无手臂反折（上肢方向偏差超 20° 仅 6 帧/共 150 帧）；参考轨迹最大跃度不超过 1500 弧度/秒³；深蹲时骨盆最低降至 0.488 米（目标 0.485 米）。\\
+  3. 五类序列平均：全身关节误差 19.32°，下肢关节误差 13.37°，身体三维关键点误差约 65 毫米，水平路径偏差（95 分位）约 0.61 米。}} & & & \\
+
+  \SetCell[c=5]{l, m, font=\bfseries} 二．未完成事项，问题及解决方案 & & & & \\
+
+  \SetCell[c=5]{l, m}
+  {\parbox{14.1cm}{\raggedright\zihao{-5} 1. 全部结果均来自仿真（MuJoCo 全动力学），尚未在宇树 G1 实机上验证，不能作为实机效果结论。\\
+  2. 长距离行走转身存在全局水平位置累积漂移（五类序列平均 0.61 米，行走转身 0.83 米）。解决方案：利用脚跟、脚趾关键点识别支撑期，将位移锚定在支撑脚上，并增加低频位置纠偏。\\
+  3. 快速连续起蹲序列的全身关节误差为 21.1°，高于其他序列，存在相位滞后。解决方案：按跟踪残差自适应调度跃度上限。\\
+  4. 现有二十三个关键点无法唯一确定前臂自旋与手腕朝向，相关自由度保持未知。解决方案：评估引入手部关键点的全身稠密关键点模型。\\
+  5. 评测含 120 毫秒链路延迟，快速挥臂时带来明显相位差。解决方案：四路检测合并批处理推理压缩感知耗时，并实测真实端到端延迟。}} & & & & \\
+
+  \SetCell[c=5]{l, m, font=\bfseries} 三．需要其他部门配合的工作 & & & & \\
+
+  \SetCell{l, m, font=\bfseries} 序号 &
+  \SetCell[c=2]{l, m, font=\bfseries} \hspace{1.2em}内容事项 & &
+  \SetCell{l, m, font=\bfseries} \hspace{1.2em}配合部门 &
+  \SetCell{l, m, font=\bfseries} \hspace{1.2em}时间要求 \\
+
+  \textbf{1} &
+  \SetCell[c=2]{l, m} {\parbox{3.85cm}{\raggedright 四相机硬件同步触发与场地搭建}} & &
+  \SetCell{c, m} 硬件 / 实验室 &
+  \SetCell{c, m} 待协商 \\
+
+  \textbf{2} &
+  \SetCell[c=2]{l, m} {\parbox{3.85cm}{\raggedright 宇树 G1 实机、龙门保护架及关节零位、增益参数资料}} & &
+  \SetCell{c, m} 机器人平台组 &
+  \SetCell{c, m} 待协商 \\
+\end{tblr}
+
+% ============================================================================
+% 第二页：周工作计划
+% ============================================================================
+\clearpage
+\newgeometry{
+  top=1.8cm,
+  bottom=1.5cm,
+  left=1.32cm,
+  right=1.32cm
+}
+\setlength{\paperwidth}{297mm}
+\setlength{\paperheight}{210mm}
+\setlength{\pdfpagewidth}{297mm}
+\setlength{\pdfpageheight}{210mm}
+\setlength{\textwidth}{27.05cm}
+\setlength{\hsize}{\textwidth}
+\setlength{\linewidth}{\textwidth}
+
+\noindent
+\begin{tblr}{
+  width = \textwidth,
+  colspec = {
+    X[1.211, l, m, fg=planTextBlue]
+    X[1.253, l, m, fg=planTextBlue]
+    X[4.637, l, m, fg=planTextBlue]
+    X[0.949, c, m, fg=planTextBlue]
+    X[2.149, l, m, fg=planTextBlue]
+    X[1.347, c, m, fg=planTextBlue]
+    X[1.208, c, m, fg=planTextBlue]
+    X[1.339, c, m, fg=planTextBlue]
+    X[1.245, l, m, fg=planTextBlue]
+  },
+  hlines = {0.5pt, solid, planBorder},
+  vlines = {0.5pt, solid, planBorder},
+  hline{1-4} = {1pt, solid, planBorder},
+  vline{1,10} = {1pt, solid, planBorder},
+  rowsep = 4pt,
+  colsep = 5.4pt,
+  row{1} = {ht=1.04cm, bg=planHeaderBg, fg=planTextBlue, font=\heiti\bfseries\zihao{2}},
+  row{2,3} = {ht=1.59cm, bg=planHeaderBg, fg=planTextBlue, font=\heiti\bfseries\zihao{-4}},
+  row{even[4]} = {bg=planBandBg},
+  row{4,5,6,7} = {ht=2.1cm, font=\small},
+}
+  \SetCell[c=9]{c, m} 周工作计划(\PlanDateRange) & & & & & & & & \\
+
+  \SetCell[c=6]{c, m} 工作计划 & & & & & &
+  \SetCell[c=3]{c, m} 进度总结 & & \\
+
+  \SetCell{c, m} 项目名称 &
+  \SetCell{c, m} 工作事项 &
+  \SetCell{c, m} 工作内容 &
+  \SetCell{c, m} 执行人 &
+  \SetCell{c, m} 执行日期 &
+  \SetCell{c, m} 里程节点 &
+  \SetCell{c, m} 完成进度 &
+  \SetCell{c, m} 任务状态 &
+  \SetCell{c, m} 问题需求 \\
+
+  \SetCell{fg=black, font=\bfseries} 多相机姿态模仿主线算法 &
+  推进算法遗留问题的仿真验证 &
+  {1. 实现并验证按跟踪残差自适应调度的跃度上限，检验快速起蹲序列误差是否下降，同时核对跃度峰值与深蹲到位率不退化。\\
+  2. 实现支撑脚锚定的位移处理，在行走转身序列上评估路径偏差；若效果不佳，如实记录原因。} &
+  谭为 &
+  {2026-10-26 至\\2026-10-30} &
+  五类序列验证结果 & & & \\
+
+  \SetCell{fg=black, font=\bfseries} 视觉感知链路 &
+  降低端到端延迟与扩展关键点 &
+  {1. 将四路检测合并批处理，实测单帧感知耗时与端到端延迟。\\
+  2. 调研含手部关键点的全身稠密关键点模型，评估前臂自旋可观测性提升效果。} &
+  谭为 &
+  {2026-10-26 至\\2026-10-30} &
+  延迟实测数据 & & & \\
+
+  \SetCell{fg=black, font=\bfseries} 宇树 G1 实机部署准备 &
+  制定上机验证与资源协调方案 &
+  {1. 整理关节零位、增益、限位核对清单及悬空联调步骤。\\
+  2. 与硬件、机器人平台组确认四相机硬同步方案、实机及保护架使用时间。} &
+  谭为 &
+  {2026-10-26 至\\2026-10-30} &
+  上机方案与资源确认 & & & \\
+  \SetCell{fg=black, font=\bfseries} 运动控制策略复现 &
+  复现 SuperMimic 算法 &
+  {1. 复现 SuperMimic，该算法效果优于目前使用的 SONIC。\\
+  2. 接入现有感知与重定向链路，在相同动作序列与相同延迟条件下检验跟踪效果，再决定是否替换 SONIC。} &
+  谭为 &
+  {2026-10-26 至\\2026-10-30} &
+  复现与首轮跟踪结果 & & & \\
+\end{tblr}
+
+\end{document}

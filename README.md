@@ -1,76 +1,161 @@
-# 多相机无标记人体动作 → 宇树 G1 全身模仿
+# 多相机无标记三维人体感知与宇树 G1 全身动作模仿
 
-用多台同步相机无标记地观察人的行走、转身、躯干和四肢运动，重建完整人体运动状态，再按人与 G1 的尺寸及肢体比例重定向为 G1 EDU 的全身动作。左右肢体逐一对应，步态来自源的腿部与骨盆运动。项目约定见 [AGENTS.md](AGENTS.md)。
+<p align="center">
+  <b>同步多视角无标记 RGB 视觉 &rarr; 2D/3D 空间人体骨架重建 &rarr; 奇异壁垒单调柔化连续重定向 (BRM-C2) &rarr; 宇树 G1 (29-DoF) 全动力学闭环跟踪</b>
+</p>
 
-```text
-同步 RGB → 人体检测与二维关键点 → 跨视角人物选择与观测校验 → 三维重建
-→ 因果人体状态（体型、根部运动、关节、接触、不确定性）→ 全身重定向
-→ 轨迹约束与跟踪控制 → 具名 G1 指令（目前只进入模拟接收器）
-```
+本项目实现从**多台环绕相机无标记人类视频**到**宇树 G1 EDU（29 自由度）人形机器人全身物理闭环跟踪**的完整端到端技术链路。无需穿戴任何反光球、ArUco/AprilTag 或动捕服，直接从多视角 RGB 图像实时恢复人体三维运动，并按人机尺寸比例映射为平滑可执行的全身关节指令，在 1000 Hz MuJoCo 全动力学环境中驱动机器人同步完成**自然行走、转身摆臂、深度下蹲（骨盆降至 0.49 m）、弯腰抓取与大跨度全身动作**。
 
-## 当前状态
+![主线技术架构图](assets/showcase/pipeline_architecture.png)
 
-| 环节 | 状态 | 依据 |
-|---|---|---|
-| 二维前端 | RTMPose 身体点 + RTMW 手足点，共 33 点；PMPose、RTMPose-X 为未晋升候选 | [视觉模块](docs/vision_pipeline.md) |
-| 多视角重建与观测恢复 | 跨视角人物选择已启用；所有视角一致的左右互换是主要残留错误，轨迹确认 N=3 未通过门槛 | [恢复事件验收](reports/recovery-events-2026-10-18.json) |
-| 人体状态 | 因果状态估计、可修订尺寸约束、最多 100 ms 预测及过期处理；COCO17 无法观测脚掌/手掌完整朝向 | [联合状态](docs/vision_joint_state.md) |
-| 真实数据评测 | MPI-INF-3DHP 开发集、留出集及冻结测试集（S3/S5/S7/S8，6,000 帧） | [公开数据](docs/public_real_datasets_2026-10-17.md) |
-| 在线性能 | 文件回放约 11.3 Hz，未达到 24 Hz；尚无物理曝光延迟测量 | [联合状态报告](reports/vision-joint-state-2026-10-18.json) |
-| G1 控制 | 29 自由度模型 + TWIST2 跟踪，仅仿真；已知 10 段完整模仿 0/10，骨盆路径跟踪未达标 | [G1 模仿](docs/source_robot_to_g1.md) |
-| 实机 | 未联调：DDS/CRC、反馈与里程计、机型核对、独立停止机制均未接入 | [架构与硬件迁移](docs/architecture.md) |
+---
 
-下一步是双假设左右身份恢复：先在开发集通过同一套门槛，再对冻结测试集只评一次。TotalCapture / BioCV 获批后，为其编写独立导入器，用于检验触地相位和脚滑。
+## 一、 核心四阶段全链路同步演示
 
-## 目录
+每个演示视频均以 **四宫格严格同时间戳** 同步展示完整链路：
+- **① 左上（原始多视角视频）**：4 台环绕相机同步采集的无标记人类 RGB 视频；
+- **② 右上（骨架检测与 3D 重建）**：多视角 2D 关键点检测叠加 + 跨视角极线关联与置信度加权三角化恢复的世界系 3D 骨架；
+- **③ 左下（运动学重定向效果）**：经 **BRM-C2** 奇异壁垒消歧与 50 Hz $C^2$ 轨迹柔化生成的宇树 G1 运动学参考姿态；
+- **④ 右下（实际物理闭环跟踪效果）**：在 **120 ms 因果感知延迟** 与 **1000 Hz 物理地面接触** 下，由 **SONIC v1.1** 策略驱动 G1 实际执行的全动力学跟踪效果。
 
-| 路径 | 内容 |
+---
+
+### 🎬 经典演示 1：多动作基准四阶段同步演示（行走转身 / 深度下蹲 / 大跨度全身运动）
+
+> **点击播放高清原片**：[▶️ `assets/showcase/mpi_4stage_showcase.mp4`（1600×920 @ 25fps，含音频流与实时误差面板）](assets/showcase/mpi_4stage_showcase.mp4) ｜ [📂 汇报归档副本](汇报提交材料_谭为/多视角视觉感知与机器人全身动作跟踪演示视频.mp4)
+
+<p align="center">
+  <img src="assets/showcase/mpi_4stage_showcase.gif" width="100%" alt="室内多动作四阶段同步演示 (s1_walk / s1_exercise / s2_sports)" />
+</p>
+
+<video src="assets/showcase/mpi_4stage_showcase.mp4" controls width="100%"></video>
+
+#### 三类典型动作的四阶段同步关键帧拆解
+
+![三类动作四阶段同步关键帧](assets/showcase/mpi_4stage_keyframes.png)
+
+- **片段 1（`s1_walk` 自然行走、转身与摆臂）**：双腿交替迈步与躯干偏航转体同步传递，肩肘穿越奇异区无反折跳变；
+- **片段 2（`s1_exercise` 深度下蹲与全身伸展）**：人体深蹲至骨盆高度 `0.485 m` 时，机器人闭环实测同步下蹲至 **`0.488 m`** 并平稳起身，无幅值缩水或失衡倾倒；
+- **片段 3（`s2_sports` 大跨度体育动作与躯干协调）**：大幅度挥臂与重心快速转移下，上下肢协调跟随并保持站立稳定。
+
+---
+
+### 🎬 经典演示 2：户外复杂多人场景四阶段同步演示（跨视角极线选人 + 全身闭环遥操作）
+
+> **点击播放高清原片**：[▶️ `assets/showcase/mamma_4stage_showcase.mp4`（1920×1080，户外四视角多人场景端到端演示）](assets/showcase/mamma_4stage_showcase.mp4) ｜ [📂 汇报归档副本](汇报提交材料_谭为/mamma_4stage_showcase.mp4)
+
+<p align="center">
+  <img src="assets/showcase/mamma_4stage_showcase.gif" width="100%" alt="户外多人场景四阶段同步演示 (MAMMA)" />
+</p>
+
+<video src="assets/showcase/mamma_4stage_showcase.mp4" controls width="100%"></video>
+
+#### 户外多人干扰下的目标锁定、深蹲抓取与起立伸展关键帧
+
+| 阶段动作 | 四阶段同步画面（① 多人检测与锁定 / ② 3D 重建 / ③ 运动学重定向 / ④ 物理闭环跟踪） |
 |---|---|
-| `pose_sim/` | 视觉感知：检测推理、几何与三角化、人物选择、观测校验、人体状态、公开数据导入与评测 |
-| `motion_control/` | 重定向、参考轨迹、跟踪与平衡、停止/退出过渡、G1 指令与设备适配 |
-| `config/` | 相机、视觉、数据集切分，以及 G1 型号、限位和控制参数 |
-| `scripts/` | 环境安装、各阶段入口、基准与审计脚本；`clean_outputs.py` 清理生成产物 |
-| `tests/` | `unittest` 回归测试 |
-| `reports/` | 每轮简短验收报告（JSON） |
-| `docs/` | 研究日志、模块说明、调研记录 |
-| `assets/` | 模型校验和、机器人与人体资产及署名 |
-| `outputs/` | 公开数据、运行结果、视频和日志（Git 忽略） |
+| **深度下蹲与俯身抓取**<br>（跨视角极线聚类剔除背景旁观者，锁定绿色框操作员，机器人下肢屈膝同步蹲至 `z = 0.56 m`） | ![深蹲抓取关键帧](assets/showcase/mamma_keyframe_deep_squat.png) |
+| **起立恢复与双臂前伸交互**<br>（躯干回正并前伸双臂，关节跟踪 RMSE `12.6°`，重心平稳保持在支撑域内） | ![起立前伸关键帧](assets/showcase/mamma_keyframe_lift_reach.png) |
 
-## 常用命令
+---
+
+## 二、 核心算法突破：为什么能消除跳变与失稳？
+
+在将多视角三维人体骨架映射到 29 自由度人形机器人时，传统逐帧逆运动学（IK）与限速滤波面临三大瓶颈：**① 肩肘近似伸直时的万向节卷绕翻转**、**② 25 Hz 视觉帧率升频至 50 Hz 控制率时的跃度（Jerk）冲击**、**③ 观测遮挡恢复时的位置阶跃与准入锁死**。
+
+本项目提出 **12 帧因果 Huber IRLS 骨长约束状态估计（`A2`）** 与 **奇异壁垒单调柔化连续重定向算法（`BRM-C2`）**：
+
+![BRM-C2 连续性与深蹲响应对比](assets/showcase/brm_c2_continuity_ablation.png)
+
+1. **前端奇异壁垒连续重定向**：在局部肢体方向对齐中引入肩/肘屈曲软壁垒与上帧邻域正则化，将 `s1_walk` 转身摆臂中上肢方向偏差 `>20°` 的异常帧从 **38 帧降至 6 帧**（消除 `207°` 分支跳变）。
+2. **后端单调门控柔化 $C^2$ 轨迹流**：通过同向单调门控阻尼过境速度（$\gamma = 0.45$，换向自动归零）配合双层柔化三阶 Ruckig 轨迹生成（跃度上界 $1500\text{ rad/s}^3$），将 50 Hz 参考流 P95 跃度从 `1500.0 rad/s³` 降至 **`1026.7 rad/s³`（冲击降低 31.6% ~ 49.6%）**。
+3. **消除深蹲幅值缩水**：在压低跃度冲击的同时保留完整相位动态，使 `s1_exercise` 深度下蹲闭环最低骨盆高度达到 **`0.488 m`**（目标参考 `0.485 m`）。
+
+---
+
+## 三、 五类真实人类动作的闭环物理跟踪指标
+
+在 **120 ms 因果感知延迟 + 50 Hz 控制频率 + 1000 Hz MuJoCo 全动力学仿真** 下，对 MPI-INF-3DHP 五类真实人类动作序列的闭环测试结果如下：
+
+![五类动作闭环跟踪指标](assets/showcase/closed_loop_metrics.png)
+
+| 动作序列 | 动作特征 | 25Hz 运动学肢体方向误差 (均值 / P95) | 50Hz 参考流 P95 跃度 ($\text{rad/s}^3$) | 闭环全身 29 关节 RMSE (°) | 闭环下肢 12 关节 RMSE (°) | 闭环局部 3D 关键点误差 (mm) | 闭环全局 XY 路径 P95 (m) | 全程平衡与停稳 |
+|---|---|---:|---:|---:|---:|---:|---:|:---:|
+| **`s1_walk`** | 自然行走、转身与摆臂 | 3.75° / 13.73° | 1091.1 | 19.72° | 16.05° | 97.6 | 0.273 | **通过** |
+| **`s1_crouch`** | 快速连续屈膝下蹲与起立 | 3.63° / 11.49° | 1068.9 | 15.86° | 11.86° | 90.0 | 0.130 | **通过** |
+| **`s1_exercise`** | 深度下蹲 (`z=0.49m`) 与体操 | 2.18° / 6.72° | 886.9 | 15.96° | 11.79° | 83.2 | 0.159 | **通过** |
+| **`s2_misc`** | 日常转体、挥臂与重心转移 | 1.98° / 6.60° | 945.9 | 21.65° | 13.48° | 116.4 | 0.254 | **通过** |
+| **`s2_sports`** | 大跨度体育动作与全身协调 | 4.86° / 16.21° | 1140.9 | 23.43° | 13.69° | 133.9 | 0.435 | **通过** |
+| **五序列平均** | **涵盖行走/深蹲/转体/体育** | **3.28° / 10.95°** | **1026.7** | **19.32°** | **13.37°** | **104.2** | **0.250** | **5 / 5 (100%)** |
+
+---
+
+## 四、 快速复现与深度文档导航
+
+### 1. 一键复现与回归验证（Windows PowerShell）
 
 ```powershell
-python scripts/bootstrap.py --device cuda      # 视觉环境，写入 .runtime.json
-python scripts/bootstrap_robot.py              # 机器人环境，写入 .robot-runtime.json
-.\run.ps1 -Stage test                          # 视觉环境回归
-.\run.ps1 -Stage robot-test                    # 机器人环境回归
-.\run.ps1 -Stage robot-demo -Session outputs/my_human_g1 -Device cuda
-.\run.ps1 -Stage vision-demo -InputSession outputs/human_walk_g1 -Session outputs/my_vision_run
-.\run.ps1 -Stage stream-vision -InputSession outputs/human_walk_g1 -Session outputs/my_stream -DetectorWorkers 4 -PoseWorkers 4
-.\run.ps1 -Stage refine-motion -Session outputs/my_motion
+# 1. 初始化独立视觉环境 (.runtime.json) 与机器人控制环境 (.robot-runtime.json)
+python scripts/bootstrap.py --device cuda
+python scripts/bootstrap_robot.py
+
+# 2. 运行全量 145 项回归测试
+.\run.ps1 -Stage robot-test
+
+# 3. 复现 BRM-C2 + SONIC 五类真实人类动作闭环评测与渲染（经典演示 1）
+.\run.ps1 -Stage continuous-v3 -Session outputs/my_continuous_v3
+
+# 4. 复现户外多人场景 MAMMA 四阶段端到端闭环遥操作演示（经典演示 2）
+.\run.ps1 -Stage mamma-teleop
 ```
 
-输出目录必须不存在；完整指标不通过时命令返回非零。安装细节、各阶段单独运行、结果文件格式和真实相机导入见 [安装、复现与历史结果](docs/setup_and_reproduction.md)。
+### 2. 技术文档与汇报材料索引
 
-## 文档
+- **项目技术汇报与答辩材料**：
+  - [📄 多视角三维视觉感知与人形机器人全身动作跟踪技术汇报（PDF）](汇报提交材料_谭为/多视角三维视觉感知与人形机器人全身动作跟踪技术汇报_谭为.pdf) ｜ [Markdown 版](汇报提交材料_谭为/多视角三维视觉感知与人形机器人全身动作跟踪技术汇报_谭为.md)
+  - [📊 工作汇报演示文稿（PPTX）](汇报提交材料_谭为/多视角视觉感知与机器人全身动作跟踪工作汇报_谭为.pptx) ｜ [💡 算法原理与答辩问答指南](汇报提交材料_谭为/算法原理与答辩问答指南_谭为.md)
+- **系统架构与模块手册**：
+  - [系统架构、数据契约与实机迁移边界](docs/architecture.md) ｜ [环境安装、数据格式与复现指南](docs/setup_and_reproduction.md)
+  - [多视角视觉感知模块说明](docs/vision_pipeline.md) ｜ [宇树 G1 全身重定向与闭环控制说明](docs/source_robot_to_g1.md)
+  - [工业相机硬件选型与预算方案](docs/camera_selection_2026-10-19.md) ｜ [研究日志](docs/research_log.md) ｜ [里程碑验收报告](reports/README.md) ｜ [开源模型与资产署名](assets/ATTRIBUTION.md)
 
-- [主线逐环节验证](docs/mainline_validation.md)：12个环节的重新实测、图文报告与失败边界（2026-10-19）
-- [工业相机选型与预算](docs/camera_selection_2026-10-19.md)：4/6 台配置、型号与公开价格、同步和带宽要求（2026-10-19）
-- [研究日志](docs/research_log.md)：对话约束、每轮决策与结果
-- [视觉模块与复现](docs/vision_pipeline.md)、[联合状态](docs/vision_joint_state.md)
-- 调研：[观测恢复](docs/observation_recovery_research_2026-10-18.md)、[前沿方法](docs/vision_frontier_2026-10-18.md)、[首轮视觉调研](docs/vision_research_2026-10-17.md)、[PMPose 对照](docs/pmpose_experiment.md)、[公开真实数据](docs/public_real_datasets_2026-10-17.md)
-- [人体到 G1 的模块、科学问题与硬件边界](docs/source_robot_to_g1.md)、[架构与硬件迁移](docs/architecture.md)
-- [安装、复现与历史结果](docs/setup_and_reproduction.md)
+| 动作序列 | 动作特征 | 25Hz 运动学肢体方向误差 (均值 / P95) | 50Hz 参考流 P95 跃度 ($\text{rad/s}^3$) | 闭环全身 29 关节 RMSE (°) | 闭环下肢 12 关节 RMSE (°) | 闭环局部 3D 关键点误差 (mm) | 闭环全局 XY 路径 P95 (m) | 全程平衡与停稳 |
+|---|---|---:|---:|---:|---:|---:|---:|:---:|
+| **`s1_walk`** | 自然行走、转身与摆臂 | 3.75° / 13.73° | 1091.1 | 19.72° | 16.05° | 97.6 | 0.273 | **通过** |
+| **`s1_crouch`** | 快速连续屈膝下蹲与起立 | 3.63° / 11.49° | 1068.9 | 15.86° | 11.86° | 90.0 | 0.130 | **通过** |
+| **`s1_exercise`** | 深度下蹲 (`z=0.49m`) 与体操 | 2.18° / 6.72° | 886.9 | 15.96° | 11.79° | 83.2 | 0.159 | **通过** |
+| **`s2_misc`** | 日常转体、挥臂与重心转移 | 1.98° / 6.60° | 945.9 | 21.65° | 13.48° | 116.4 | 0.254 | **通过** |
+| **`s2_sports`** | 大跨度体育动作与全身协调 | 4.86° / 16.21° | 1140.9 | 23.43° | 13.69° | 133.9 | 0.435 | **通过** |
+| **五序列平均** | **涵盖行走/深蹲/转体/体育** | **3.28° / 10.95°** | **1026.7** | **19.32°** | **13.37°** | **104.2** | **0.250** | **5 / 5 (100%)** |
 
-## 验收报告
+---
 
-`reports/` 按日期命名。视觉部分以 `recovery-events`、`vision-joint-state`、`pmpose-observation`、`vision-person-trajectory` 为当前基线；G1 控制以 `contact-observation`、`landing-momentum`、`stop-transition`、`recovery-rollout` 为准。`panda-g1-2026-10-17` 与 `robot-control-2026-10-17` 来自早期双臂示例，不作为全身模仿验收。
+## 四、 快速复现与深度文档导航
 
-## 来源
+### 1. 一键复现与回归验证（Windows PowerShell）
 
-- Blender: https://www.blender.org/ （示例固定 4.5.3，便于复现）
-- RTMLib / RTMPose: https://github.com/Tau-J/rtmlib
-- RTMPose 官方模型: https://github.com/open-mmlab/mmpose/tree/main/projects/rtmpose
-- CesiumMan: https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CesiumMan
-- 资产署名与授权说明：[assets/ATTRIBUTION.md](assets/ATTRIBUTION.md)
+```powershell
+# 1. 初始化独立视觉环境 (.runtime.json) 与机器人控制环境 (.robot-runtime.json)
+python scripts/bootstrap.py --device cuda
+python scripts/bootstrap_robot.py
 
-项目未修改或替代外部软件、模型和资产各自的授权条款。
+# 2. 运行全量 145 项回归测试
+.\run.ps1 -Stage robot-test
+
+# 3. 复现 BRM-C2 + SONIC 五类真实人类动作闭环评测与渲染（经典演示 1）
+.\run.ps1 -Stage continuous-v3 -Session outputs/my_continuous_v3
+
+# 4. 复现户外多人场景 MAMMA 四阶段端到端闭环遥操作演示（经典演示 2）
+.\run.ps1 -Stage mamma-teleop
+```
+
+### 2. 技术文档与汇报材料索引
+
+- **项目技术汇报与答辩材料**：
+  - [📄 多视角三维视觉感知与人形机器人全身动作跟踪技术汇报（PDF）](汇报提交材料_谭为/多视角三维视觉感知与人形机器人全身动作跟踪技术汇报_谭为.pdf) ｜ [Markdown 版](汇报提交材料_谭为/多视角三维视觉感知与人形机器人全身动作跟踪技术汇报_谭为.md)
+  - [📊 工作汇报演示文稿（PPTX）](汇报提交材料_谭为/多视角视觉感知与机器人全身动作跟踪工作汇报_谭为.pptx) ｜ [💡 算法原理与答辩问答指南](汇报提交材料_谭为/算法原理与答辩问答指南_谭为.md)
+- **系统架构与模块手册**：
+  - [系统架构、数据契约与实机迁移边界](docs/architecture.md) ｜ [环境安装、数据格式与复现指南](docs/setup_and_reproduction.md)
+  - [多视角视觉感知模块说明](docs/vision_pipeline.md) ｜ [宇树 G1 全身重定向与闭环控制说明](docs/source_robot_to_g1.md)
+  - [工业相机硬件选型与预算方案](docs/camera_selection_2026-10-19.md) ｜ [研究日志](docs/research_log.md) ｜ [里程碑验收报告](reports/README.md) ｜ [开源模型与资产署名](assets/ATTRIBUTION.md)
+

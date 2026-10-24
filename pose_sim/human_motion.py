@@ -12,6 +12,7 @@ from .body_shape import BodyShape
 from .human_state import HumanStateEstimator
 from .auxiliary import filter_measurements, attachment_checks, groups
 from .foot_support import FootSupportEstimator
+from .foot_contact import MultiViewFootContact
 
 
 class HumanMotionEstimator(HumanStateEstimator):
@@ -19,6 +20,7 @@ class HumanMotionEstimator(HumanStateEstimator):
         super().__init__(config)
         self.shape=BodyShape();self.motion_history=deque(maxlen=4);self.previous_rotations={}
         self.foot_support=FootSupportEstimator(self.cfg.get('foot_support'));self._current_row=None
+        self.contact_baseline=MultiViewFootContact(self.cfg.get('contact_baseline_config')) if self.cfg.get('contact_baseline',False) else None
 
     def _learn_lengths(self, measurements, accepted, noise):
         # Dimension learning must not depend on rejection by the old dimensions:
@@ -51,6 +53,7 @@ class HumanMotionEstimator(HumanStateEstimator):
         if self.signature is not None and (signature!=self.signature or row['timestamp_ns']-self.last_time>self.cfg['reset_gap_ms']*1e6):
             self.shape=BodyShape();self.motion_history.clear();self.previous_rotations={}
             self.foot_support=FootSupportEstimator(self.cfg.get('foot_support'))
+            if self.contact_baseline is not None:self.contact_baseline=MultiViewFootContact(self.cfg.get('contact_baseline_config'))
         if self.cfg.get('auxiliary_consistency',True):row=filter_measurements(row,self.cfg.get('attachment'))
         self._current_row=row
         out=super().update(row,cameras,detection)
@@ -135,6 +138,8 @@ class HumanMotionEstimator(HumanStateEstimator):
                 out['joint_rotations'][side+'_'+joint]=dict(flexion_rad=angle,axial_twist_rad=None,
                     rotation_world=None,observed_dof=1 if angle is not None else 0)
         out['support']=self._support(p,velocity,states,t)
+        if self.contact_baseline is not None:
+            out['support']=self.contact_baseline.update(out,self.cfg.get('ground_plane'))
         out['unobserved']+=['anatomical full 3-DOF joint rotation','ground reaction force','centre of pressure']
         return out
 

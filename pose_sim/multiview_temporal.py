@@ -17,7 +17,6 @@ from .landmarks import BONES
 from .pipeline import reconstruct_record
 from .sensors import validate_calibration
 from .auxiliary import associate_details
-from .association_history import AssociationHistory
 from .observation_consistency import ObservationConsistency
 
 
@@ -27,13 +26,13 @@ def skew(v):
 
 
 class MultiViewTemporal:
-    def __init__(self, calibration, config, association=True, structured=True,solver='newton',
-                 auxiliary=True, history=False, observation_consistency=False,window_config=None):
+    def __init__(self, calibration, config, association=True, structured=True, solver='newton',
+                 auxiliary=True, observation_consistency=False):
         validate_calibration(calibration)
         self.cameras = calibration['cameras']; self.cfg = {**config,'triangulation_solver':solver}
         self.triangulation_geometry={}
         self.association = association; self.structured = structured
-        self.auxiliary=auxiliary;self.history=AssociationHistory() if history else None
+        self.auxiliary = auxiliary
         self.consistency = ObservationConsistency(self.cameras, self.cfg) if observation_consistency else None
         self.calibration_sha = hashlib.sha256(json.dumps(calibration,sort_keys=True).encode()).hexdigest()
         self.geometry = {c:CameraGeometry([cam]) for c,cam in self.cameras.items()}
@@ -43,11 +42,6 @@ class MultiViewTemporal:
             r = rb@ra.T; t = tb-r@ta
             self.fundamental[a,b] = np.linalg.inv(kb).T@skew(t)@r@np.linalg.inv(ka)
         self.last_timestamp = None
-        self.window=None
-        if window_config is not None:
-            if structured:raise ValueError('Select one structured reconstruction path')
-            from .joint_window import JointWindow
-            self.window=JointWindow(self.cameras,window_config)
 
     def prior(self, state, row):
         if not state or any(state.get(k)!=row.get(k) for k in ('source_id','landmark_schema_id','perception_signature')):
@@ -120,18 +114,13 @@ class MultiViewTemporal:
                 cost+=sum(c[bits[a],bits[b]] for (a,b),c in pair_cost.items())
                 hypotheses.append((float(cost),bits))
             hypotheses.sort()
-            history_cost=np.zeros_like(unary);history_anchored=False;samples=None
-            if self.history:
-                hypotheses,history_cost,samples,history_anchored=self.history.rank(
-                    group,ids,xy,confidence,original,hypotheses,self.cfg['confidence_threshold'])
             best,bits = hypotheses[0]
             candidates[group]=[dict(flipped_cameras=[ids[i] for i,b in enumerate(h) if b],
                 relative_cost_px=float(cost-best)) for cost,h in hypotheses[:3]]
             geometry_original=sum(c[0,0] for c in pair_cost.values())
             geometry_best=sum(c[bits[a],bits[b]] for (a,b),c in pair_cost.items())
-            global_temporal_gain=max(float(np.mean(unary[:,0]-unary[:,1])),
-                                     float(np.mean(history_cost[:,0]-history_cost[:,1])) if history_anchored else 0.)
-            if all(bits) and (prior or history_anchored) and geometry_original-geometry_best<1.5 and global_temporal_gain>=1.5:
+            global_temporal_gain=float(np.mean(unary[:,0]-unary[:,1]))
+            if all(bits) and prior and geometry_original-geometry_best<1.5 and global_temporal_gain>=1.5:
                 # A simultaneous global permutation has identical epipolar geometry.
                 # History can flag it, but cannot certify a semantic correction.
                 for c in ids:
@@ -140,15 +129,14 @@ class MultiViewTemporal:
                 continue
             # Complementary global label permutations cannot be resolved geometrically.
             # With no temporal evidence keep detector semantics, explicitly report that prior.
-            if not prior and not history_anchored:
+            if not prior:
                 complement = tuple(1-b for b in bits)
                 if sum(complement)<sum(bits): bits = complement
             for ci,c in enumerate(ids):
                 alternative = min(cost for cost,h in hypotheses if h[ci]!=bits[ci])
                 margin = alternative-best
-                temporal_gain=max(float(unary[ci,0]-unary[ci,1]),
-                                  float(history_cost[ci,0]-history_cost[ci,1]) if history_anchored else 0.)
-                temporal_available=bool(prior) or history_anchored
+                temporal_gain=float(unary[ci,0]-unary[ci,1])
+                temporal_available=bool(prior)
                 if bits[ci] and temporal_available and margin>=1.5 and geometry_original-geometry_best>=1.5 and temporal_gain>=1.5:
                     mapping = list(range(len(names)))
                     for dst,src in zip(original,flipped): mapping[dst]=int(src)
@@ -164,11 +152,8 @@ class MultiViewTemporal:
                     # No confident identity assignment: remove only affected current observations.
                     for j in original: out['views'][c]['scores'][int(j)]=0.
                     ambiguities.append(dict(camera=c,group=group,reason='label hypotheses indistinguishable'))
-            if self.history:
-                self.history.commit(group,hypotheses,samples,anchored=bool(prior) or history_anchored,
-                                    ambiguous=any(a['group']==group for a in ambiguities))
         out['association'] = dict(corrections=corrections,ambiguities=ambiguities,candidates=candidates,
-            candidate_scores_calibrated=False,history_enabled=self.history is not None,
+            candidate_scores_calibrated=False,history_enabled=False,
             semantic_identity='temporal_and_geometry' if prior else 'unverified_detector_label_prior')
         return out
 
@@ -177,7 +162,6 @@ class MultiViewTemporal:
         if type(stamp) is not int or (self.last_timestamp is not None and stamp<=self.last_timestamp):
             raise ValueError('Exposure timestamps must strictly increase')
         self.last_timestamp=stamp
-        if self.history:self.history.begin(row,self.calibration_sha)
         prior=self.prior(state,row)
         checked = self.consistency.update(row) if self.consistency else row
         assigned=self.associate(checked,prior) if self.association else copy.deepcopy(checked)
@@ -189,7 +173,6 @@ class MultiViewTemporal:
         result['auxiliary_association']=assigned.get('auxiliary_association',{})
         result['observation_consistency']=assigned.get('observation_consistency',{})
         if self.structured: self.refine(result,assigned,prior,state.get('shape',{}) if state and prior else {})
-        if self.window:result=self.window.update(result,assigned)
         return result,assigned
 
     def refine(self, row, detection, prior, shape):

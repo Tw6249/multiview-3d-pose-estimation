@@ -12,9 +12,6 @@ from .root_tracking import RootTracker
 from .g1_command import G1SimulationSink
 from .reference_trajectory import BoundedReferenceTrajectory,SourceReferenceDerivative,load_config
 from .tracking_metrics import phase_lag,foot_contacts,SourceLegAudit,standing_stop_audit
-from .stop_transition import StopTransition,load_config as load_stop_config
-from .support_feedback import SimulationSupportFeedback
-from .centroidal_feasibility import braking_wrench
 
 
 class ReferenceGate:
@@ -35,6 +32,10 @@ class ReferenceGate:
     def get(self,now_ns):
         if self.latest is None:return None
         age=now_ns-self.latest['timestamp_ns']
+        if (self.latest.get('reference_schema_id')=='continuous_simulation_reference_v1' and
+                (self.latest.get('hardware_enabled') is not False or
+                 now_ns>self.latest.get('prediction_valid_until_ns',-1))):
+            return None
         return self.latest if 0<=age<=self.max_age_ns else None
 
 
@@ -46,8 +47,7 @@ def read_preview_image(path):
 
 
 def replay(session,video=True,delay_ms=120,dropout=None,output_name='imitation',control_dt=.02,
-           reference_mode='rate_limit',trajectory_config=None,save_logs=True,
-           transition_mode='legacy',transition_config=None,support_diagnostics=False,recovery_config=None,root_tracking_config=None):
+           reference_mode='rate_limit',trajectory_config=None,save_logs=True,root_tracking_config=None):
     session=Path(session);out=session/output_name
     if out.exists():raise FileExistsError('Output exists; explicitly clean generated replay before rerun')
     out.mkdir()
@@ -60,22 +60,12 @@ def replay(session,video=True,delay_ms=120,dropout=None,output_name='imitation',
     source_start=2.;dt=control_dt;delay_ns=round(delay_ms*1e6)
     plant=TwistPlant();policy=TwistPolicy();gate=ReferenceGate();sink=G1SimulationSink(plant)
     leg_audit=SourceLegAudit(plant)
-    if transition_mode not in ('legacy','timed','support_aware','rollout'):raise ValueError('Unknown stop transition mode')
-    stop_settings=transition_config or load_stop_config()
-    transition=StopTransition(DEFAULT_REF,plant.sha256,'support_aware' if transition_mode=='rollout' else transition_mode,stop_settings) if transition_mode!='legacy' else None
-    recovery=None;recovery_plan=None;recovery_diagnostic=None
-    if transition_mode=='rollout':
-        from .recovery_rollout import RecoveryRollout,scheduled_reference
-        recovery=RecoveryRollout(recovery_config)
-        if reference_mode!='rate_limit' or control_dt!=.02 or stop_settings['apply_to_missing']:
-            raise ValueError('Rollout requires the exact 50Hz rate limiter and terminal-only withdrawal')
-        if not np.array_equal(recovery.cfg['reference_rate_per_second'],np.r_[2,2,.6,1.5,1.5,3,np.full(29,6)]):
-            raise ValueError('Prediction and execution reference rate limits must match')
-    feedback=SimulationSupportFeedback(plant,stop_settings) if transition or support_diagnostics else None
-    feedback_latencies=[]
-    if reference_mode not in ('rate_limit','jerk_limited','arms_jerk_limited'):raise ValueError('Unknown reference trajectory mode')
+    if reference_mode not in ('rate_limit','jerk_limited','arms_jerk_limited','recovery_jerk_limited'):raise ValueError('Unknown reference trajectory mode')
     trajectory_settings=trajectory_config or load_config()
     trajectory=BoundedReferenceTrajectory(DEFAULT_REF,plant.limits,plant.sha256,trajectory_settings,dt) if reference_mode!='rate_limit' else None
+    if reference_mode=='recovery_jerk_limited':
+        from .continuous_reference import RecoveryReferenceTrajectory
+        trajectory=RecoveryReferenceTrajectory(DEFAULT_REF,plant.limits,plant.sha256,trajectory_settings,dt)
     derivative=SourceReferenceDerivative(trajectory_settings)
     ref=DEFAULT_REF.copy();first=np.array(valid[0]['reference']);index=0;last_frame=rows[0]['frame_id']
     states=[];commands=[];latencies=[];aligned=[];root_errors=[];root_tracker=None
@@ -109,24 +99,13 @@ def replay(session,video=True,delay_ms=120,dropout=None,output_name='imitation',
                     root_errors.append(root_error);state='tracking'
                 else:state='vision_unavailable'
             elif now>source_start+duration:state='return_to_stand'
-            support=None;transition_diagnostic=None
-            if feedback:
-                tick=time.perf_counter();support=feedback.read(round(now*1e9));feedback_latencies.append((time.perf_counter()-tick)*1000)
-            if transition:requested,transition_diagnostic=transition.step(round(now*1e9),requested,ref,state,support)
-            if recovery and state=='return_to_stand':
-                if recovery_diagnostic is None:
-                    recovery_plan,recovery_diagnostic=recovery.plan(plant,policy,ref,round(now*1e9))
-                if recovery_plan is not None:
-                    elapsed=(round(now*1e9)-recovery_plan['timestamp_ns'])/1e9
-                    if recovery_plan['model_sha256']!=plant.sha256:raise ValueError('Recovery model changed')
-                    requested=scheduled_reference(elapsed,recovery_plan['entry'],recovery_plan['parameters'])
-                    transition_diagnostic=dict(active=True,phase='offline_verified_withdrawal',source_motion_generated=False,
-                        elapsed_seconds=elapsed,source_timestamp_ns=None,hardware_enabled=False)
             # Bounded causal transition; no future frame interpolation or frozen walking target.
             max_delta=np.r_[.04,.04,.012,.03,.03,.06,np.full(29,.12)]*(dt/.02)
             if trajectory:
                 rate=derivative.update(row)
                 horizon=(source_ns-row['timestamp_ns'])/1e9 if row is not None else 0.
+                if trajectory_settings.get('use_source_derivative',True) is False:
+                    rate=np.zeros(35);horizon=0.
                 curve_target=requested.copy();old_ref=ref.copy()
                 if reference_mode=='arms_jerk_limited':
                     curve_target[:21]=trajectory.position[:21];rate[:21]=0.
@@ -145,7 +124,8 @@ def replay(session,video=True,delay_ms=120,dropout=None,output_name='imitation',
                 position_rad=target.tolist(),velocity_rad_s=[0.]*29,kp=KP.tolist(),kd=KD.tolist(),
                 feedforward_torque_nm=[0.]*29,effort_limit_nm=plant.effort.tolist(),
                 source_timestamp_ns=None if row is None else row['timestamp_ns'],state=state)
-            plant.step(sink.validate(command,round(now*1e9)),dt)
+            validated=sink.validate(command,round(now*1e9))
+            plant.step(validated,dt)
             q,dq,quat,omega=plant.state()
             rpy=Rotation.from_quat(quat[[1,2,3,0]]).as_euler('xyz')
             commands.append(command)
@@ -153,8 +133,7 @@ def replay(session,video=True,delay_ms=120,dropout=None,output_name='imitation',
                 root_position_m=plant.data.qpos[:3].tolist(),root_rpy_rad=rpy.tolist(),
                 position_rad=q.tolist(),velocity_rad_s=dq.tolist(),reference=ref.tolist(),
                 source_reference=None if row is None else row.get('source_reference',row['reference']),
-                foot_contacts=foot_contacts(plant),source_leg_direction_error_deg=leg_audit.update(row),trajectory=trajectory_diagnostic,
-                robot_support_feedback_before_step=support,stop_transition=transition_diagnostic))
+                foot_contacts=foot_contacts(plant),source_leg_direction_error_deg=leg_audit.update(row),trajectory=trajectory_diagnostic))
             if state=='tracking':aligned.append((q.copy(),np.array(row.get('source_reference',row['reference'])[6:]),ref[6:].copy()))
             if writer is not None and i%round(.04/dt)==0:
                 canvas=np.full((720,1920,3),245,np.uint8)
@@ -234,37 +213,9 @@ def replay(session,video=True,delay_ms=120,dropout=None,output_name='imitation',
         first_violation_s=next((s['time_s'] for s in samples if s['root_position_m'][2]<=.5 or max(abs(v) for v in s['root_rpy_rad'][:2])>=.5),None))
         for stage in sorted({s['state'] for s in states}) if (samples:=[s for s in states if s['state']==stage])}
     report['balance_check_scope']='Historical fixed height >0.5 m and |roll/pitch|<0.5 rad are retained for comparison. Height-only failure can be intended deep crouching, not a fall; inspect stage height relative to requested reference. This is not a complete balance certificate.'
-    report['transition_mode']=transition_mode
     report['root_tracking_configuration']=root_tracker.cfg if root_tracker else None
     report['root_feedforward_frame_error_m_s']=dict(mean=float(np.mean([e['feedforward_world_frame_error_m_s'] for e in root_errors])),
         maximum=float(max(e['feedforward_world_frame_error_m_s'] for e in root_errors))) if root_errors else None
-    report['transition_configuration']=stop_settings if transition else None
-    report['recovery_rollout']=recovery_diagnostic
-    report['recovery_configuration']=recovery.cfg if recovery else None
-    report['support_feedback_scope']='Ideal simulated robot feedback before the control step; capture-point margin assumes flat-ground constant-height pendulum. Not a stability or contact-force-feasibility certificate, and never a source pose observation.'
-    report['support_feedback_mean_ms']=float(np.mean(feedback_latencies)) if feedback_latencies else None
-    report['support_by_stage']={}
-    for stage in sorted({s['state'] for s in states}):
-        samples=[s['robot_support_feedback_before_step'] for s in states if s['state']==stage and s['robot_support_feedback_before_step'] is not None]
-        margins=[s['capture_margin_m'] for s in samples if s['capture_margin_m'] is not None]
-        if samples:report['support_by_stage'][stage]=dict(frames=len(samples),polygon_known_frames=len(margins),
-            double_support_frames=sum(s['double_support'] for s in samples),
-            minimum_capture_margin_m=float(min(margins)) if margins else None,
-            maximum_com_horizontal_speed_m_s=float(max(np.linalg.norm(s['com_velocity_world_m_s'][:2]) for s in samples)))
-    report['stop_transition_events']=[];old_phase=None
-    for s in states:
-        diagnostic=s['stop_transition']
-        phase=(s['state'],diagnostic['phase'] if diagnostic else None)
-        if phase!=old_phase:
-            report['stop_transition_events'].append(dict(time_s=s['time_s'],state=s['state'],transition=diagnostic,
-                robot_support_feedback=s['robot_support_feedback_before_step']))
-        old_phase=phase
-    terminal=next((s for s in states if s['state']=='return_to_stand' and s['robot_support_feedback_before_step'] is not None),None)
-    report['terminal_braking_wrench_audit']=None
-    if terminal:
-        f=terminal['robot_support_feedback_before_step'];acc=-np.asarray(f['com_velocity_world_m_s'])/stop_settings['brake_seconds'];acc[2]=0.
-        report['terminal_braking_wrench_audit']=braking_wrench(f['com_world_m'],f['loaded_contact_points_world_m'],f['mass_kg'],acc,
-            stop_settings['braking_audit_friction_coefficient'],f['gravity_m_s2'])
     report['evaluation_target']='Original source joint/path reference retained before any offline regularization. Phase lag includes controller response relative to delayed available source, not physical capture latency.'
     report['balance_passed']=bool(heights.min()>.5 and np.abs(tilts).max()<.5)
     report['limb_imitation_passed']=bool(len(actual)>50 and report['acceptance_fraction']>=.7 and
@@ -283,12 +234,9 @@ def replay(session,video=True,delay_ms=120,dropout=None,output_name='imitation',
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('session',type=Path)
     parser.add_argument('--no-video',action='store_true');parser.add_argument('--delay-ms',type=float,default=120)
-    parser.add_argument('--reference-mode',choices=['rate_limit','jerk_limited','arms_jerk_limited'],default='rate_limit')
+    parser.add_argument('--reference-mode',choices=['rate_limit','jerk_limited','arms_jerk_limited','recovery_jerk_limited'],default='rate_limit')
     parser.add_argument('--output-name',default='imitation')
     parser.add_argument('--no-logs',action='store_true')
-    parser.add_argument('--transition-mode',choices=['legacy','timed','support_aware','rollout'],default='legacy')
-    parser.add_argument('--support-diagnostics',action='store_true')
     args=parser.parse_args();result=replay(args.session,not args.no_video,args.delay_ms,
-        output_name=args.output_name,reference_mode=args.reference_mode,save_logs=not args.no_logs,
-        transition_mode=args.transition_mode,support_diagnostics=args.support_diagnostics)
+        output_name=args.output_name,reference_mode=args.reference_mode,save_logs=not args.no_logs)
     print(json.dumps(result,indent=2));raise SystemExit(0 if result['passed'] else 1)
