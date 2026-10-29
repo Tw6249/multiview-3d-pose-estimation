@@ -1,117 +1,128 @@
-# 多相机无标记三维人体感知与宇树 G1 全身动作模仿
+# 多视角 RGB → 宇树 G1 全身动作模仿
 
-<p align="center">
-  <b>同步多视角无标记 RGB 视觉 &rarr; 2D/3D 空间人体骨架重建 &rarr; 奇异壁垒单调柔化连续重定向 (BRM-C2) &rarr; 宇树 G1 (29-DoF) 全动力学闭环跟踪</b>
-</p>
+**Markerless multi-view RGB whole-body motion imitation for the Unitree G1 humanoid — perception, retargeting and closed-loop physics simulation.**
 
-本项目实现从**多台环绕相机无标记人类视频**到**宇树 G1 EDU（29 自由度）人形机器人全身物理闭环跟踪**的完整端到端技术链路。无需穿戴任何反光球、ArUco/AprilTag 或动捕服，直接从多视角 RGB 图像实时恢复人体三维运动，并按人机尺寸比例映射为平滑可执行的全身关节指令，在 1000 Hz MuJoCo 全动力学环境中驱动机器人同步完成**自然行走、转身摆臂、深度下蹲（骨盆降至 0.49 m）、弯腰抓取与大跨度全身动作**。
+多台相机拍摄的无标记 RGB 视频，经 2D 关键点检测、多视角三角化和因果重定向，驱动宇树 G1 在 MuJoCo 中由 SONIC 控制器闭环跟踪。每个模块都有明确的输入输出、单位、坐标系和失败行为，并由测试和验收报告覆盖。
 
-![主线技术架构图](assets/showcase/pipeline_architecture.png)
+> **状态（2026-10-29）**：全部结果来自仿真，**没有实机验证**。动捕 BVH 只用于离线评分，不是任何模块的输入。项目约定见 [AGENTS.md](AGENTS.md)，原始技术规范见 [docs/方案规范.md](docs/方案规范.md)。
 
----
+## 链路
 
-## 一、 核心四阶段全链路同步演示
-
-每个演示视频均以 **四宫格严格同时间戳** 同步展示完整链路：
-- **① 左上（原始多视角视频）**：4 台环绕相机同步采集的无标记人类 RGB 视频；
-- **② 右上（骨架检测与 3D 重建）**：多视角 2D 关键点检测叠加 + 跨视角极线关联与置信度加权三角化恢复的世界系 3D 骨架；
-- **③ 左下（运动学重定向效果）**：经 **BRM-C2** 奇异壁垒消歧与 50 Hz $C^2$ 轨迹柔化生成的宇树 G1 运动学参考姿态；
-- **④ 右下（实际物理闭环跟踪效果）**：在 **120 ms 因果感知延迟** 与 **1000 Hz 物理地面接触** 下，由 **SONIC v1.1** 策略驱动 G1 实际执行的全动力学跟踪效果。
-
----
-
-### 🎬 经典演示 1：多动作基准四阶段同步演示（行走转身 / 深度下蹲 / 大跨度全身运动）
-
-> **点击播放高清原片**：[▶️ `assets/showcase/mpi_4stage_showcase.mp4`（1600×920 @ 25fps，含实时误差面板）](assets/showcase/mpi_4stage_showcase.mp4)
-
-<p align="center">
-  <img src="assets/showcase/mpi_4stage_showcase.gif" width="100%" alt="室内多动作四阶段同步演示 (s1_walk / s1_exercise / s2_sports)" />
-</p>
-
-<video src="assets/showcase/mpi_4stage_showcase.mp4" controls width="100%"></video>
-
-#### 三类典型动作的四阶段同步关键帧拆解
-
-![三类动作四阶段同步关键帧](assets/showcase/mpi_4stage_keyframes.png)
-
-- **片段 1（`s1_walk` 自然行走、转身与摆臂）**：双腿交替迈步与躯干偏航转体同步传递，肩肘穿越奇异区无反折跳变；
-- **片段 2（`s1_exercise` 深度下蹲与全身伸展）**：人体深蹲至骨盆高度 `0.485 m` 时，机器人闭环实测同步下蹲至 **`0.488 m`** 并平稳起身，无幅值缩水或失衡倾倒；
-- **片段 3（`s2_sports` 大跨度体育动作与躯干协调）**：大幅度挥臂与重心快速转移下，上下肢协调跟随并保持站立稳定。
-
----
-
-### 🎬 经典演示 2：户外复杂多人场景四阶段同步演示（跨视角极线选人 + 全身闭环遥操作）
-
-> **点击播放高清原片**：[▶️ `assets/showcase/mamma_4stage_showcase.mp4`（1920×1080，户外四视角多人场景端到端演示）](assets/showcase/mamma_4stage_showcase.mp4)
-
-<p align="center">
-  <img src="assets/showcase/mamma_4stage_showcase.gif" width="100%" alt="户外多人场景四阶段同步演示 (MAMMA)" />
-</p>
-
-<video src="assets/showcase/mamma_4stage_showcase.mp4" controls width="100%"></video>
-
-#### 户外多人干扰下的目标锁定、深蹲抓取与起立伸展关键帧
-
-| 阶段动作 | 四阶段同步画面（① 多人检测与锁定 / ② 3D 重建 / ③ 运动学重定向 / ④ 物理闭环跟踪） |
-|---|---|
-| **深度下蹲与俯身抓取**<br>（跨视角极线聚类剔除背景旁观者，锁定绿色框操作员，机器人下肢屈膝同步蹲至 `z = 0.56 m`） | ![深蹲抓取关键帧](assets/showcase/mamma_keyframe_deep_squat.png) |
-| **起立恢复与双臂前伸交互**<br>（躯干回正并前伸双臂，关节跟踪 RMSE `12.6°`，重心平稳保持在支撑域内） | ![起立前伸关键帧](assets/showcase/mamma_keyframe_lift_reach.png) |
-
----
-
-## 二、 核心算法突破：为什么能消除跳变与失稳？
-
-在将多视角三维人体骨架映射到 29 自由度人形机器人时，传统逐帧逆运动学（IK）与限速滤波面临三大瓶颈：**① 肩肘近似伸直时的万向节卷绕翻转**、**② 25 Hz 视觉帧率升频至 50 Hz 控制率时的跃度（Jerk）冲击**、**③ 观测遮挡恢复时的位置阶跃与准入锁死**。
-
-本项目提出 **12 帧因果 Huber IRLS 骨长约束状态估计（`A2`）** 与 **奇异壁垒单调柔化连续重定向算法（`BRM-C2`）**：
-
-![BRM-C2 连续性与深蹲响应对比](assets/showcase/brm_c2_continuity_ablation.png)
-
-1. **前端奇异壁垒连续重定向**：在局部肢体方向对齐中引入肩/肘屈曲软壁垒与上帧邻域正则化，将 `s1_walk` 转身摆臂中上肢方向偏差 `>20°` 的异常帧从 **38 帧降至 6 帧**（消除 `207°` 分支跳变）。
-2. **后端单调门控柔化 $C^2$ 轨迹流**：通过同向单调门控阻尼过境速度（$\gamma = 0.45$，换向自动归零）配合双层柔化三阶 Ruckig 轨迹生成（跃度上界 $1500\text{ rad/s}^3$），将 50 Hz 参考流 P95 跃度从 `1500.0 rad/s³` 降至 **`1026.7 rad/s³`（冲击降低 31.6% ~ 49.6%）**。
-3. **消除深蹲幅值缩水**：在压低跃度冲击的同时保留完整相位动态，使 `s1_exercise` 深度下蹲闭环最低骨盆高度达到 **`0.488 m`**（目标参考 `0.485 m`）。
-
----
-
-## 三、 五类真实人类动作的闭环物理跟踪指标
-
-在 **120 ms 因果感知延迟 + 50 Hz 控制频率 + 1000 Hz MuJoCo 全动力学仿真** 下，对 MPI-INF-3DHP 五类真实人类动作序列的闭环测试结果如下：
-
-![五类动作闭环跟踪指标](assets/showcase/closed_loop_metrics.png)
-
-| 动作序列 | 动作特征 | 25Hz 运动学肢体方向误差 (均值 / P95) | 50Hz 参考流 P95 跃度 ($\text{rad/s}^3$) | 闭环全身 29 关节 RMSE (°) | 闭环下肢 12 关节 RMSE (°) | 闭环局部 3D 关键点误差 (mm) | 闭环全局 XY 路径 P95 (m) | 全程平衡与停稳 |
-|---|---|---:|---:|---:|---:|---:|---:|:---:|
-| **`s1_walk`** | 自然行走、转身与摆臂 | 3.75° / 13.73° | 1091.1 | 19.72° | 16.05° | 97.6 | 0.273 | **通过** |
-| **`s1_crouch`** | 快速连续屈膝下蹲与起立 | 3.63° / 11.49° | 1068.9 | 15.86° | 11.86° | 90.0 | 0.130 | **通过** |
-| **`s1_exercise`** | 深度下蹲 (`z=0.49m`) 与体操 | 2.18° / 6.72° | 886.9 | 15.96° | 11.79° | 83.2 | 0.159 | **通过** |
-| **`s2_misc`** | 日常转体、挥臂与重心转移 | 1.98° / 6.60° | 945.9 | 21.65° | 13.48° | 116.4 | 0.254 | **通过** |
-| **`s2_sports`** | 大跨度体育动作与全身协调 | 4.86° / 16.21° | 1140.9 | 23.43° | 13.69° | 133.9 | 0.435 | **通过** |
-| **五序列平均** | **涵盖行走/深蹲/转体/体育** | **3.28° / 10.95°** | **1026.7** | **19.32°** | **13.37°** | **104.2** | **0.250** | **5 / 5 (100%)** |
-
----
-
-## 四、 快速复现与深度文档导航
-
-### 1. 一键复现与回归验证（Windows PowerShell）
-
-```powershell
-# 1. 初始化独立视觉环境 (.runtime.json) 与机器人控制环境 (.robot-runtime.json)
-python scripts/bootstrap.py --device cuda
-python scripts/bootstrap_robot.py
-
-# 2. 运行全量 145 项回归测试
-.\run.ps1 -Stage robot-test
-
-# 3. 复现 BRM-C2 + SONIC 五类真实人类动作闭环评测与渲染（经典演示 1）
-.\run.ps1 -Stage continuous-v3 -Session outputs/my_continuous_v3
-
-# 4. 复现户外多人场景 MAMMA 四阶段端到端闭环遥操作演示（经典演示 2）
-.\run.ps1 -Stage mamma-teleop
+```mermaid
+flowchart LR
+    A["N 路相机<br/>RGB 视频"] --> S1["S1 检测与 2D 关键点<br/>YOLOX + RTMW"]
+    S1 --> S1b["S1b 多人关联与目标锁定"]
+    S1b --> S2["S2 多视角三角化"]
+    S2 --> S3["S3 时序滤波"]
+    S3 --> S45["S4+S5 因果重定向<br/>关键点 IK"]
+    S45 --> S6["S6 SONIC 控制器<br/>MuJoCo 物理闭环"]
 ```
 
-### 2. 技术文档导航
+| 模块 | 文件 | 输入 → 输出 | 说明 |
+|---|---|---|---|
+| S1 | [s1_vision_tracker.py](g1_imitation/core/s1_vision_tracker.py) | 各相机图像 → 每路 27 个 2D 关键点 | 每帧 YOLOX 检测 + RTMW（COCO‑WholeBody 133 点取 27 点），GPU ONNX |
+| S1b | [s1b_person_association.py](g1_imitation/core/s1b_person_association.py) | 全部候选人的 2D 关键点 → 目标人物的 2D 关键点 | 多人场景：跨视角分组、3D 轨迹、目标锁定；歧义、遮挡或丢失时输出无效，不会换人 |
+| S2 | [s2_triangulation.py](g1_imitation/core/s2_triangulation.py) | 多路 2D → 27 个 3D 点（米，Z 朝上） | 加权 DLT，留一/留二相机共识剔除离群点 |
+| S3 | [s3_temporal_filter.py](g1_imitation/core/s3_temporal_filter.py) | 3D 轨迹 → 平滑轨迹 | 因果 One‑Euro + 地面约束；典型滞后约 67 ms |
+| S4+S5 | [s45c_keypoint_ik.py](g1_imitation/core/s45c_keypoint_ik.py) | 27 个 3D 点 → G1 参考 `q(36)`、`dq(35)` | **默认**：逐帧因果，肢体方向迁移 + 热启动 Mink IK，单线程每帧约 1.3 ms |
+| S4+S5 参照 | [s45_gmr_retarget.py](g1_imitation/core/s45_gmr_retarget.py) | 27 点 → SMPL‑X 拟合 → GMR | **仅离线对照**：整段拟合，需要未来帧，不能实时 |
+| S6 | [s6_mujoco_closed_loop.py](g1_imitation/core/s6_mujoco_closed_loop.py) | G1 参考 → 物理仿真 | 官方 G1 模型（scene_43dof）；SONIC v1.1 / low_latency；6A 运动学回放、6B 物理闭环 |
 
-- **系统架构与模块手册**：
-  - [系统架构、数据契约与实机迁移边界](docs/architecture.md) ｜ [环境安装、数据格式与复现指南](docs/setup_and_reproduction.md)
-  - [多视角视觉感知模块说明](docs/vision_pipeline.md) ｜ [宇树 G1 全身重定向与闭环控制说明](docs/source_robot_to_g1.md)
-  - [工业相机硬件选型与预算方案](docs/camera_selection_2026-10-19.md) ｜ [研究日志](docs/research_log.md) ｜ [里程碑验收报告](reports/README.md) ｜ [开源模型与资产署名](assets/ATTRIBUTION.md)
+重定向的假设（不是测量值）：
+- 骨盆前倾 = `pelvis_trunk_share`（0.5）× 躯干倾角，因为两个髋点测不出骨盆俯仰。
+- 手臂或腿伸直时的扭转测不出来，由弱姿态项拉回默认姿态。
+- 手的朝向不跟踪：掌指关节点噪声会翻转手的坐标系，而且没有真值可以验证。
+- 缺失数据保持上一帧，不外推。
+
+所有参数在 [pipeline_config.json](g1_imitation/config/pipeline_config.json)，每个参数块里都写了来源和取值理由。
+
+## 当前结果
+
+### 单人（AdvancedTake 真人数据与合成动作）
+
+| 项目 | 结果 |
+|---|---|
+| 10 组合成动作 S6 验收（存活 / 关节 RMSE / 支撑脚滑移） | 10/10；0.065–0.100 rad（< 0.12）；0.001–0.020 m/s（< 0.04），全部通过 |
+| 真人 5 段，S3 滤波输入，SONIC low_latency，不加延迟 | 5/5 存活；RMSE 0.159 rad；终点偏差 0.29 m |
+| 与动捕的肢体方向误差（物理仿真后，手臂 / 腿） | 关键点 IK：滤波输入 17.0° / 11.7°，不滤波 15.0° / 10.8°；离线 SMPL‑X + GMR 17.4° / 10.5° |
+| 延迟（已测部分） | S3 约 67 ms + 30→50 Hz 保持约 17 ms + 姿态网络约 6 ms + 重定向约 1 ms + 机器人响应 40–80 ms ≈ 130–170 ms；相机曝光和传输未测 |
+
+### 多人与遮挡（MAMMA 户外四机位，2 人互相推搡，120 帧，无 3D 标注）
+
+S1 原本每个机位独立选框，机位之间没有身份约束。在这段数据上，现有链路在第 93 帧悄悄换了人，出现过 0.60 m 的躯干跳变和 63% 的骨长波动。加入 S1b 后：
+
+| | 现有链路 | S1b 锁定站立者 | S1b 锁定倒地者 |
+|---|---|---|---|
+| 目标身份 | 第 93 帧换人 | 118/120 帧稳定跟踪 | 118/120 帧稳定跟踪 |
+| 躯干逐帧最大位移 | 0.60 m | 0.042 m | 0.063 m |
+| 骨长变异系数最大值 | 62.7% | 8.3% | 18.9% |
+| 仿真闭环 | 倒地 | 未倒地 | 随目标倒地 |
+
+在单人数据（AdvancedTake 5 段）上插入 S1b 后，3D 输出与原链路几乎逐帧相同，S1b 的额外延迟中位约 12 ms。这些是一致性检查，不是精度：该片段没有 3D 标注。完整数据与负面结果见 [reports/mamma-multiperson-2026-10-29.md](reports/mamma-multiperson-2026-10-29.md)。
+
+### 测试
+
+`pytest tests`：64 项通过，3 项 strict XFAIL。这 3 项是 S1/S2/S3 规范原文的字面参数被证伪后保留的对照项，阈值没有改动。
+
+## 已知限制
+
+- 真人数据只有 5 段单人加 1 段 4 秒双人片段；仅仿真，没有实机验证。
+- 多人场景必须由操作者指定目标；自动选择只适用于工作区内只有一个人的情况。S1b 只解决"跟谁"，不判断"该不该模仿"：目标倒地时机器人照样倒地，还没有动作域检查。
+- 目标被挡到只剩两个相对的机位时，几何条件很差，但状态仍标为正常跟踪。
+- 合成行走时机器人原地跟踪，不会向前走；真人行走片段能跟着走。
+- S3 滤波的滞后是最大的延迟来源，也让腿部误差多出 1–2°。
+- 参考轨迹不经过速度/加速度限制就送给 SONIC；数据长时间缺失时只会保持上一帧。上实机前必须补上轨迹约束和超时停止。
+- low_latency 控制器在不加延迟时看到的是静止的参考窗口，这不在它的训练分布内，上实机前要单独验证。
+
+完整的实验过程、负面结果和全部数值见 [reports/advanced-take-2026-10-27.md](reports/advanced-take-2026-10-27.md)。
+
+## 仓库结构
+
+```text
+g1_imitation/            代码包
+  core/                  S1–S6 模块、BVH 读取（bvh.py，只用于评分）、评测工具（adv_eval.py）
+  config/                pipeline_config.json：参数、模型哈希、运行环境路径
+  gmr_bridge/            GMR 离线参照：在独立的 GMR 环境中运行的子进程
+scripts/                 实验、评测与渲染脚本
+tests/                   单元测试与验收测试
+docs/                    方案规范、硬件与相机选型；docs/vendor/ 放厂商手册（不入库）
+reports/                 验收报告（实验过程与全部数值）
+requirements-lock.txt    主运行环境的依赖锁定；requirements-gmr-lock.txt 是 GMR 环境的
+data/      （不入库）     原始视频、动捕、公开数据集
+outputs/   （不入库）     生成结果与演示视频
+```
+
+## 运行
+
+运行环境是固定的本地虚拟环境，路径见 `pipeline_config.json` 的 `runtime.python`；GMR 环境见 `s45_gmr_retarget.python`。重定向的 IK 矩阵很小，多线程 BLAS 反而更慢，实时进程要设置 `OPENBLAS_NUM_THREADS=1`（评测脚本已经自动设置）。需要 NVIDIA GPU（ONNX Runtime CUDA）；Blender 合成场景另需 Blender 4.5 和 OptiX。
+
+```powershell
+$py = "<pipeline_config.json 中 runtime.python 的路径>"
+& $py -m pytest tests -q                                   # 全量测试，约 5 分钟
+& $py scripts/s6_keypoint_ik_eval.py                       # 默认重定向 + SONIC：合成 13 组与 AdvancedTake 5 段
+& $py scripts/advanced_take_limb_direction_eval.py         # 与动捕的肢体方向误差（离线评分）
+& $py scripts/mamma_multiperson_eval.py                    # 多人场景：S1b 与现有链路对照
+& $py scripts/advanced_take_s1b_regression.py              # 单人回归：S1b 是否改变已验收的结果
+& $py scripts/render_showcase_videos.py                    # 演示视频：四路原画 + 2D 骨架 + 重定向参考 + 物理跟踪
+```
+
+演示视频由数据集和仿真现场生成，放在被忽略的 `outputs/showcase_videos/`，**不随仓库发布**：MAMMA 等数据集的许可不允许再分发。
+
+AdvancedTake 真人数据的处理顺序：`advanced_take_audit` → `advanced_take_s1_extract` → `advanced_take_calibrate` → `advanced_take_rgb_register` → `advanced_take_s2s3_eval` → `s6_keypoint_ik_eval`。
+
+## 第三方组件与数据
+
+本仓库只含自己的代码、配置和报告，不含模型权重、数据集和第三方源码。各组件按各自许可使用，细节以上游仓库为准：
+
+| 组件 | 用途 | 备注 |
+|---|---|---|
+| RTMW / rtmlib、YOLOX | 2D 检测与关键点 | 权重由 rtmlib 缓存下载 |
+| MuJoCo、Mink | 物理仿真、IK | |
+| SONIC（NVlabs GR00T-WholeBodyControl） | G1 全身控制器 | ONNX 权重不入库，`pipeline_config.json` 记录哈希 |
+| GMR（MIT） | 离线重定向参照 | |
+| EasyMocap | 离线 SMPL‑X 拟合 | Project Registration License：研究与评测可用，机构项目使用需注册 |
+| SMPL‑X 人体模型 | 离线拟合与 Blender 合成人体 | 需自行从官网获取，不可再分发 |
+| MAMMA 公开示例 | 多人遮挡测试 | 仅限非商业本地研究，不可再分发 |
+| MPI‑INF‑3DHP | 公开数据测试 | 研究用途，请遵守原数据集许可 |
+
+本仓库自身的许可证尚未指定。

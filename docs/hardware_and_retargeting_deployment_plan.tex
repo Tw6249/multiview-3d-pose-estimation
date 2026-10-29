@@ -1,0 +1,314 @@
+% !TEX program = xelatex
+\documentclass[10pt, a4paper]{ctexart}
+
+% ==================== 页面几何与边距设置 ====================
+\usepackage[
+  a4paper,
+  top=1.8cm,
+  bottom=1.7cm,
+  left=1.55cm,
+  right=1.55cm,
+  headheight=19pt,
+  headsep=9pt,
+  footskip=15pt
+]{geometry}
+
+% ==================== 核心宏包 ====================
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{enumitem}
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\graphicspath{{./}{../}}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc, fit, backgrounds}
+\usepackage{float}
+\usepackage[most]{tcolorbox}
+\usepackage[colorlinks=true, urlcolor=AccentTeal, linkcolor=PrimaryNavy, citecolor=PrimaryNavy]{hyperref}
+
+% ==================== 视觉配色体系 ====================
+\definecolor{PrimaryNavy}{HTML}{16324F}
+\definecolor{AccentTeal}{HTML}{0B7A75}
+\definecolor{WarmAmber}{HTML}{B85D19}
+\definecolor{CrimsonAlert}{HTML}{9E2A2B}
+\definecolor{ForestPass}{HTML}{1B6B3A}
+\definecolor{HeaderBg}{HTML}{EAF0F6}
+\definecolor{RowAltBg}{HTML}{F7FAFC}
+\definecolor{BoxBgTeal}{HTML}{F0F7F7}
+\definecolor{BoxBgAmber}{HTML}{FDF6F0}
+\definecolor{BoxBgNavy}{HTML}{F2F5F9}
+\definecolor{RuleGray}{HTML}{CBD5E1}
+\definecolor{TextDark}{HTML}{1E293B}
+\definecolor{TextMuted}{HTML}{64748B}
+
+\color{TextDark}
+\linespread{1.14}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+
+% ==================== 章节标题排版 ====================
+\titleformat{\section}
+  {\large\bfseries\color{PrimaryNavy}}
+  {\chinese{section}、}{0.2em}{}
+  [\vspace{2pt}{\color{PrimaryNavy}\titlerule[0.8pt]}]
+\titlespacing*{\section}{0pt}{9pt}{5pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{AccentTeal}}
+  {\arabic{section}.\arabic{subsection}}{0.45em}{}
+\titlespacing*{\subsection}{0pt}{6pt}{3pt}
+
+% ==================== 页眉与页脚 ====================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{TextMuted}多视角无标记视觉采集系统硬件采购报价单}
+\fancyhead[R]{\footnotesize\color{TextMuted}海康工业相机自建方案 vs.\ 青瞳视觉 CHINGMU R3 方案}
+\fancyfoot[L]{\footnotesize\color{TextMuted}报价更新日期：2026-10-29}
+\fancyfoot[C]{}
+\fancyfoot[R]{\footnotesize\color{TextMuted}第 \thepage\ 页 / 共 \pageref{LastPage} 页}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{RuleGray}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0pt}
+
+% ==================== 表格列类型与提示框样式 ====================
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\renewcommand{\arraystretch}{1.24}
+
+\setlist[itemize]{leftmargin=1.4em, itemsep=2pt, topsep=2pt, parsep=0pt}
+
+\newtcolorbox{keybox}[2][]{
+  enhanced,
+  colback=BoxBgNavy,
+  colframe=PrimaryNavy,
+  boxrule=0.6pt,
+  arc=2pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  fonttitle=\bfseries\small,
+  title={#2},
+  #1
+}
+
+\begin{document}
+
+% ==================== 顶部标题横幅 ====================
+\begin{tcolorbox}[
+  enhanced,
+  colback=PrimaryNavy,
+  colframe=PrimaryNavy,
+  arc=3pt,
+  boxrule=0pt,
+  left=10pt, right=10pt, top=8pt, bottom=8pt
+]
+  \begin{center}
+    {\LARGE\bfseries\color{white} 多视角无标记视觉采集系统硬件采购报价单}\\[3pt]
+    {\normalsize\color{HeaderBg} 方案一（海康工业相机自建方案）与方案二（青瞳视觉 CHINGMU R3 方案）}
+  \end{center}
+\end{tcolorbox}
+
+% ==================== 第一章：拓扑图与总览对比 ====================
+\section{硬件系统架构、场地尺寸与方案总览}
+
+\subsection{硬件系统拓扑与场地空间要求}
+
+系统以 4 台四角环绕相机为基准配置（预留 2 台侧向机位可扩展至 6 台），外部触发信号同步各相机曝光，图像流经 PoE+ 交换机万兆上联口汇总至现有工作站的 PCIe 万兆网卡，工作站主板自带千兆网口独立直连宇树 G1 机器人（图 \ref{fig:topology}）：
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  font=\footnotesize,
+  node distance=0.55cm and 0.7cm,
+  box/.style={draw=PrimaryNavy, thick, rounded corners=2pt, fill=white, align=center, inner sep=5pt},
+  cambox/.style={draw=AccentTeal, thick, rounded corners=2pt, fill=BoxBgTeal, align=center, inner sep=4pt, minimum width=3.55cm},
+  extcambox/.style={draw=AccentTeal, thick, dashed, rounded corners=2pt, fill=white, align=center, inner sep=4pt, minimum width=3.55cm},
+  pcbox/.style={draw=PrimaryNavy, very thick, rounded corners=3pt, fill=BoxBgNavy, align=left, inner sep=7pt},
+  robobox/.style={draw=WarmAmber, very thick, rounded corners=2pt, fill=BoxBgAmber, align=center, inner sep=5pt},
+  arrow/.style={-{Stealth[length=2.2mm, width=1.6mm]}, thick, color=PrimaryNavy},
+  trigarrow/.style={-{Stealth[length=2.0mm, width=1.4mm]}, thick, dashed, color=CrimsonAlert}
+]
+  % 硬件同步触发源
+  \node[box, fill=BoxBgAmber, draw=WarmAmber, minimum width=3.1cm] (sync) {
+    \textbf{硬件曝光同步模块}\\[1pt]
+    方案一：STM32 + 光耦触发线\\
+    方案二：青瞳 CMLock 同步机
+  };
+
+  % 相机组
+  \node[cambox, right=2.0cm of sync, yshift=0.95cm] (cam13) {
+    \textbf{基准相机组 C1--C4（4台基准）}\\
+    四角 90$^\circ$ 对角环绕布置\\
+    海康 MV-CS020 / 青瞳 R3
+  };
+  \node[extcambox, right=2.0cm of sync, yshift=-0.95cm] (cam46) {
+    \textbf{扩展相机组 C5--C6（+2台扩展）}\\
+    两侧正交补盲（升至 6 机位）\\
+    交换机与同步源已预留接口
+  };
+
+  % 交换机
+  \node[box, right=2.15cm of $(cam13.east)!0.5!(cam46.east)$, minimum width=3.1cm] (switch) {
+    \textbf{万兆上联 PoE+ 交换机}\\
+    8口 1G/2.5G PoE+ 一线供电\\
+    （接入4台基准，直扩6台）
+  };
+
+  % 主机（已有）
+  \node[pcbox, right=2.1cm of switch, minimum width=4.9cm] (pc) {
+    \textbf{\color{PrimaryNavy}地面算力工作站（实验室已有）}\\
+    \textcolor{RuleGray}{\rule{4.6cm}{0.4pt}}\\
+    $\bullet$ \textbf{网卡 1 (新增 PCIe 万兆卡)}：\\
+    \hspace{0.7em} 专职接收 4 路（可扩展 6 路）图像流\\
+    $\bullet$ \textbf{GPU/CPU}：运行自研独立算法管线\\
+    $\bullet$ \textbf{网卡 2 (主板自带千兆口)}：\\
+    \hspace{0.7em} 独立网线直连机器人（严禁混用）
+  };
+
+  % 机器人（已有）
+  \node[robobox, below=0.8cm of pc, minimum width=4.9cm] (robot) {
+    \textbf{Unitree G1 EDU 机器人与保护吊架（实验室已有）}\\
+    通过独立千兆网线接收实时控制指令
+  };
+
+  % 连线
+  \draw[trigarrow] (sync.east) -- ++(0.35,0) |- node[pos=0.76, above, font=\scriptsize\color{CrimsonAlert}] {微秒级硬同步} (cam13.west);
+  \draw[trigarrow] (sync.east) -- ++(0.35,0) |- node[pos=0.76, below, font=\scriptsize\color{CrimsonAlert}] {时差 $<0.1\text{\,ms}$} (cam46.west);
+
+  \draw[arrow] (cam13.east) -- ++(0.35,0) |- node[pos=0.75, above, font=\scriptsize] {4$\times$PoE (基准)} ([yshift=3.2mm]switch.west);
+  \draw[arrow, dashed] (cam46.east) -- ++(0.35,0) |- node[pos=0.75, below, font=\scriptsize] {+2$\times$PoE (扩展)} ([yshift=-3.2mm]switch.west);
+
+  \draw[arrow, very thick, color=AccentTeal] (switch.east) -- node[above, font=\scriptsize\bfseries] {10GbE 万兆汇总} node[below, font=\scriptsize] {零丢包直入内存} (pc.west);
+
+  \draw[arrow, very thick, color=WarmAmber] (pc.south) -- node[right, font=\scriptsize\bfseries] {独立千兆网线（双网卡物理隔离）} (robot.north);
+\end{tikzpicture}%
+}
+\caption{多视角硬件同步采集、万兆 PoE 汇聚与地面工作站双网卡连接拓扑图}
+\label{fig:topology}
+\end{figure}
+
+\vspace{-4pt}
+按 1/1.7$''$ 靶面相机搭配 $6\text{\,mm}$ 定焦镜头（单机视场角：水平 $62.7^\circ \times$ 垂直 $49.9^\circ$）核算，实验室场地尺寸要求如下：
+\begin{itemize}
+  \item \textbf{标准场地（4 机基准推荐）}：外围三脚架四角占地 \textbf{$4.0\text{\,m} \times 4.0\text{\,m} \sim 5.0\text{\,m} \times 5.0\text{\,m}$}（约 $16\sim 25\text{\,m}^2$，层高 $\ge 2.5\text{\,m}$），相机架高 $1.8\sim 2.2\text{\,m}$、距中心 $2.8\sim 3.5\text{\,m}$；中心全身有效捕捉区为 \textbf{$2.0\text{\,m} \times 2.0\text{\,m} \sim 2.5\text{\,m} \times 2.5\text{\,m}$}（支持多步直行、转身、下蹲与举手）。
+  \item \textbf{紧凑场地（最小可用空间）}：外围占地 \textbf{$3.2\text{\,m} \times 3.2\text{\,m} \sim 3.5\text{\,m} \times 3.5\text{\,m}$}（约 $10\sim 12\text{\,m}^2$）；将相机在云台上旋转 $90^\circ$ 竖装（垂直视场角扩至 $62.7^\circ$），距中心 $2.0\text{\,m}$ 即可拍全全身，中心有效捕捉区为 \textbf{$1.2\text{\,m} \times 1.2\text{\,m} \sim 1.5\text{\,m} \times 1.5\text{\,m}$}。
+  \item \textbf{扩展场地（6 机走廊 / 人机同室）}：6 机位外围占地约 \textbf{$4.0\text{\,m} \times 6.0\text{\,m}$}（中心有效捕捉区 $2.0\text{\,m} \times 3.5\text{\,m}$）；若宇树 G1 机器人及保护吊架同室部署，需在捕捉视野外另预留约 $2.0\text{\,m} \times 2.0\text{\,m}$ 独立安全区。
+\end{itemize}
+
+\subsection{两套方案核心配置与总价对比}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.16}
+\begin{tabularx}{\textwidth}{@{} L{2.5cm} L{6.2cm} Y @{}}
+\toprule
+\rowcolor{HeaderBg}
+\textbf{对比项} & \textbf{方案一：海康工业相机自建方案} & \textbf{方案二：上海青瞳视觉（CHINGMU）R3 方案} \\
+\midrule
+\textbf{核心相机与镜头} & 海康 \texttt{MV-CS020-10GC}（1/1.7$''$ 200万全局快门彩色）\newline + 海康 \texttt{MVL-KF0618M-12MPE}（1.1$''$ 大靶面 6\,mm 镜头） & 青瞳视觉 \texttt{CHINGMU R3}（RGB/红外双模自动切换，含原厂广角定焦镜头与环形红外灯） \\
+\rowcolor{RowAltBg}
+\textbf{相机与镜头单价} & 相机：\textbf{¥1,975.00 / 台}（含 13\% 增值税专票）\newline 镜头：\textbf{¥1,364.00 / 支}（含 13\% 增值税专票） & \textbf{约 ¥32,000.00 / 台}（需向销售确认是否含 13\% 专票；若不含税则加税后为 ¥36,160/台） \\
+\textbf{4 台基准相机小计} & \textbf{相机 ¥7,900.00 + 镜头 ¥5,456.00 = ¥13,356.00}\newline {\scriptsize （扩展至 6 台：相机 ¥11,850 + 镜头 ¥8,184 = ¥20,034.00）} & \textbf{约 ¥128,000.00}（扩展至 6 台约为 ¥192,000.00） \\
+\rowcolor{RowAltBg}
+\textbf{配套网络与同步件} & \textbf{¥1,889.60}（H3C 万兆交换机 ¥799 + Intel X550 万兆网卡 ¥765 + 硬同步件 ¥325.60；6 机为 ¥1,977.40） & \textbf{待销售报价}（交换机与万兆网卡可京东自购 ¥1,564；\texttt{CMLock} 同步盒待报价） \\
+\textbf{通用支架与补光灯} & \textbf{约 ¥3,000}（标定板 + 4盏灯 + 4套三脚架；6 机扩展约 ¥3,600） & \textbf{约 ¥2,500 -- ¥3,600}（被动 T 杆/L 尺待确认是否赠送） \\
+\midrule
+\rowcolor{BoxBgTeal}
+\textbf{\color{AccentTeal}全套总价}\newline {\scriptsize (4 机基准 / 6 机扩展)} & \textbf{\color{AccentTeal}4 机基准约 ¥18,245.60（含 13\% 增值税专票）}\newline {\scriptsize 6 机扩展约 ¥25,611.40（含 13\% 增值税专票）} & \textbf{\color{CrimsonAlert}4 机基准 ¥128,000 + 待报价配件}\newline {\scriptsize 6 机扩展 ¥192,000 + 待报价配件} \\
+\bottomrule
+\end{tabularx}
+\caption{方案一（海康自建方案）与方案二（青瞳 R3 方案）总价对比表}
+\end{table}
+
+% ==================== 第二章：方案一（海康自建）报价单 ====================
+\clearpage
+\section{方案一：海康工业相机自建方案报价单与设备说明}
+
+以下列出方案一各设备的型号、功能说明、京东价格（均含 13\% 增值税专用发票）及商品链接，按 4 台基准配置与 6 台扩展配置分别核算：
+
+\begin{table}[H]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.26}
+\begin{tabularx}{\textwidth}{@{} C{0.65cm} L{2.60cm} Y C{1.05cm} L{2.60cm} L{3.60cm} @{}}
+\toprule
+\rowcolor{HeaderBg}
+\textbf{序号} & \textbf{设备名称与型号} & \textbf{设备功能说明} & \textbf{数量} & \textbf{单价 / 小计（含税）} & \textbf{京东链接与备选型号} \\
+\midrule
+\textbf{01} & \textbf{全局快门工业相机}\newline 海康 \texttt{MV-CS020-10GC}\newline {\scriptsize (1/1.7$''$ 靶面, 60\,fps)} & Sony IMX430 全局快门彩色 CMOS（$1624\times 1240 \text{ @ } 60\text{\,fps}$），消除快速运动时的卷帘畸变；支持千兆 PoE 供电与外部光电硬触发同步。 & \textbf{4 台}\newline {\scriptsize (扩展6台)} & 单价：\textbf{¥1,975.00}\newline {\scriptsize (含 13\% 增值税专票)}\newline 4台基准：\textbf{¥7,900.00}\newline {\scriptsize (6台扩展：¥11,850.00)} & \textbf{海康机器人旗舰店}\newline \href{https://item.jd.com/10102727234121.html}{京东链接 (\texttt{10102727234121})}\newline {\scriptsize 备选 USB 款：\href{https://item.jd.com/10102727234122.html}{\texttt{10102727234122}} (¥2,199)} \\
+\rowcolor{RowAltBg}
+\textbf{02} & \textbf{大靶面工业定焦镜头}\newline 海康 6\,mm 1.1$''$ 12MP\newline \texttt{MVL-KF0618M-12MPE} & 6\,mm C 口定焦镜头（视场角 $62.7^\circ\times 49.9^\circ$），1.1$''$ 靶面（$\Phi 17.6\text{\,mm}$）覆盖相机 1/1.7$''$（$9.19\text{\,mm}$）传感器无暗角；F1.8 光圈，带对焦与光圈锁紧环。 & \textbf{4 支}\newline {\scriptsize (扩展6支)} & 单价：\textbf{¥1,364.00}\newline {\scriptsize (含 13\% 增值税专票)}\newline 4支基准：\textbf{¥5,456.00}\newline {\scriptsize (6支扩展：¥8,184.00)} & \textbf{海康机器人旗舰店}\newline \href{https://item.jd.com/10096689777346.html}{京东链接 (\texttt{10096689777346})}\newline {\scriptsize 经济款 1/1.8$''$：\href{https://item.jd.com/10085166542314.html}{\texttt{10085166542314}} (¥375)} \\
+\textbf{03} & \textbf{万兆上联 PoE+ 交换机}\newline 新华三 (H3C)\newline \texttt{S1510FX-UP} & 提供 8 个 2.5G PoE+ 网口同时为 4--6 台相机供电并采集图像流（4 机约 $3.22\text{\,Gbps}$，6 机约 $4.83\text{\,Gbps}$），通过万兆上联口汇总送入主机。 & \textbf{1 台} & 单价：\textbf{¥799.00}\newline {\scriptsize (含 13\% 增值税专票)}\newline 小计：\textbf{¥799.00} & \textbf{华三 (H3C) 京东自营}\newline \href{https://item.jd.com/100234051427.html}{京东链接 (\texttt{100234051427})}\newline {\scriptsize 经济备选希力威视：\href{https://item.jd.com/100221279582.html}{\texttt{100221279582}} (¥519)} \\
+\rowcolor{RowAltBg}
+\textbf{04} & \textbf{主机 PCIe 万兆网卡}\newline EB-LINK \texttt{Intel X550-T1} & 安装在工作站主板 PCIe 插槽，对接交换机万兆口接收 4--6 路相机图像流，与主板自带千兆口（直连机器人）物理隔离。 & \textbf{1 张} & 单价：\textbf{¥765.00}\newline {\scriptsize (含 13\% 增值税专票)}\newline 小计：\textbf{¥765.00} & \textbf{EB-LINK 京东自营旗舰店}\newline \href{https://item.jd.com/100020712289.html}{京东链接 (\texttt{100020712289})}\newline {\scriptsize 备选万兆通：\href{https://item.jd.com/100343005162.html}{\texttt{100343005162}} (¥799)}\newline {\scriptsize 双口 X550-2T：\href{https://item.jd.com/100097756203.html}{\texttt{100097756203}} (¥820)} \\
+\textbf{05} & \textbf{硬件同步触发线与脉冲源}\newline 6芯触发线 $\times 4$ + STM32 & 由 STM32 输出 $50/60\text{\,Hz}$ 同步方波，经 6 芯航插线并联触发 4--6 台相机同时曝光（同步误差 $<0.1\text{\,ms}$）。 & \textbf{1 套}\newline {\scriptsize (基准4根)}\newline {\scriptsize (扩展6根)} & 触发线：\textbf{¥43.90}$\times 4$\newline 模块：\textbf{¥150.00}\newline 4机基准：\textbf{¥325.60}\newline {\scriptsize (6机扩展：¥413.40)} & \textbf{洛克康官方旗舰店 (5m线)}\newline \href{https://item.jd.com/10022815039131.html}{京东链接 (\texttt{10022815039131})}\newline {\scriptsize 海康原装 1m 线：\href{https://item.jd.com/10086982437155.html}{\texttt{10086982437155}} (¥49)} \\
+\rowcolor{RowAltBg}
+\textbf{06} & \textbf{空间标定板与补光灯}\newline A1 ChArUco 板 + 4盏常亮灯 & ChArUco 标定板用于标定多相机内外参并对齐 $Z=0$ 地面；4 盏 100W 无频闪 LED 常亮灯用于补充短曝光进光量。 & \textbf{1 套} & 标定板：约 ¥300\newline 4盏灯：约 ¥1,500\newline 小计：\textbf{约 ¥1,800} & 通用摄影与标定辅材（定制 A1 铝塑哑光棋盘格/ChArUco 板 + 4 盏 100W 摄影常亮灯） \\
+\textbf{07} & \textbf{相机三脚架云台与网线}\newline 4套三脚架 + Cat6A 网线 & 重型三脚架（配三维齿轮云台）将相机固定于场地四角；$15\text{\,m}$ 超六类屏蔽网线用于传输 PoE 供电与图像数据。 & \textbf{4 套}\newline {\scriptsize (扩展6套)} & 三脚架：约 ¥1,000\newline 网线：约 ¥200\newline 4机基准：\textbf{约 ¥1,200}\newline {\scriptsize (6机扩展：约 ¥1,800)} & 通用摄影器材与网络线材（承重 $\ge 5\text{\,kg}$ 三脚架云台 + $15\text{\,m}$ Cat6A 屏蔽网线） \\
+\midrule
+\rowcolor{BoxBgTeal}
+\multicolumn{4}{@{}l}{\textbf{\color{AccentTeal}序号 01--05 京东采购项小计（含 13\% 增值税专票）}} & \textbf{\color{AccentTeal}4机基准：¥15,245.60} & \textbf{6 机扩展：¥22,011.40} \\
+\rowcolor{HeaderBg}
+\multicolumn{4}{@{}l}{\textbf{方案一全套总计（序号 01--07，含 13\% 增值税专票）}} & \textbf{4机基准：约 ¥18,245.60} & \textbf{6 机扩展：约 ¥25,611.40} \\
+\bottomrule
+\end{tabularx}
+\caption{方案一（海康工业相机自建方案）设备清单与报价表}
+\label{tab:hik_bom}
+\end{table}
+
+% ==================== 第三章：方案二（青瞳视觉 R3）报价单 ====================
+\clearpage
+\section{方案二：上海青瞳视觉（CHINGMU）R3 方案报价单与设备说明}
+
+\subsection{青瞳 R3 相机功能说明}
+
+\begin{itemize}
+  \item \textbf{红外/彩色双模切换标定}：镜头外圈集成环形红外 LED 与电控滤光片。标定时切至红外模式，挥动被动反光 T 型校准杆即可自动解算多机内外参；采集时切回 RGB 彩色模式输出图像。
+  \item \textbf{2.5Gbps PoE+ 接口}：配备双 $2.5\text{\,Gbps}$ 网口，单机直连需搭配 $2.5\text{\,Gbps}$ PoE+ 交换机。单台相机主机初报约为 \textbf{¥32,000 / 台}，其余配件待销售报价。
+\end{itemize}
+
+\subsection{青瞳视觉 R3 方案设备清单与报价表（未报价项留空）}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.32}
+\begin{tabularx}{\textwidth}{@{} C{0.65cm} L{2.7cm} Y C{1.05cm} L{2.65cm} L{3.55cm} @{}}
+\toprule
+\rowcolor{HeaderBg}
+\textbf{序号} & \textbf{设备名称与型号} & \textbf{设备功能说明} & \textbf{数量} & \textbf{单价 / 小计（待填）} & \textbf{备注与自购替代参考} \\
+\midrule
+\textbf{01} & \textbf{青瞳 R3 双模相机}\newline (\texttt{CHINGMU R3} 主机) & 支持红外反光点标定模式与 RGB 彩色采集模式切换；内置环形红外灯，含原厂广角定焦镜头。 & \textbf{4 台}\newline {\scriptsize (扩展6台)} & 单价：\textbf{约 ¥32,000.00}\newline 4台基准：\textbf{¥128,000.00}\newline {\scriptsize (6台扩展：¥192,000.00)} & 销售初报约 ¥32,000/台；\textbf{需确认是否含 13\% 增值税专票}及是否开放底层 50/60\,Hz 取图 SDK \\
+\rowcolor{RowAltBg}
+\textbf{02} & \textbf{青瞳网络同步盒}\newline (\texttt{CMLock} 同步机) & 提供多台相机的硬件同步触发与时间码对齐，支持 PoE+/DC 供电与 BNC/TTL 信号接口。 & \textbf{1 台} & 单价：¥\underline{\hspace{1.35cm}}\newline 小计：¥\underline{\hspace{1.35cm}} & \textbf{待销售报价}（确认 4--6 台 R3 是否必须配同步盒，或通过交换机直连同步） \\
+\textbf{03} & \textbf{2.5G PoE+/PoE++}\newline \textbf{万兆上联交换机} & 为 4--6 台 R3 提供 $2.5\text{\,Gbps}$ 接入带宽与 PoE+/PoE++ 供电，经万兆上联口汇总至主机。 & \textbf{1 台} & 原厂：¥\underline{\hspace{1.35cm}}\newline {\scriptsize 京东自购：\textbf{¥799.00}} & 原厂报价留空；若自备可采购京东自营 H3C \href{https://item.jd.com/100234051427.html}{\texttt{100234051427}} (¥799) \\
+\rowcolor{RowAltBg}
+\textbf{04} & \textbf{主机 PCIe 万兆网卡}\newline (10GbE 或 2.5GbE) & 安装在工作站 PCIe 插槽，接收交换机万兆口汇总的 4--6 路 R3 相机数据流，与机器人网口隔离。 & \textbf{1 张} & 原厂：¥\underline{\hspace{1.35cm}}\newline {\scriptsize 京东自购：\textbf{¥765.00}} & 原厂报价留空；若自备可采购京东自营 Intel X550-T1 \href{https://item.jd.com/100020712289.html}{\texttt{100020712289}} (¥765) \\
+\textbf{05} & \textbf{被动反光 T 型校准杆}\newline ($300/410/610\text{\,mm}$) & 配合 R3 自带的环形红外灯，在场地内挥动完成 4--6 台相机的内外参标定。 & \textbf{1 根} & 单价：¥\underline{\hspace{1.35cm}}\newline {\scriptsize ($\square$ 随相机赠送)} & \textbf{待销售报价}（确认是否随相机主机赠送） \\
+\rowcolor{RowAltBg}
+\textbf{06} & \textbf{L 型地面原点校准尺}\newline + \textbf{地面校准反光球} & 放置在场地地面，用于设定世界坐标系原点并标定 $Z=0$ 水平地面。 & \textbf{1 套} & 单价：¥\underline{\hspace{1.35cm}}\newline {\scriptsize ($\square$ 随相机赠送)} & \textbf{待销售报价}（含 L 型尺与地面反光球，确认是否随主机赠送） \\
+\textbf{07} & \textbf{超六类屏蔽网线}\newline (\texttt{Cat6A SFTP}, 15--20\,m) & 用于 R3 的 $2.5\text{\,Gbps}$ 数据传输与 PoE 供电。 & \textbf{4--6 根}\newline {\scriptsize (扩展6--8)} & 原厂：¥\underline{\hspace{1.35cm}}\newline {\scriptsize ($\square$ 赠送 / 自购约 ¥200)} & \textbf{待销售报价}（确认是否随相机附赠网线） \\
+\rowcolor{RowAltBg}
+\textbf{08} & \textbf{相机三脚架云台}\newline + \textbf{无频闪 LED 补光灯} & 三脚架与三维齿轮云台用于固定四角机位；4 盏 100W 常亮灯用于短曝光补光。 & \textbf{4 套}\newline {\scriptsize (扩展6套)}\newline + 4 盏灯 & 原厂：¥\underline{\hspace{1.35cm}}\newline {\scriptsize (通用自购：约 ¥2,500)} & 可询问青瞳原厂选配价，或自购通用摄影器材 \\
+\textbf{09} & \textbf{基础标定软件与}\newline \textbf{底层图像获取 SDK} & 用于切换 R3 红外/RGB 模式、导出标定参数文件，并通过 SDK 实时读取原始 RGB 图像。 & \textbf{1 套} & 报价：¥\underline{\hspace{1.35cm}}\newline {\scriptsize ($\square$ 随硬件免费提供)} & \textbf{待销售报价}（仅需标定与底层取图 SDK，不含动捕软件模块） \\
+\midrule
+\rowcolor{BoxBgAmber}
+\multicolumn{4}{@{}l}{\textbf{\color{WarmAmber}序号 01 相机主机小计（按 ¥32,000/台估算）}} & \textbf{\color{WarmAmber}4机基准：约 ¥128,000} & \textbf{6 机扩展：约 ¥192,000} \\
+\rowcolor{HeaderBg}
+\multicolumn{4}{@{}l}{\textbf{方案二全套总计（含 13\% 增值税专票）}} & \textbf{¥\underline{\hspace{2.1cm}}} & \textbf{待销售返回配件报价与折扣后汇总} \\
+\bottomrule
+\end{tabularx}
+\caption{方案二（上海青瞳视觉 CHINGMU R3 方案）设备清单与报价表}
+\label{tab:chingmu_bom}
+\end{table}
+
+\end{document}

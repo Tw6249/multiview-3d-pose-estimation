@@ -1,11 +1,13 @@
 __pycache__/
 *.pyc
-.runtime.json
-.robot-runtime.json
-outputs/
+.pytest_cache/
+# data (raw videos, BVH, archives, public datasets) and generated outputs stay local
 data/
-assets/*.glb
-*.blend1
+outputs/
+*.zip
+# vendor manuals and LaTeX build products
+docs/vendor/
+docs/*.pdf
 *.log
 *.aux
 *.synctex.gz

@@ -1,7 +1,0 @@
-numpy==1.26.4
-scipy==1.14.1
-opencv-contrib-python==4.11.0.86
-rtmlib==0.0.13
-matplotlib==3.9.4
-Pillow==11.1.0
-tqdm==4.67.1
