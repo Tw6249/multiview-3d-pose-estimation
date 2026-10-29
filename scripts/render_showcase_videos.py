@@ -124,7 +124,7 @@ class AdvSource:
     def __init__(self, take: str):
         from advanced_take_s2s3_eval import load_cameras, track_take
         self.take, self.names = take, ADV_CAMS
-        self.title = f"AdvancedTake {take}（青瞳 Chingmu 实验室采集，单人）"
+        self.title = f"真人采集 · AdvancedTake {take}（4 机位，单人）"
         self.P, _ = load_cameras(ROOT / "outputs" / "advanced_take" / "cameras_rgbonly.json")
         self.tr = track_take(take, self.P, use_consensus=True, shifts=None, ref_lag=6)
         self.fidx = self.tr["frame_idx"]
