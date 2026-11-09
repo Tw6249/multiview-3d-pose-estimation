@@ -9,8 +9,7 @@ from scipy.spatial.transform import Rotation
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from g1_imitation.core import adv_eval as ae  # noqa: E402
-sys.path.insert(0, str(ROOT / "scripts"))
-from advanced_take_gmr_control import to_50hz  # noqa: E402
+from g1_imitation.core.adv_eval import to_50hz  # noqa: E402
 
 
 def make_pose():

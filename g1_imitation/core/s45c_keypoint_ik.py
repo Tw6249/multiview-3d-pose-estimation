@@ -1,20 +1,21 @@
-"""Module S4+S5 (real-time retargeter): golden-27 keypoints -> Unitree G1 reference, causal, one frame at a time.
+"""Module S4+S5 (real-time retargeter): golden-27 keypoints -> humanoid reference, causal, one frame at a time.
 
+Supports both configured humanoid robots (`unitree_g1`: 29-DoF, nq=36, nv=35; `roban_s17`: 21-DoF, nq=28, nv=27).
 Replaces the EasyMocap SMPL-X fit + GMR path for live use; that path stays as the offline reference. No body
 model, no sequence optimisation: q[t] depends only on points[0..t].
 
 Input  : `step(points (27,3), t_s)`: golden keypoints of ONE frame, metres, right-handed Z-up registered world (ground
          z = 0), NaN = unobserved; t_s = capture time in seconds (strictly increasing).
 Output : `KeypointIKFrame`
-           q  (36,) [root xyz m, root quat wxyz, 29 joints rad, SDK order] - the S6 reference layout
-           dq (35,) backward difference against the previous output [root lin vel world m/s, root ang vel body
+           q  (7 + n_dof,) [root xyz m, root quat wxyz, n_dof joints rad, robot joint order] - the S6 reference layout
+           dq (6 + n_dof,) backward difference against the previous output [root lin vel world m/s, root ang vel body
                     rad/s, joint vel rad/s]; zero on held / calibration frames
            observed: False while calibrating (default stance) or when the trunk points are missing (q held)
            held_groups: limbs whose keypoints were missing this frame (their joints keep the previous solution)
            solve_ms: wall time of this call
 Method :
   1. Calibration: median human bone lengths over the first `calibration_s` of frames with observed legs ->
-     root-displacement scale s = G1 leg length / human leg length. During calibration the output is the default
+     root-displacement scale s = robot leg length / human leg length. During calibration the output is the default
      stance turned to the hip-line heading (observed=False): an explicit start-up phase, not a guess. The output
      then ramps linearly from that stance to the retargeted pose over `startup_blend_s` (held_groups "blend").
   2. Direction transfer: every limb segment of the robot points along the human segment direction, with the robot's
@@ -26,8 +27,7 @@ Method :
      whole-arm task that pulled the shoulder/elbow into a wrong branch (Take_012, S2 raw input: left upper arm 33 deg
      off its own input). Default `wrist_iterations` = 0: hand orientation is not tracked (unmeasured; wrists stay at
      the posture default). With `wrist_iterations` > 0 only the three wrist joints of each side are turned towards
-     the hand frame after step 3 (damped Gauss-Newton, clipped to the joint limits); measured on the real takes, that
-     gave wrist references up to p95 1300 deg/s and no gain in limb fidelity, so it is off by default.
+     the hand frame after step 3 (damped Gauss-Newton, clipped to the joint limits) on robots with 3-DoF wrists.
 Assumptions (not measurements):
   - Pelvis pitch is not observable from two hip points. The hip->shoulder (trunk) inclination is split between the
     pelvis (hip joints) and the waist by `pelvis_trunk_share` (0 = pelvis upright, 1 = pelvis follows the trunk).
@@ -36,13 +36,13 @@ Assumptions (not measurements):
   - Upper-arm twist with a straight elbow and leg twist with a straight knee are unobservable; a weak posture task
     pulls them to the default stance.
   - Root xy displacement = s * human mid-hip displacement since calibration end; root height puts the lowest robot
-    sole point at the human sole clearance (flight phases are kept). Root position is not a SONIC input; it only
-    makes the reference self-consistent and scorable.
+    sole point at the human sole clearance (flight phases are kept).
 Failure: ValueError for a wrong shape / non-increasing time; RuntimeError if IK leaves the joint limits or returns
          non-finite values. Missing data is held, never extrapolated.
 """
 from __future__ import annotations
 
+from pathlib import Path
 import time
 from dataclasses import dataclass, field
 
@@ -51,7 +51,15 @@ import mujoco
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-from .constants import G1_29_JOINTS, KEYPOINT_INDEX_BY_NAME as K, load_config
+from .constants import (
+    G1_29_JOINTS,
+    KEYPOINT_INDEX_BY_NAME as K,
+    ROBAN_21_JOINTS,
+    ROBAN_HEFT_21_JOINTS,
+    ROBOT_JOINTS,
+    SUPPORTED_ROBOTS,
+    load_config,
+)
 
 SIDES = ("left", "right")
 _Z = np.array([0.0, 0.0, 1.0])
@@ -64,6 +72,10 @@ class KeypointIKFrame:
     observed: bool
     held_groups: tuple[str, ...] = field(default_factory=tuple)
     solve_ms: float = 0.0
+    ik_branch: str = "warm_start"
+    ik_task_cost: float = 0.0
+    ik_continuity_cost: float = 0.0
+    ik_candidates_evaluated: int = 1
 
 
 def _unit(v: np.ndarray) -> np.ndarray | None:
@@ -98,34 +110,99 @@ def _ok(p: np.ndarray, *names: str) -> bool:
 
 
 class KeypointIKRetargeter:
-    def __init__(self, model: mujoco.MjModel | None = None, cfg: dict | None = None,
-                 default_q_29: np.ndarray | None = None) -> None:
-        self.cfg = cfg or load_config()["s45c_keypoint_ik"]
+    def __init__(
+        self,
+        model: mujoco.MjModel | None = None,
+        cfg: dict | None = None,
+        default_q_29: np.ndarray | None = None,
+        *,
+        robot: str | None = None,
+        default_q: np.ndarray | None = None,
+    ) -> None:
+        full_cfg = load_config()
+        self.cfg = cfg or full_cfg["s45c_keypoint_ik"]
+        if robot is None:
+            if model is not None and model.nq == 28:
+                robot = "roban_s17"
+            elif model is not None and model.nq == 36:
+                robot = "unitree_g1"
+            else:
+                robot = self.cfg.get("robot") or full_cfg.get("default_robot", "unitree_g1")
+        if robot not in SUPPORTED_ROBOTS:
+            raise ValueError(f"Unsupported robot {robot!r}; expected one of {SUPPORTED_ROBOTS}")
+        self.robot = robot
+        expected_joints = list(ROBOT_JOINTS[self.robot])
+        self.nj = len(expected_joints)
+        self.nq = 7 + self.nj
+        self.nv = 6 + self.nj
+
+        robots_cfg = self.cfg.get("robots") or full_cfg["s45c_keypoint_ik"]["robots"]
+        rcfg = robots_cfg[self.robot]
+        self._b_pelvis = str(rcfg["pelvis_body"])
+        self._b_torso = str(rcfg["torso_body"])
+        fmt = lambda tpl, s: str(tpl).format(side=s, s=s[0])
+        self._b_hip = {s: fmt(rcfg["hip_body_template"], s) for s in SIDES}
+        self._b_knee = {s: fmt(rcfg["knee_body_template"], s) for s in SIDES}
+        self._b_ankle = {s: fmt(rcfg["ankle_body_template"], s) for s in SIDES}
+        self._b_foot = {s: fmt(rcfg["foot_body_template"], s) for s in SIDES}
+        self._b_shoulder = {s: fmt(rcfg["shoulder_body_template"], s) for s in SIDES}
+        self._b_elbow = {s: fmt(rcfg["elbow_body_template"], s) for s in SIDES}
+        self._b_hand = {s: fmt(rcfg["hand_body_template"], s) for s in SIDES}
+        wrist_tpls = list(rcfg.get("wrist_joint_templates", ()))
+
         if model is None:
-            from .s6_mujoco_closed_loop import G1PhysicsPlant
-            model = G1PhysicsPlant().kin_model
-        if model.nq != 36 or [model.joint(i).name for i in range(1, model.njnt)] != list(G1_29_JOINTS):
-            raise ValueError("KeypointIKRetargeter needs the 29-joint G1 kinematic model (nq 36, SDK order)")
+            if self.robot == "unitree_g1":
+                from .s6_mujoco_closed_loop import G1PhysicsPlant
+                model = G1PhysicsPlant().kin_model
+            else:
+                from .s6_mujoco_closed_loop import RobanPhysicsPlant
+                model = RobanPhysicsPlant().kin_model
+        if model.nq != self.nq or [model.joint(i).name for i in range(1, model.njnt)] != expected_joints:
+            raise ValueError(
+                f"KeypointIKRetargeter({self.robot}) needs the {self.nj}-joint kinematic model (nq {self.nq})"
+            )
         self.model = model
-        if default_q_29 is None:
-            from .s6_mujoco_closed_loop import COMMON_DEFAULT_Q_29
-            default_q_29 = COMMON_DEFAULT_Q_29
-        self.default_q = np.asarray(default_q_29, np.float64).copy()
+        dq_init = default_q if default_q is not None else default_q_29
+        if dq_init is None:
+            if self.robot == "unitree_g1":
+                from .s6_mujoco_closed_loop import COMMON_DEFAULT_Q_29
+                dq_init = COMMON_DEFAULT_Q_29
+            else:
+                from .s6_mujoco_closed_loop import COMMON_DEFAULT_Q_ROBAN_21
+                dq_init = COMMON_DEFAULT_Q_ROBAN_21
+        self.default_q = np.asarray(dq_init, np.float64).copy()
+        if self.default_q.shape != (self.nj,):
+            raise ValueError(f"default_q for {self.robot} must have shape ({self.nj},), got {self.default_q.shape}")
         self._robot_geometry()
         c = self.cfg
         self.configuration = mink.Configuration(model)
         mk = lambda n, p, o: mink.FrameTask(n, "body", position_cost=p, orientation_cost=o, lm_damping=1.0)
-        self.t_pelvis = mk("pelvis", c["pelvis_position_cost"], c["pelvis_orientation_cost"])
-        self.t_torso = mk("torso_link", 0.0, c["torso_orientation_cost"])
-        self.t_knee = {s: mk(f"{s}_knee_link", c["knee_position_cost"], 0.0) for s in SIDES}
-        self.t_foot = {s: mk(f"{s}_ankle_roll_link", c["foot_position_cost"], c["foot_orientation_cost"]) for s in SIDES}
-        self.t_elbow = {s: mk(f"{s}_elbow_link", c["elbow_position_cost"], 0.0) for s in SIDES}
-        self.t_hand = {s: mk(f"{s}_wrist_yaw_link", c["wrist_position_cost"], 0.0) for s in SIDES}
-        self._wrist_body = {s: model.body(f"{s}_wrist_yaw_link").id for s in SIDES}
-        wj = {s: [model.joint(f"{s}_wrist_{a}_joint").id for a in ("roll", "pitch", "yaw")] for s in SIDES}
-        self._wrist_dof = {s: model.jnt_dofadr[wj[s]].copy() for s in SIDES}
-        self._wrist_qadr = {s: model.jnt_qposadr[wj[s]].copy() for s in SIDES}
-        self._wrist_rng = {s: model.jnt_range[wj[s]].copy() for s in SIDES}
+        self.t_pelvis = mk(self._b_pelvis, c["pelvis_position_cost"], c["pelvis_orientation_cost"])
+        self.t_torso = mk(self._b_torso, 0.0, c["torso_orientation_cost"])
+        pelvis_axis_scale = np.asarray(c.get("pelvis_orientation_axis_scale", [1.0, 1.0, 1.0]), dtype=np.float64)
+        torso_axis_scale = np.asarray(c.get("torso_orientation_axis_scale", [1.0, 1.0, 1.0]), dtype=np.float64)
+        if pelvis_axis_scale.shape != (3,) or torso_axis_scale.shape != (3,) \
+                or not np.isfinite(pelvis_axis_scale).all() or not np.isfinite(torso_axis_scale).all() \
+                or np.any(pelvis_axis_scale < 0.0) or np.any(torso_axis_scale < 0.0):
+            raise ValueError("orientation axis scales must be finite non-negative 3-vectors [local x,y,z]")
+        # FrameTask's final three residual components are local-frame rotation axes [x,y,z].
+        self.t_pelvis.cost[3:] *= pelvis_axis_scale
+        self.t_torso.cost[3:] *= torso_axis_scale
+        self.t_knee = {s: mk(self._b_knee[s], c["knee_position_cost"], 0.0) for s in SIDES}
+        self.t_foot = {s: mk(self._b_foot[s], c["foot_position_cost"], c["foot_orientation_cost"]) for s in SIDES}
+        self.t_elbow = {s: mk(self._b_elbow[s], c["elbow_position_cost"], 0.0) for s in SIDES}
+        self.t_hand = {s: mk(self._b_hand[s], c["wrist_position_cost"], 0.0) for s in SIDES}
+        self._wrist_body = {s: model.body(self._b_hand[s]).id for s in SIDES}
+        self._has_wrists = len(wrist_tpls) == 3
+        if self._has_wrists:
+            wj = {s: [model.joint(fmt(t, s)).id for t in wrist_tpls] for s in SIDES}
+            self._wrist_dof = {s: model.jnt_dofadr[wj[s]].copy() for s in SIDES}
+            self._wrist_qadr = {s: model.jnt_qposadr[wj[s]].copy() for s in SIDES}
+            self._wrist_rng = {s: model.jnt_range[wj[s]].copy() for s in SIDES}
+        else:
+            self._wrist_dof = {}
+            self._wrist_qadr = {}
+            self._wrist_rng = {}
         self._wd = mujoco.MjData(model)
         self._jr = np.zeros((3, model.nv))
         self.t_posture = mink.PostureTask(model, cost=c["posture_cost"])
@@ -133,6 +210,11 @@ class KeypointIKRetargeter:
         self.t_posture.set_target(q_neutral)
         self.limits = [mink.ConfigurationLimit(model)]
         self.lo, self.hi = model.jnt_range[1:, 0], model.jnt_range[1:, 1]
+        self._joint_qadr = {
+            str(model.joint(i).name): int(model.jnt_qposadr[i])
+            for i in range(1, model.njnt)
+        }
+        self._last_ik_branch = "warm_start"
         self.reset()
 
     # ---- robot geometry (FK at the zero pose, pelvis at the origin) -------------------------------------------
@@ -144,18 +226,18 @@ class KeypointIKRetargeter:
         x = lambda n: d.xpos[m.body(n).id].copy()
         self.hip_off, self.sh_off, self.L = {}, {}, {}
         for s in SIDES:
-            knee, ankle = x(f"{s}_knee_link"), x(f"{s}_ankle_pitch_link")
+            knee, ankle = x(self._b_knee[s]), x(self._b_ankle[s])
             # virtual hip centre above the knee at hip-pitch height, so the rest thigh is vertical like a human's
-            self.hip_off[s] = np.array([knee[0], knee[1], x(f"{s}_hip_pitch_link")[2]])
-            elbow, wrist = x(f"{s}_elbow_link"), x(f"{s}_wrist_yaw_link")
-            self.sh_off[s] = np.array([elbow[0], elbow[1], x(f"{s}_shoulder_roll_link")[2]]) - x("torso_link")
+            self.hip_off[s] = np.array([knee[0], knee[1], x(self._b_hip[s])[2]])
+            elbow, wrist = x(self._b_elbow[s]), x(self._b_hand[s])
+            self.sh_off[s] = np.array([elbow[0], elbow[1], x(self._b_shoulder[s])[2]]) - x(self._b_torso)
             self.L[s] = dict(thigh=float(np.linalg.norm(knee - self.hip_off[s])), shank=float(np.linalg.norm(ankle - knee)),
-                             upper=float(np.linalg.norm(elbow - (self.sh_off[s] + x("torso_link")))),
+                             upper=float(np.linalg.norm(elbow - (self.sh_off[s] + x(self._b_torso)))),
                              fore=float(np.linalg.norm(wrist - elbow)))
-            self.ankle_roll_off = x(f"{s}_ankle_roll_link") - ankle            # in the (rest = identity) foot frame
-        self.torso_off = x("torso_link")
+            self.ankle_roll_off = x(self._b_foot[s]) - ankle              # in the (rest = identity) foot frame
+        self.torso_off = x(self._b_torso)
         # sole contact points of the foot in its own frame (box corners or sphere bottoms of colliding geoms)
-        b = m.body("left_ankle_roll_link").id
+        b = m.body(self._b_foot["left"]).id
         pts = []
         for g in range(m.body_geomadr[b], m.body_geomadr[b] + m.body_geomnum[b]):
             if not m.geom_contype[g]:
@@ -168,7 +250,7 @@ class KeypointIKRetargeter:
         if not pts:
             raise ValueError("no sole contact geometry on the ankle body")
         self.sole_local = np.array(pts)
-        self.pelvis_rest_z = float(-min(self.ankle_roll_off[2] + x("left_ankle_pitch_link")[2] + self.sole_local[:, 2].min(), 0.0))
+        self.pelvis_rest_z = float(-min(self.ankle_roll_off[2] + x(self._b_ankle["left"])[2] + self.sole_local[:, 2].min(), 0.0))
         self.robot_leg = self.L["left"]["thigh"] + self.L["left"]["shank"]
 
     # ---- state -------------------------------------------------------------------------------------------------
@@ -186,8 +268,51 @@ class KeypointIKRetargeter:
         self._clear = 0.0
         self._q_stance: np.ndarray | None = None
         self._t_calib_end = 0.0
+        self._last_ik_branch = "warm_start"
         q0 = np.r_[0.0, 0.0, self.pelvis_rest_z, 1.0, 0.0, 0.0, 0.0, self.default_q]
         self.configuration.update(q0)
+
+    def _branch_seed_patterns(self, q_warm: np.ndarray) -> list[tuple[str, np.ndarray]]:
+        """Generate bounded arm/elbow alternative initial states around the causal warm start."""
+        count = int(self.cfg.get("ik_branch_candidates", 1))
+        if count <= 1 or self.robot != "unitree_g1":
+            return [("warm_start", q_warm.copy())]
+        offset = float(self.cfg.get("ik_branch_seed_offset_rad", 0.8))
+        patterns = [("warm_start", {})]
+        for side in SIDES:
+            for sign, label in ((1.0, "plus"), (-1.0, "minus")):
+                patterns.append((f"{side}_{label}", {
+                    f"{side}_shoulder_roll_joint": sign * offset,
+                    f"{side}_elbow_joint": sign * offset,
+                }))
+        out = []
+        for name, changes in patterns[:count]:
+            seed = q_warm.copy()
+            for joint_name, delta in changes.items():
+                qadr = self._joint_qadr.get(joint_name)
+                if qadr is not None:
+                    jid = self.model.joint(joint_name).id
+                    seed[qadr] = np.clip(seed[qadr] + delta, *self.model.jnt_range[jid])
+            out.append((name, seed))
+        return out
+
+    def _ik_candidate_cost(self, tasks: list, q_warm: np.ndarray) -> tuple[float, float, float]:
+        """Return (total, observation task, continuity) costs for the current configuration."""
+        observation_sq = 0.0
+        posture_sq = 0.0
+        for task in tasks:
+            error = np.asarray(task.compute_error(self.configuration), dtype=np.float64)
+            weighted = np.asarray(task.cost, dtype=np.float64) * error
+            value = float(np.dot(weighted, weighted))
+            if task is self.t_posture:
+                posture_sq += value
+            else:
+                observation_sq += value
+        continuity_weight = float(self.cfg.get("ik_branch_continuity_weight", 0.15))
+        delta = self.configuration.q[7:] - q_warm[7:]
+        continuity = float(np.dot(delta, delta)) * continuity_weight
+        total = observation_sq + posture_sq + continuity
+        return total, observation_sq, continuity
 
     def _bones(self, p: np.ndarray) -> np.ndarray:
         b = []
@@ -197,6 +322,8 @@ class KeypointIKRetargeter:
 
     def _solve_wrists(self, q: np.ndarray, sides: list[str]) -> np.ndarray:
         """Turn only the wrist roll/pitch/yaw joints of `sides` towards the hand frames (damped Gauss-Newton)."""
+        if not self._has_wrists or int(self.cfg["wrist_iterations"]) <= 0:
+            return q.copy()
         m, d = self.model, self._wd
         d.qpos[:] = q
         lam = float(self.cfg["wrist_damping"])
@@ -214,6 +341,10 @@ class KeypointIKRetargeter:
         return d.qpos.copy()
 
     # ---- one frame -----------------------------------------------------------------------------------------------
+    def _prepare_target_tasks(self, points, t_s, pelvis_rotation, torso_rotation, pelvis_position, relative_targets):
+        """Extension point for opt-in experiments; the default reference and tasks are unchanged."""
+        return pelvis_position, relative_targets, []
+
     def step(self, points: np.ndarray, t_s: float) -> KeypointIKFrame:
         t0 = time.perf_counter()
         p = np.asarray(points, np.float64)
@@ -243,11 +374,11 @@ class KeypointIKRetargeter:
             self.configuration.update(q)
             self._q_prev = self._q_stance = q
             self._t_calib_end = float(t_s)
-            return KeypointIKFrame(q=q, dq=np.zeros(35), observed=False, held_groups=("calibration",),
+            return KeypointIKFrame(q=q, dq=np.zeros(self.nv), observed=False, held_groups=("calibration",),
                                    solve_ms=1e3 * (time.perf_counter() - t0))
         if not trunk_ok:
             q = self._q_prev.copy()
-            return KeypointIKFrame(q=q, dq=np.zeros(35), observed=False, held_groups=("trunk",),
+            return KeypointIKFrame(q=q, dq=np.zeros(self.nv), observed=False, held_groups=("trunk",),
                                    solve_ms=1e3 * (time.perf_counter() - t0))
 
         held: list[str] = []
@@ -259,7 +390,7 @@ class KeypointIKRetargeter:
         R_p = _frame_zx((1.0 - beta) * _Z + beta * trunk_up, lh - rh)
         if R_t is None or R_p is None:
             q = self._q_prev.copy()
-            return KeypointIKFrame(q=q, dq=np.zeros(35), observed=False, held_groups=("trunk",),
+            return KeypointIKFrame(q=q, dq=np.zeros(self.nv), observed=False, held_groups=("trunk",),
                                    solve_ms=1e3 * (time.perf_counter() - t0))
 
         seg = {}
@@ -318,31 +449,55 @@ class KeypointIKRetargeter:
         sole_r = [(rel[f"{s}_foot"] + self.sole_local @ self._foot_R[s].T)[:, 2].min() for s in SIDES if f"{s}_foot" in rel]
         z = self._clear - min(sole_r) if sole_r else float(self._q_prev[2])
         P = np.array([xy[0], xy[1], z])
+        P, rel, extra_tasks = self._prepare_target_tasks(p, t_s, R_p, R_t, P, rel)
 
         c = self.cfg
         SE3 = lambda R, t: mink.SE3.from_rotation_and_translation(mink.SO3.from_matrix(R), t)
         self.t_pelvis.set_target(SE3(R_p, P))
         self.t_torso.set_target(SE3(R_t, P + torso_rel))
-        tasks = [self.t_pelvis, self.t_torso, self.t_posture]
+        tasks = [self.t_pelvis, self.t_torso, self.t_posture, *extra_tasks]
         pos_only = []                                   # (task, body, target position) of the position-only tasks
         for s in SIDES:
             if f"{s}_knee" in rel:
                 self.t_foot[s].set_target(SE3(self._foot_R[s], P + rel[f"{s}_foot"]))
-                pos_only.append((self.t_knee[s], f"{s}_knee_link", P + rel[f"{s}_knee"]))
+                pos_only.append((self.t_knee[s], self._b_knee[s], P + rel[f"{s}_knee"]))
                 tasks += [self.t_knee[s], self.t_foot[s]]
             if f"{s}_elbow" in rel:
-                pos_only += [(self.t_elbow[s], f"{s}_elbow_link", P + rel[f"{s}_elbow"]),
-                             (self.t_hand[s], f"{s}_wrist_yaw_link", P + rel[f"{s}_hand"])]
+                pos_only += [(self.t_elbow[s], self._b_elbow[s], P + rel[f"{s}_elbow"]),
+                             (self.t_hand[s], self._b_hand[s], P + rel[f"{s}_hand"])]
                 tasks += [self.t_elbow[s], self.t_hand[s]]
-        for _ in range(int(c["ik_iterations"])):
-            # mink's frame error is the SE(3) log, whose translation part is coupled to the rotation error even at
-            # zero orientation cost; a target rotation equal to the current one makes it a pure position error
-            for task, body, pos in pos_only:
-                cur = self.configuration.get_transform_frame_to_world(body, "body").rotation()
-                task.set_target(mink.SE3.from_rotation_and_translation(cur, pos))
-            v = mink.solve_ik(self.configuration, tasks, 1.0, solver="daqp", damping=float(c["ik_damping"]),
-                              limits=self.limits)
-            self.configuration.integrate_inplace(v, 1.0)
+        q_warm = self.configuration.q.copy()
+        candidates = self._branch_seed_patterns(q_warm)
+        evaluated = []
+        for branch_name, seed in candidates:
+            self.configuration.update(seed)
+            for _ in range(int(c["ik_iterations"])):
+                # Mink's SE(3) log couples translation with rotation unless position-only targets use current FK rotation.
+                for task, body, pos in pos_only:
+                    cur = self.configuration.get_transform_frame_to_world(body, "body").rotation()
+                    task.set_target(mink.SE3.from_rotation_and_translation(cur, pos))
+                v = mink.solve_ik(self.configuration, tasks, 1.0, solver="daqp", damping=float(c["ik_damping"]),
+                                  limits=self.limits)
+                self.configuration.integrate_inplace(v, 1.0)
+            q_candidate = self.configuration.q.copy()
+            total_cost, observation_cost, continuity_cost = self._ik_candidate_cost(tasks, q_warm)
+            evaluated.append((total_cost, branch_name, q_candidate, observation_cost, continuity_cost))
+
+        switch_penalty = float(c.get("ik_branch_switch_penalty", 0.02))
+        ranked = [
+            (row[0] + (switch_penalty if row[1] != self._last_ik_branch else 0.0), row)
+            for row in evaluated
+        ]
+        selected = min(ranked, key=lambda item: item[0])[1]
+        warm_result = next(row for row in evaluated if row[1] == "warm_start")
+        switch_margin = float(c.get("ik_branch_switch_margin", 0.0))
+        selected_rank = next(score for score, row in ranked if row[1] == selected[1])
+        warm_rank = next(score for score, row in ranked if row[1] == "warm_start")
+        if selected[1] != "warm_start" and selected_rank > warm_rank - switch_margin:
+            selected = warm_result
+        _, branch_name, q_solution, observation_cost, continuity_cost = selected
+        self.configuration.update(q_solution)
+        self._last_ik_branch = branch_name
         q = self._solve_wrists(self.configuration.q, [s for s in SIDES if f"{s}_elbow" in rel])
         self.configuration.update(q)
         if not np.isfinite(q).all():
@@ -360,7 +515,7 @@ class KeypointIKRetargeter:
             q_out[[4, 5, 6, 3]] = (r[0] * Rotation.from_rotvec(a * (r[0].inv() * r[1]).as_rotvec())).as_quat()
             q = q_out
             held.append("blend")
-        dq = np.zeros(35)
+        dq = np.zeros(self.nv)
         if dt is not None and self._q_prev is not None:
             dq[:3] = (q[:3] - self._q_prev[:3]) / dt
             r0, r1 = (Rotation.from_quat(x[[4, 5, 6, 3]]) for x in (self._q_prev, q))
@@ -368,7 +523,11 @@ class KeypointIKRetargeter:
             dq[6:] = (q[7:] - self._q_prev[7:]) / dt
         self._q_prev = q
         return KeypointIKFrame(q=q, dq=dq, observed=True, held_groups=tuple(held),
-                               solve_ms=1e3 * (time.perf_counter() - t0))
+                               solve_ms=1e3 * (time.perf_counter() - t0),
+                               ik_branch=branch_name,
+                               ik_task_cost=float(np.sqrt(max(observation_cost, 0.0))),
+                               ik_continuity_cost=float(np.sqrt(max(continuity_cost, 0.0))),
+                               ik_candidates_evaluated=len(evaluated))
 
 
 def causal_upsample(t_slot: np.ndarray, q: np.ndarray, dq: np.ndarray, observed: np.ndarray, mode: str,
@@ -391,12 +550,67 @@ def causal_upsample(t_slot: np.ndarray, q: np.ndarray, dq: np.ndarray, observed:
     return t_tick, qo, dqo, observed[k]
 
 
-def retarget_sequence(points: np.ndarray, t_s: np.ndarray, retargeter: KeypointIKRetargeter | None = None) -> dict:
-    """Offline driver that feeds frames one at a time (identical to streaming): returns q (T,36), dq (T,35),
+def retarget_sequence(
+    points: np.ndarray,
+    t_s: np.ndarray,
+    retargeter: KeypointIKRetargeter | None = None,
+    *,
+    robot: str | None = None,
+) -> dict:
+    """Offline driver that feeds frames one at a time (identical to streaming): returns q (T,7+n_dof), dq (T,6+n_dof),
     observed (T,), solve_ms (T,), held (list of tuples)."""
-    r = retargeter or KeypointIKRetargeter()
+    r = retargeter or KeypointIKRetargeter(robot=robot)
     r.reset()
     out = [r.step(p, float(t)) for p, t in zip(np.asarray(points, np.float64), np.asarray(t_s, np.float64))]
     return dict(q=np.array([f.q for f in out]), dq=np.array([f.dq for f in out]),
                 observed=np.array([f.observed for f in out]), solve_ms=np.array([f.solve_ms for f in out]),
                 held=[f.held_groups for f in out])
+
+
+_ROBAN_TO_HEFT_ORDER = np.array([ROBAN_21_JOINTS.index(n) for n in ROBAN_HEFT_21_JOINTS], dtype=np.int32)
+_HEFT_TO_ROBAN_ORDER = np.argsort(_ROBAN_TO_HEFT_ORDER)
+_HEFT_JOINT_DIRECTION = np.array([-1.0] + [1.0] * 20, dtype=np.float64)
+
+
+def export_heft_deploy_csv(path: str | Path, q_traj_28: np.ndarray, dq_traj_27: np.ndarray | None = None) -> Path:
+    """Export a Roban S17 trajectory (q: (T,28) in ROBAN_21_JOINTS order, dq: (T,27)) to a 49-column LejuLab HEFT CSV.
+
+    Applies the ROBAN_21_JOINTS -> ROBAN_HEFT_21_JOINTS permutation and the `waist_yaw_joint` sign flip (`-1`)
+    expected by `HeftRLController` / `MotionTrajectory`.
+    """
+    q = np.asarray(q_traj_28, dtype=np.float64)
+    if q.ndim != 2 or q.shape[1] != 28:
+        raise ValueError(f"Expected q_traj_28 of shape (T, 28), got {q.shape}")
+    if dq_traj_27 is None:
+        dq_joints = np.zeros((q.shape[0], 21), dtype=np.float64)
+    else:
+        dq = np.asarray(dq_traj_27, dtype=np.float64)
+        if dq.shape != (q.shape[0], 27):
+            raise ValueError(f"Expected dq_traj_27 of shape ({q.shape[0]}, 27), got {dq.shape}")
+        dq_joints = dq[:, 6:]
+    jpos_heft = q[:, 7:][:, _ROBAN_TO_HEFT_ORDER] * _HEFT_JOINT_DIRECTION
+    jvel_heft = dq_joints[:, _ROBAN_TO_HEFT_ORDER] * _HEFT_JOINT_DIRECTION
+    mat = np.hstack([q[:, :7], jpos_heft, jvel_heft])
+    header_cols = (
+        ["body_pos_x", "body_pos_y", "body_pos_z", "body_quat_w", "body_quat_x", "body_quat_y", "body_quat_z"]
+        + [f"joint_pos{i:02d}" for i in range(21)]
+        + [f"joint_vel_{i:02d}" for i in range(21)]
+    )
+    dst = Path(path)
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    np.savetxt(dst, mat, delimiter="\t", header="\t".join(header_cols), comments="")
+    return dst
+
+
+def load_heft_deploy_csv(path: str | Path) -> tuple[np.ndarray, np.ndarray]:
+    """Load a 49-column LejuLab HEFT deploy CSV into S6 layout `(q (T, 28), dq (T, 27))` in ROBAN_21_JOINTS order."""
+    raw = np.loadtxt(Path(path), delimiter="\t", skiprows=1, ndmin=2)
+    if raw.shape[1] != 49:
+        raise ValueError(f"Expected 49-column HEFT deploy CSV, got {raw.shape}")
+    pos = raw[:, 0:3]
+    quat = raw[:, 3:7]
+    jpos_roban = (raw[:, 7:28] * _HEFT_JOINT_DIRECTION)[:, _HEFT_TO_ROBAN_ORDER]
+    jvel_roban = (raw[:, 28:49] * _HEFT_JOINT_DIRECTION)[:, _HEFT_TO_ROBAN_ORDER]
+    q = np.hstack([pos, quat, jpos_roban])
+    dq = np.hstack([np.zeros((raw.shape[0], 6), dtype=np.float64), jvel_roban])
+    return q, dq

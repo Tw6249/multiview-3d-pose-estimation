@@ -14,7 +14,7 @@ Output:
     - `solve_time_ms`: float (wall-clock execution time in milliseconds).
 Failure Behavior:
   - Any joint with fewer than 2 valid cameras (c >= c_min) outputs `np.nan` for that joint without crashing.
-  - Inter-frame displacement exceeding `max_displacement_m = 0.25 m` (at 100 Hz) is directionally clamped.
+  - Inter-frame displacement is bounded either by the legacy fixed distance or by a configured speed times actual `dt`.
 """
 from __future__ import annotations
 
@@ -510,11 +510,19 @@ class MultiViewTriangulator:
         reproj_outlier_threshold_px: float = 15.0,
         max_displacement_m: float = 0.25,
         use_consensus_search: bool = True,
+        max_joint_speed_m_s: float | None = None,
+        max_history_gap_s: float = 0.15,
     ) -> None:
         self.c_min = float(c_min)
         self.reproj_outlier_threshold_px = float(reproj_outlier_threshold_px)
         self.max_displacement_m = float(max_displacement_m)
         self.use_consensus_search = bool(use_consensus_search)
+        self.max_joint_speed_m_s = None if max_joint_speed_m_s is None else float(max_joint_speed_m_s)
+        if self.max_joint_speed_m_s is not None and self.max_joint_speed_m_s <= 0.0:
+            raise ValueError("max_joint_speed_m_s must be positive")
+        self.max_history_gap_s = float(max_history_gap_s)
+        if self.max_history_gap_s <= 0.0:
+            raise ValueError("max_history_gap_s must be positive")
         self.prev_points_3d: np.ndarray = np.full((27, 3), np.nan, dtype=np.float64)
         self.has_prev: bool = False
         self._warmup()
@@ -548,6 +556,7 @@ class MultiViewTriangulator:
         keypoints_2d: np.ndarray,
         proj_matrices: np.ndarray,
         update_history: bool = True,
+        dt_s: float | None = None,
     ) -> TriangulationResult:
         kp2d = np.ascontiguousarray(keypoints_2d, dtype=np.float64)
         P_mats = np.ascontiguousarray(proj_matrices, dtype=np.float64)
@@ -555,16 +564,24 @@ class MultiViewTriangulator:
             raise ValueError(f"Expected keypoints_2d of shape (N_cams, 27, 3), got {kp2d.shape}")
         if P_mats.shape != (kp2d.shape[0], 3, 4):
             raise ValueError(f"Expected proj_matrices of shape ({kp2d.shape[0]}, 3, 4), got {P_mats.shape}")
+        if self.max_joint_speed_m_s is not None:
+            if dt_s is None or not np.isfinite(dt_s) or dt_s <= 0.0:
+                raise ValueError("positive dt_s is required when max_joint_speed_m_s is configured")
+            max_displacement_m = self.max_joint_speed_m_s * float(dt_s)
+            use_history = self.has_prev and float(dt_s) <= self.max_history_gap_s
+        else:
+            max_displacement_m = self.max_displacement_m
+            use_history = self.has_prev
 
         t0 = time.perf_counter()
         pts_3d, inlier_counts, reproj_px, covs_m2 = triangulate_frame_numba(
             kp2d,
             P_mats,
             self.prev_points_3d,
-            self.has_prev,
+            use_history,
             self.c_min,
             self.reproj_outlier_threshold_px,
-            self.max_displacement_m,
+            max_displacement_m,
             self.use_consensus_search,
         )
         solve_ms = (time.perf_counter() - t0) * 1000.0

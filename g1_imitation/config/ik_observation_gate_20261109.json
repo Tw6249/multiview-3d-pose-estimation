@@ -1,0 +1,13 @@
+{
+  "status": "exploratory simulation; no deployment claim or production default change",
+  "takes": ["Take_002", "Take_006", "Take_007", "Take_008", "Take_012"],
+  "variants": ["baseline", "direction_hold", "arm_freeze"],
+  "length_ratio_min": 0.55,
+  "length_ratio_max": 1.45,
+  "min_calibration_samples": 3,
+  "swivel_min_sin_bend": 0.25,
+  "evaluation_start_s": 1.2,
+  "control_dt_s": 0.02,
+  "preview_s": 0.0,
+  "notes": "Thresholds inherited from exploratory trials. All five clips have been inspected; none is a new blind test. Bone length validity does not establish correct direction or full orientation."
+}

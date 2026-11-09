@@ -1,0 +1,19 @@
+{
+  "status": "exploratory simulation; no production default change, no deployment claim",
+  "takes": ["Take_002", "Take_006", "Take_007", "Take_008", "Take_012"],
+  "control_dt_s": 0.02,
+  "evaluation_start_s": 1.2,
+  "variants": ["baseline", "tick50", "tick50_history", "baseline_lowlat", "tick50_history_lowlat", "tick50_history_lowlat_p180"],
+  "variant_specs": {
+    "baseline": {"reference": "slot30_hold", "policy": "sonic_v11", "preview_s": 0.0},
+    "tick50": {"reference": "tick50", "policy": "sonic_v11", "preview_s": 0.0},
+    "tick50_history": {"reference": "tick50_history", "policy": "sonic_v11", "preview_s": 0.0},
+    "baseline_lowlat": {"reference": "slot30_hold", "policy": "sonic_low_latency", "preview_s": 0.0},
+    "tick50_history_lowlat": {"reference": "tick50_history", "policy": "sonic_low_latency", "preview_s": 0.0},
+    "tick50_history_lowlat_p180": {"reference": "tick50_history", "policy": "sonic_low_latency", "preview_s": 0.18}
+    ,"tick50_predict": {"reference": "tick50_predict", "policy": "sonic_v11", "preview_s": 0.0},
+    "tick50_predict_lowlat": {"reference": "tick50_predict", "policy": "sonic_low_latency", "preview_s": 0.0}
+  },
+  "history_config": "g1_imitation/config/structured_history_20261109.json",
+  "notes": "History limits 8 rad/s and 60 rad/s^2 are experimental, fixed before this run. preview_s > 0 equals an added human-to-robot delay; end-to-end scores shift physics by that delay. All clips were inspected before; no blind test."
+}

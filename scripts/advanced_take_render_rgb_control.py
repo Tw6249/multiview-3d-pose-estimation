@@ -89,12 +89,12 @@ class Skel3D:
         self.Rz = np.array([[np.cos(y), -np.sin(y), 0], [np.sin(y), np.cos(y), 0], [0, 0, 1]])
         self.cp, self.sp, self.s, self.c = np.cos(p), np.sin(p), s, np.zeros(3)
 
-    def pix(self, X):
+    def pix(self, X, w=PW):
         v = (np.asarray(X) - self.c) @ self.Rz.T
-        return np.stack([PW * 0.5 + v[..., 0] * self.s, PH * 0.80 - (v[..., 2] * self.cp + v[..., 1] * self.sp) * self.s], -1)
+        return np.stack([w * 0.5 + v[..., 0] * self.s, PH * 0.80 - (v[..., 2] * self.cp + v[..., 1] * self.sp) * self.s], -1)
 
-    def render(self, X, trail):
-        img = np.full((PH, PW, 3), (250, 247, 244), np.uint8)
+    def render(self, X, trail, w=PW):
+        img = np.full((PH, w, 3), (250, 247, 244), np.uint8)
         pel = 0.5 * (X[11] + X[12])
         if np.isfinite(pel).all():
             self.c = np.array([pel[0], pel[1], 0.0])
@@ -102,12 +102,12 @@ class Skel3D:
         for k in range(14):
             for a, b in (([g0[0] + 0.5 * k, g0[1], 0], [g0[0] + 0.5 * k, g0[1] + 6.5, 0]),
                          ([g0[0], g0[1] + 0.5 * k, 0], [g0[0] + 6.5, g0[1] + 0.5 * k, 0])):
-                pa, pb = self.pix(np.array(a, float)), self.pix(np.array(b, float))
+                pa, pb = self.pix(np.array(a, float), w=w), self.pix(np.array(b, float), w=w)
                 cv2.line(img, tuple(pa.astype(int)), tuple(pb.astype(int)), (226, 220, 212), 1, cv2.LINE_AA)
         tr = trail[np.isfinite(trail).all(1)]
         if len(tr) > 1:
-            cv2.polylines(img, [self.pix(np.c_[tr, np.zeros(len(tr))]).astype(np.int32)], False, (180, 170, 160), 2, cv2.LINE_AA)
-        draw27(img, self.pix(X), th=3)
+            cv2.polylines(img, [self.pix(np.c_[tr, np.zeros(len(tr))], w=w).astype(np.int32)], False, (180, 170, 160), 2, cv2.LINE_AA)
+        draw27(img, self.pix(X, w=w), th=3)
         return img
 
 

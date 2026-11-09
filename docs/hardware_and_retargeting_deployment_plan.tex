@@ -70,7 +70,7 @@
 \fancyhf{}
 \fancyhead[L]{\footnotesize\color{TextMuted}多视角无标记视觉采集系统硬件采购报价单}
 \fancyhead[R]{\footnotesize\color{TextMuted}海康工业相机自建方案 vs.\ 青瞳视觉 CHINGMU R3 方案}
-\fancyfoot[L]{\footnotesize\color{TextMuted}报价更新日期：2026-10-29}
+\fancyfoot[L]{\footnotesize\color{TextMuted}报价更新日期：2026-11-06}
 \fancyfoot[C]{}
 \fancyfoot[R]{\footnotesize\color{TextMuted}第 \thepage\ 页 / 共 \pageref{LastPage} 页}
 \renewcommand{\headrulewidth}{0.4pt}
@@ -220,10 +220,10 @@
 \textbf{4 台基准相机小计} & \textbf{相机 ¥7,900.00 + 镜头 ¥5,456.00 = ¥13,356.00}\newline {\scriptsize （扩展至 6 台：相机 ¥11,850 + 镜头 ¥8,184 = ¥20,034.00）} & \textbf{约 ¥128,000.00}（扩展至 6 台约为 ¥192,000.00） \\
 \rowcolor{RowAltBg}
 \textbf{配套网络与同步件} & \textbf{¥1,889.60}（H3C 万兆交换机 ¥799 + Intel X550 万兆网卡 ¥765 + 硬同步件 ¥325.60；6 机为 ¥1,977.40） & \textbf{待销售报价}（交换机与万兆网卡可京东自购 ¥1,564；\texttt{CMLock} 同步盒待报价） \\
-\textbf{通用支架与补光灯} & \textbf{约 ¥3,000}（标定板 + 4盏灯 + 4套三脚架；6 机扩展约 ¥3,600） & \textbf{约 ¥2,500 -- ¥3,600}（被动 T 杆/L 尺待确认是否赠送） \\
+\textbf{标定板、支架与网线} & \textbf{京东选定直采}（$12\times 9$ 漫反射棋盘格标定板 \texttt{Q12-600-45} $\times 1$ + $1.8\text{\,m}$ 工业相机三脚架 $\times 4$ + 山泽 \texttt{GD6A} 超六类万兆纯铜网线 $10\text{\,m}\times 5$ / $15\text{\,m}\times 2$；前期复用实验室照明暂不采购补光灯） & \textbf{约 ¥2,500 -- ¥3,600}（被动 T 杆/L 尺待确认是否赠送；三脚架与网线可复用同款京东链接） \\
 \midrule
 \rowcolor{BoxBgTeal}
-\textbf{\color{AccentTeal}全套总价}\newline {\scriptsize (4 机基准 / 6 机扩展)} & \textbf{\color{AccentTeal}4 机基准约 ¥18,245.60（含 13\% 增值税专票）}\newline {\scriptsize 6 机扩展约 ¥25,611.40（含 13\% 增值税专票）} & \textbf{\color{CrimsonAlert}4 机基准 ¥128,000 + 待报价配件}\newline {\scriptsize 6 机扩展 ¥192,000 + 待报价配件} \\
+\textbf{\color{AccentTeal}全套总价}\newline {\scriptsize (4 机基准 / 6 机扩展)} & \textbf{\color{AccentTeal}4 机基准约 ¥16,200--¥16,800（含 13\% 增值税专票）}\newline {\scriptsize 6 机扩展约 ¥23,200--¥23,800（含 13\% 增值税专票）} & \textbf{\color{CrimsonAlert}4 机基准 ¥128,000 + 待报价配件}\newline {\scriptsize 6 机扩展 ¥192,000 + 待报价配件} \\
 \bottomrule
 \end{tabularx}
 \caption{方案一（海康自建方案）与方案二（青瞳 R3 方案）总价对比表}
@@ -238,7 +238,7 @@
 \begin{table}[H]
 \centering
 \footnotesize
-\renewcommand{\arraystretch}{1.26}
+\renewcommand{\arraystretch}{1.14}
 \begin{tabularx}{\textwidth}{@{} C{0.65cm} L{2.60cm} Y C{1.05cm} L{2.60cm} L{3.60cm} @{}}
 \toprule
 \rowcolor{HeaderBg}
@@ -252,18 +252,33 @@
 \textbf{04} & \textbf{主机 PCIe 万兆网卡}\newline EB-LINK \texttt{Intel X550-T1} & 安装在工作站主板 PCIe 插槽，对接交换机万兆口接收 4--6 路相机图像流，与主板自带千兆口（直连机器人）物理隔离。 & \textbf{1 张} & 单价：\textbf{¥765.00}\newline {\scriptsize (含 13\% 增值税专票)}\newline 小计：\textbf{¥765.00} & \textbf{EB-LINK 京东自营旗舰店}\newline \href{https://item.jd.com/100020712289.html}{京东链接 (\texttt{100020712289})}\newline {\scriptsize 备选万兆通：\href{https://item.jd.com/100343005162.html}{\texttt{100343005162}} (¥799)}\newline {\scriptsize 双口 X550-2T：\href{https://item.jd.com/100097756203.html}{\texttt{100097756203}} (¥820)} \\
 \textbf{05} & \textbf{硬件同步触发线与脉冲源}\newline 6芯触发线 $\times 4$ + STM32 & 由 STM32 输出 $50/60\text{\,Hz}$ 同步方波，经 6 芯航插线并联触发 4--6 台相机同时曝光（同步误差 $<0.1\text{\,ms}$）。 & \textbf{1 套}\newline {\scriptsize (基准4根)}\newline {\scriptsize (扩展6根)} & 触发线：\textbf{¥43.90}$\times 4$\newline 模块：\textbf{¥150.00}\newline 4机基准：\textbf{¥325.60}\newline {\scriptsize (6机扩展：¥413.40)} & \textbf{洛克康官方旗舰店 (5m线)}\newline \href{https://item.jd.com/10022815039131.html}{京东链接 (\texttt{10022815039131})}\newline {\scriptsize 海康原装 1m 线：\href{https://item.jd.com/10086982437155.html}{\texttt{10086982437155}} (¥49)} \\
 \rowcolor{RowAltBg}
-\textbf{06} & \textbf{空间标定板与补光灯}\newline A1 ChArUco 板 + 4盏常亮灯 & ChArUco 标定板用于标定多相机内外参并对齐 $Z=0$ 地面；4 盏 100W 无频闪 LED 常亮灯用于补充短曝光进光量。 & \textbf{1 套} & 标定板：约 ¥300\newline 4盏灯：约 ¥1,500\newline 小计：\textbf{约 ¥1,800} & 通用摄影与标定辅材（定制 A1 铝塑哑光棋盘格/ChArUco 板 + 4 盏 100W 摄影常亮灯） \\
-\textbf{07} & \textbf{相机三脚架云台与网线}\newline 4套三脚架 + Cat6A 网线 & 重型三脚架（配三维齿轮云台）将相机固定于场地四角；$15\text{\,m}$ 超六类屏蔽网线用于传输 PoE 供电与图像数据。 & \textbf{4 套}\newline {\scriptsize (扩展6套)} & 三脚架：约 ¥1,000\newline 网线：约 ¥200\newline 4机基准：\textbf{约 ¥1,200}\newline {\scriptsize (6机扩展：约 ¥1,800)} & 通用摄影器材与网络线材（承重 $\ge 5\text{\,kg}$ 三脚架云台 + $15\text{\,m}$ Cat6A 屏蔽网线） \\
+\textbf{06} & \textbf{高精度棋盘格标定板}\newline \texttt{Q12-600-45}（$12\times 9$ 格）\newline {\scriptsize ($600\times 450\text{\,mm}$, 单格 $45\text{\,mm}$)} & 不反光漫反射黑白棋盘格标定板（优先选\textbf{【铝基板】}，不透明），用于标定多相机内外参、6\,mm 镜头畸变并对齐物理地面 $Z=0$。 & \textbf{1 块} & 铝基板款：\textbf{约 ¥200--¥300}\newline {\scriptsize (玻璃基板款：¥693.02)} & \textbf{京东标定板专营}\newline \href{https://3.cn/3aytG-qq?jkl=@T94kCClENKUq@}{京东链接 (\texttt{3.cn/3aytG-qq})}\newline {\scriptsize 口令：\texttt{CA1565}（选 \texttt{Q12-600-45}）} \\
+\textbf{07} & \textbf{工业相机三脚架}\newline 铝合金便携支架 \textbf{1.8米}\newline {\scriptsize (配海康相机底座与云台)} & 将 4 台海康工业相机固定于场地四角（主力机位高度 $1.45\sim 1.75\text{\,m}$），需备注配海康 $29\times 29\text{\,mm}$ 机身 M3 转接安装底座。 & \textbf{4 个}\newline {\scriptsize (扩展6个)} & 4个基准：\textbf{约 ¥400--¥600}\newline {\scriptsize (以京东实时结算价为准)} & \textbf{京东工业相机支架}\newline \href{https://3.cn/3a-yocT8?jkl=@Z9WlY0CsBf8s@}{京东链接 (\texttt{3.cn/3a-yocT8})}\newline {\scriptsize 口令：\texttt{MF3390}（必选规格：\textbf{1.8米}）} \\
+\rowcolor{RowAltBg}
+\textbf{08} & \textbf{超六类万兆纯铜网线}\newline 山泽 \texttt{CAT6A} 8芯双绞\newline \texttt{GD6A100} / \texttt{GD6A150} & 8 芯纯无氧铜双绞屏蔽圆线（$10\text{\,Gbps}$ / $500\text{\,MHz}$），同时承担千兆 PoE 供电、交换机至主机万兆上联及工作站至 G1 机器人连接。 & \textbf{共 7 根}\newline {\scriptsize $10\text{\,m}\times 5$}\newline {\scriptsize $15\text{\,m}\times 2$} & $10\text{\,m}$ 款 $\times 5$ 根\newline $15\text{\,m}$ 款 $\times 2$ 根\newline 小计：\textbf{约 ¥260--¥350} & \textbf{山泽京东自营旗舰店}\newline \href{https://3.cn/3ax-HTAK?jkl=@F3J7l31m6edo@}{京东链接 (\texttt{3.cn/3ax-HTAK})}\newline {\scriptsize 口令：\texttt{CA1565}（选\textbf{超六类万兆纯铜款}）} \\
 \midrule
 \rowcolor{BoxBgTeal}
 \multicolumn{4}{@{}l}{\textbf{\color{AccentTeal}序号 01--05 京东采购项小计（含 13\% 增值税专票）}} & \textbf{\color{AccentTeal}4机基准：¥15,245.60} & \textbf{6 机扩展：¥22,011.40} \\
 \rowcolor{HeaderBg}
-\multicolumn{4}{@{}l}{\textbf{方案一全套总计（序号 01--07，含 13\% 增值税专票）}} & \textbf{4机基准：约 ¥18,245.60} & \textbf{6 机扩展：约 ¥25,611.40} \\
+\multicolumn{4}{@{}l}{\textbf{方案一全套总计（序号 01--08，含全部京东直采辅材）}} & \textbf{4机基准：约 ¥16,200--¥16,800} & \textbf{6 机扩展：约 ¥23,200--¥23,800} \\
 \bottomrule
 \end{tabularx}
 \caption{方案一（海康工业相机自建方案）设备清单与报价表}
 \label{tab:hik_bom}
 \end{table}
+
+\vspace{-6pt}
+\begin{keybox}[top=4pt, bottom=4pt]{辅材（序号 06--08）京东下单口令速查（可直接复制打开京东 App）}
+\scriptsize
+\begin{itemize}
+  \item \textbf{序号 06 棋盘格标定板}（下单规格：\textbf{\texttt{12x9格 / Q12-600-45（铝基板）}}，数量：\textbf{1 块}）：\\
+  \texttt{【京东】\href{https://3.cn/3aytG-qq?jkl=@T94kCClENKUq@}{https://3.cn/3aytG-qq?jkl=@T94kCClENKUq@} CA1565 「高精度12x9相机视觉标定板不反光」}
+  \item \textbf{序号 07 工业相机三脚架}（下单规格：\textbf{\texttt{1.8米}}，备注配海康相机底座，数量：\textbf{4 个}）：\\
+  \texttt{【京东】\href{https://3.cn/3a-yocT8?jkl=@Z9WlY0CsBf8s@}{https://3.cn/3a-yocT8?jkl=@Z9WlY0CsBf8s@} MF3390 「角架适用于工业机铝合金便携1.8」}
+  \item \textbf{序号 08 山泽超六类万兆纯铜网线}（下单规格：\textbf{\texttt{超六类万兆纯铜款}}，选 \textbf{\texttt{10米}} 买 \textbf{5 根} + \textbf{\texttt{15米}} 买 \textbf{2 根}，共 \textbf{7 根}）：\\
+  \texttt{【京东】\href{https://3.cn/3ax-HTAK?jkl=@F3J7l31m6edo@}{https://3.cn/3ax-HTAK?jkl=@F3J7l31m6edo@} CA1565 「山泽 超六类万兆纯铜网线10米 CAT6A类成品线 家用电脑网络宽带工程跳线兼容千兆8芯2.5g连接线GD6A100」}
+\end{itemize}
+\end{keybox}
 
 % ==================== 第三章：方案二（青瞳视觉 R3）报价单 ====================
 \clearpage

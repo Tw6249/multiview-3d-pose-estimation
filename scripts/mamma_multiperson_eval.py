@@ -126,7 +126,11 @@ def run_s1b(names, P, frames, tracker, click):
         if tri is not None:
             r2 = tri.process_frame(res.keypoints_2d, P)
             raw[k], reproj[k] = r2.points_3d_m, r2.reprojection_errors_px
-            smooth[k] = flt.process_frame(r2.points_3d_m, dt=1.0 / FPS).points_3d_smooth_m
+            smooth[k] = flt.process_frame(
+                r2.points_3d_m,
+                timestamp_s=float(fr["timestamp_ns"] * 1e-9),
+                covariance_m2=r2.point_covariances_m2,
+            ).points_3d_smooth_m
         status.append(res.status)
         views.append(res.target_views)
         boxes.append(res.crop_bboxes_xyxy)
@@ -172,7 +176,11 @@ def run_baseline(names, P, frames):
         r1 = tracker.process_frame(imgs, P, dt=1.0 / FPS)
         s1_ms.append((time.perf_counter() - t0) * 1e3)
         r2 = tri.process_frame(r1.keypoints_2d, P)
-        r3 = flt.process_frame(r2.points_3d_m, dt=1.0 / FPS)
+        r3 = flt.process_frame(
+            r2.points_3d_m,
+            timestamp_s=float(fr["timestamp_ns"] * 1e-9),
+            covariance_m2=r2.point_covariances_m2,
+        )
         tracker.update_3d_state(r3.points_3d_smooth_m, dt=1.0 / FPS)
         raw[k], smooth[k], reproj[k] = r2.points_3d_m, r3.points_3d_smooth_m, r2.reprojection_errors_px
         status.append(r1.mode_used)
@@ -201,7 +209,12 @@ def timing_ab(names, P, frames, tracker, click, reps):
                 if which == 0:
                     r1 = base.process_frame(imgs, P, dt=1.0 / FPS)
                     a_ms.append((time.perf_counter() - t0) * 1e3)
-                    r3 = flt.process_frame(tri.process_frame(r1.keypoints_2d, P).points_3d_m, dt=1.0 / FPS)
+                    r2 = tri.process_frame(r1.keypoints_2d, P)
+                    r3 = flt.process_frame(
+                        r2.points_3d_m,
+                        timestamp_s=float(fr["timestamp_ns"] * 1e-9),
+                        covariance_m2=r2.point_covariances_m2,
+                    )
                     base.update_3d_state(r3.points_3d_smooth_m, dt=1.0 / FPS)
                 else:
                     trk.step(extract_person_candidates(tracker, imgs), P, fr["timestamp_ns"] * 1e-9)
@@ -213,10 +226,10 @@ def timing_ab(names, P, frames, tracker, click, reps):
 
 def closed_loop(smooth):
     """S4+S5 keypoint IK (causal, 30 Hz slots) -> 50 Hz hold -> S6 SONIC physics (simulation only)."""
+    from g1_imitation.core.adv_eval import anchor_heading
     from g1_imitation.core.constants import load_config
     from g1_imitation.core.s45c_keypoint_ik import KeypointIKRetargeter, causal_upsample, retarget_sequence
     from g1_imitation.core.s6_mujoco_closed_loop import MuJoCoClosedLoopVerifier, SonicPolicy
-    from advanced_take_gmr_control import anchor_heading
     first = int(np.argmax(np.isfinite(smooth).all(axis=(1, 2))))
     pts = smooth[first:]
     t_slot = np.arange(len(pts)) / FPS

@@ -116,7 +116,11 @@ def run_s1b(take: str, c: dict, P: np.ndarray, grid: np.ndarray, idx: dict) -> d
         if tri is not None:
             r = tri.process_frame(res.keypoints_2d, P)
             raw[k] = r.points_3d_m
-            smooth[k] = flt.process_frame(r.points_3d_m).points_3d_smooth_m
+            smooth[k] = flt.process_frame(
+                r.points_3d_m,
+                timestamp_s=float(grid[k] / BVH_HZ),
+                covariance_m2=r.point_covariances_m2,
+            ).points_3d_smooth_m
         status.append(res.status)
         nviews.append(len(res.target_views))
     return dict(raw=raw, smooth=smooth, status=status, nviews=nviews, picked_xy=picked_xy)

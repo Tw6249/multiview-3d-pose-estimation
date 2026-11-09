@@ -85,3 +85,31 @@ def test_s6_waist_bend_strict_per_motion_skating_bound(ten_motion_reports) -> No
     assert rep_6b.support_foot_skating_speed_ms < 0.04, (
         f"04_waist_bend_reach support foot skating speed {rep_6b.support_foot_skating_speed_ms:.4f} m/s >= 0.04 m/s"
     )
+
+
+@pytest.fixture(scope="module")
+def roban_ten_motion_reports():
+    motions = generate_10_diverse_human_motions(duration_s=10.0, fps_hz=100.0)
+    verifier = MuJoCoClosedLoopVerifier(robot="roban_s17")
+    reports = {}
+    for name, pts_seq in motions.items():
+        q_traj, dq_traj, _ = solve_ik_trajectory_from_3d(pts_seq, dt=0.01, robot="roban_s17")
+        rep_6a = verifier.run_stage_6a_kinematic(q_traj, dt=0.01)
+        rep_6b = verifier.run_stage_6b_physics(q_traj, dq_traj, ik_dt=0.01, control_dt=0.02, settle_steps=25)
+        reports[name] = (rep_6a, rep_6b)
+    return reports
+
+
+def test_s6_roban_s17_all_ten_motions_survival_rmse_and_skating(roban_ten_motion_reports) -> None:
+    for name, (rep_6a, rep_6b) in roban_ten_motion_reports.items():
+        assert rep_6a.joint_limit_violation_rate == 0.0, f"Roban Stage 6A joint limit violation on {name}"
+        assert rep_6b.survived, (
+            f"Roban {name} failed balance survival: min_z={rep_6b.min_pelvis_height_m:.3f} m, "
+            f"max_tilt={rep_6b.max_tilt_deg:.2f} deg"
+        )
+        assert np.all(np.isfinite(rep_6b.torques_hist)), f"Non-finite torques in Roban {name}"
+        assert rep_6b.joint_rmse_rad < 0.12, f"Roban {name} joint RMSE {rep_6b.joint_rmse_rad:.4f} rad >= 0.12 rad"
+        assert rep_6b.support_foot_skating_speed_ms < 0.04, (
+            f"Roban {name} support foot skating speed {rep_6b.support_foot_skating_speed_ms:.4f} m/s >= 0.04 m/s"
+        )
+

@@ -56,6 +56,40 @@ def test_s3_nan_hold_and_floor_non_penetration() -> None:
     assert float(np.min(res1.points_3d_smooth_m[:, 2])) >= 0.0, "Floor non-penetration Z >= 0 violated"
 
 
+def test_s3_default_kalman_dynamic_3hz_phase_lag() -> None:
+    rng = np.random.default_rng(42)
+    dt = 0.01
+    tf = TemporalFilter(freq_hz=100.0, z_nominal_m=0.0)
+    base_pose = synthesize_human_27_pose(height_m=1.75)
+
+    for _ in range(200):
+        tf.process_frame(base_pose + rng.normal(0.0, 0.015, size=(27, 3)), dt=dt)
+
+    t_dyn = np.arange(200, dtype=np.float64) * dt
+    clean_sin = 0.15 * np.sin(2.0 * np.pi * 3.0 * t_dyn)
+    filt_dyn_x = np.zeros(200, dtype=np.float64)
+    for k in range(200):
+        pose_k = base_pose.copy()
+        pose_k[:, 0] += clean_sin[k]
+        noisy_k = pose_k + rng.normal(0.0, 0.015, size=(27, 3))
+        out_k = tf.process_frame(noisy_k, dt=dt).points_3d_smooth_m
+        filt_dyn_x[k] = float(np.mean(out_k[:, 0] - base_pose[:, 0]))
+
+    lags_ms = np.linspace(0.0, 100.0, 2001)
+    best_lag_ms = 0.0
+    min_err = float("inf")
+    t_eval = t_dyn[20:]
+    y_eval = filt_dyn_x[20:]
+    for lag_ms in lags_ms:
+        ref_shifted = 0.15 * np.sin(2.0 * np.pi * 3.0 * (t_eval - lag_ms / 1000.0))
+        mse = float(np.mean((y_eval - ref_shifted) ** 2))
+        if mse < min_err:
+            min_err = mse
+            best_lag_ms = float(lag_ms)
+
+    assert best_lag_ms < 15.0, f"Expected default S3 Kalman 3Hz phase lag < 15.0 ms, got {best_lag_ms:.2f} ms"
+
+
 @pytest.mark.xfail(
     strict=True,
     reason=(

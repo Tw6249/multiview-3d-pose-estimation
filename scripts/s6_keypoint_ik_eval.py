@@ -56,11 +56,10 @@ def load_input(src: str, name: str):
 
 def run(job):
     src, name, mode, save_ctrl, override, tag = job
+    from g1_imitation.core.adv_eval import anchor_heading, local_path, yaw
     from g1_imitation.core.constants import load_config
     from g1_imitation.core.s45c_keypoint_ik import KeypointIKRetargeter, causal_upsample, retarget_sequence
     from g1_imitation.core.s6_mujoco_closed_loop import MuJoCoClosedLoopVerifier, SonicPolicy
-    from s6_official_clip_check import local_path, yaw
-    from advanced_take_gmr_control import anchor_heading
     cfg = load_config()["s6_closed_loop"]
     t_slot, pts = load_input(src, name)
     from g1_imitation.core.constants import load_config as _lc

@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "status": "experimental; values fixed before evaluation, not robot deployment limits",
+  "robot": "unitree_g1",
+  "takes": ["Take_002", "Take_006", "Take_007", "Take_008", "Take_012"],
+  "variants": ["baseline", "relations", "support", "temporal", "combined"],
+  "policy": "sonic_v11",
+  "preview_s": 0.0,
+  "relations": {"wrist_torso_cost": 2.5, "hand_pair_cost": 2.0},
+  "support": {
+    "pelvis_height_mix": 0.5,
+    "pelvis_pitch_cost": 1.0,
+    "contact_position_cost": 12.0,
+    "contact_blend_s": 0.1,
+    "h_on_m": 0.025, "h_off_m": 0.04,
+    "v_on_m_s": 0.12, "v_off_m_s": 0.25,
+    "on_hold_s": 0.04
+  },
+  "temporal": {
+    "calibration_s": 0.5,
+    "root_cutoff_hz": 3.0,
+    "direction_cutoff_hz": 3.0,
+    "direction_beta": 0.6,
+    "derivative_cutoff_hz": 1.0,
+    "uncertainty_scale_m": 0.04,
+    "min_confidence": 0.15,
+    "joint_velocity_rad_s": 8.0,
+    "joint_acceleration_rad_s2": 60.0
+  },
+  "evaluation": {
+    "exclude_startup_s": 1.2,
+    "report_same_timestamp": true,
+    "no_per_variant_time_or_spatial_alignment": true,
+    "bvh_usage": "evaluation only, never retargeting input",
+    "physics": "same model, gains, solver, policy and preview for every branch"
+  }
+}

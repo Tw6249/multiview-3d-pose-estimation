@@ -1,0 +1,334 @@
+% !TEX program = xelatex
+% -*- coding: utf-8 -*-
+% ============================================================================
+% 周总结与下周计划 LaTeX 模板
+% 样式复刻自：周总结与下周计划.docx
+% 编译方式：xelatex 周总结与下周计划_20261106.tex
+% ============================================================================
+\documentclass[UTF8, a4paper, zihao=5, fontset=none]{ctexart}
+
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{tabularray}
+\usepackage[colorlinks=true, linkcolor=planTextBlue, urlcolor=planTextBlue]{hyperref}
+
+% ============================================================================
+% 字体配置（复刻原 Word docDefaults：西文 Times New Roman，中文 宋体/黑体/仿宋）
+% ============================================================================
+\setmainfont{Times New Roman}
+\setsansfont{Arial}
+\setmonofont{Courier New}
+
+\setCJKmainfont[AutoFakeBold=2.5]{SimSun}
+\setCJKsansfont[AutoFakeBold=2.0]{SimHei}
+\setCJKmonofont[AutoFakeBold=2.0]{FangSong}
+
+\setCJKfamilyfont{zhsong}[AutoFakeBold=2.5]{SimSun}
+\setCJKfamilyfont{zhhei}[AutoFakeBold=2.0]{SimHei}
+\setCJKfamilyfont{zhfs}[AutoFakeBold=2.0]{FangSong}
+
+\newcommand{\songti}{\CJKfamily{zhsong}}
+\newcommand{\heiti}{\CJKfamily{zhhei}}
+\newcommand{\fangsong}{\CJKfamily{zhfs}}
+
+% ============================================================================
+% 页面默认设置（第1页：A4 纵向 210mm × 297mm，复刻原 Word 页边距）
+% ============================================================================
+\geometry{
+  a4paper,
+  portrait,
+  top=1.6cm,
+  bottom=1.4cm,
+  left=3.18cm,
+  right=3.18cm
+}
+
+\pagestyle{empty}
+
+% ============================================================================
+% 颜色定义（直接提取自原 Word XML 样式定义）
+% ============================================================================
+\definecolor{planHeaderBg}{HTML}{99CCFF} % 表头浅天蓝底色 (w:fill="99CCFF")
+\definecolor{planBandBg}{HTML}{D9E2F3}   % 隔行浅蓝底色 (w:fill="D9E2F3")
+\definecolor{planBorder}{HTML}{8EAADB}   % 表格边框钢蓝色 (w:color="8EAADB")
+\definecolor{planTextBlue}{HTML}{2F5597} % 计划表深海蓝字色 (w:color="2F5597")
+
+% ============================================================================
+% 可配置元数据宏（每周填写时直接修改此处或下方单元格）
+% ============================================================================
+\newcommand{\Reporter}{谭为}
+\newcommand{\ReportDate}{2026.11.06}
+\newcommand{\PlanDateRange}{2026年11月9日——2026年11月13日}
+
+
+\begin{document}
+
+% ============================================================================
+% 第一页：本周工作总结（概括主表，点击可跳转至附录详情）
+% ============================================================================
+\begin{center}
+  \hypertarget{summary:top}{}{\zihao{-3}\bfseries 本周工作总结}
+\end{center}
+\vspace{-0.2em}
+
+\noindent
+\begin{tblr}{
+  colspec = {
+    Q[c, m, wd=1.11cm]
+    Q[c, m, wd=0.87cm]
+    Q[l, m, wd=2.75cm]
+    Q[l, m, wd=4.00cm]
+    Q[l, m, wd=4.01cm]
+  },
+  hlines = {0.5pt, solid, black},
+  vlines = {0.5pt, solid, black},
+  rowsep = 3.0pt,
+  colsep = 5.4pt,
+  row{1,2} = {ht=0.68cm},
+  row{3,4} = {ht=0.72cm},
+}
+  \SetCell[c=2]{c, m, font=\bfseries} 汇报人： & &
+  \SetCell[c=3]{l, m, font=\bfseries} \Reporter & & \\
+
+  \SetCell[c=2]{c, m, font=\bfseries} 汇报时间： & &
+  \SetCell[c=3]{l, m, font=\bfseries} \ReportDate & & \\
+
+  \SetCell[c=5]{l, m, font=\bfseries} 一．本周工作事项、进度及结果 & & & & \\
+
+  \textbf{序号} & \SetCell[c=4]{c, m, font=\bfseries} 工作事项与结果 & & & \\
+
+  \textbf{1} & \SetCell[c=4]{l, m}
+  {\parbox{12.6cm}{\raggedright\linespread{1.12}\fontsize{9.5pt}{11.8pt}\selectfont {\bfseries 调研“大语言模型+离散动作编码”路线（MotionMaster / UniAct）}\hfill\hyperlink{app:item1}{\mbox{\textbf{[详见附录一]}}}\\
+  1. 调研了北大团队将连续动作量化为 15360 个离散编号、合入千问大模型词表做自回归生成的方案；评估认为强行将连续关节角离散化会损失精度，后续扩展灵巧手还会导致词表组合爆炸，不适合作为主线方案。\\
+  2. 从论文数据看，虽然离散词表能过滤一部分异常抖动（跟踪成功率提升 19\% 至 83.1\%），但 30 亿参数模型需依赖远端服务器计算并通过局域网下发给机器人，仅网络传输延迟就达 \textbf{33.5 毫秒}，总响应延迟高达 \textbf{264--461 毫秒}。\par}} & & & \\
+
+  \textbf{2} & \SetCell[c=4]{l, m}
+  {\parbox{12.6cm}{\raggedright\linespread{1.12}\fontsize{9.5pt}{11.8pt}\selectfont {\bfseries 调研英伟达“连续扩散与混合潜空间”路线（Kimodo/ARDY等）}\hfill\hyperlink{app:item2}{\mbox{\textbf{[详见附录二]}}}\\
+  1. 梳理了英伟达从离线动作生成到实时流式控制的系列新论文：核心是将“平滑骨盆轨迹”与“全身四肢动作”拆为两阶段预测以消除滑步，并将骨盆保留在原始坐标空间、将身体姿态压缩到连续潜空间去噪，兼顾位置控制精度与推理速度。\\
+  2. 论文指标显示：从原始空间迭代 50 步（Kimodo，耗时秒级）改为混合潜空间迭代 4 步（ARDY），单次生成延迟降至 \textbf{33 毫秒}；若去掉文本编码器仅做关键帧姿态补间（MotionBricks），延迟可压至 \textbf{2 毫秒（15000 帧/秒）}。\par}} & & & \\
+
+  \textbf{3} & \SetCell[c=4]{l, m}
+  {\parbox{12.6cm}{\raggedright\linespread{1.12}\fontsize{9.5pt}{11.8pt}\selectfont {\bfseries 调研实时语音手势方案（RoboGesture）并讨论下一步改进思路}\hfill\hyperlink{app:item3}{\mbox{\textbf{[详见附录三]}}}\\
+  1. 调研了清华与银河通用直接从语音流生成 41 自由度（含灵巧手）上半身手势的论文，借鉴其用条件流匹配与“反惯性掩码”解决机械重复摆手的方法；针对其只能原地站立、不能准确指向空间物体且需外挂防撞滤波器的问题，讨论了结合英伟达混合潜空间方案实现全身移动与空间指物的改造思路。\\
+  2. 按目前构思的方案，去掉大语言模型后总参数量可控制在 \textbf{1 亿以内}，采用 2 步条件流匹配配合带防撞约束的解码器，预计在端侧芯片上单次生成耗时可控制在 \textbf{10 毫秒以内}，同时省去在线防撞滤波耗时。\par}} & & & \\
+
+  \SetCell[c=5]{l, m, font=\bfseries} 二．未完成事项，问题及解决方案 & & & & \\
+
+  \SetCell[c=5]{l, m}
+  {\parbox{14.1cm}{\raggedright\linespread{1.12}\fontsize{9.5pt}{11.8pt}\selectfont 1. 本周主要开展论文精读、技术路线对比与新方案讨论，表中数据均为原论文测试结果，尚未运行开源代码与开展本地实验。解决方案：下周拉取开源基线代码与预训练权重，开展本地推理测试与仿真验证。\\
+  2. 将身体动作压缩到连续潜空间后，无法像原始坐标空间那样直接锁死特定关节的三维坐标，手部指向空间目标点时会有 \textbf{10--20 毫米}左右的偏差。解决方案：后续若解码器输出关节角后仍有高精度指物要求，在单侧手臂末端单独叠加轻量级解析解逆运动学做微调。\\
+  3. 现有语音手势数据集仅有上半身原地动作（41 自由度），而英伟达开源的 288 小时动作库仅有全身移动（无灵巧手与配对语音），缺少全身边走边聊的配对数据。解决方案：下周先尝试用开源重定向工具将全身行走数据的下肢部分与上半身语音手势数据按骨盆轨迹拼接使用。\par}} & & & & \\
+
+  \SetCell[c=5]{l, m, font=\bfseries} 三．需要其他部门配合的工作 & & & & \\
+
+  \SetCell{l, m, font=\bfseries} 序号 &
+  \SetCell[c=2]{l, m, font=\bfseries} \hspace{1.2em}内容事项 & &
+  \SetCell{l, m, font=\bfseries} \hspace{1.2em}配合部门 &
+  \SetCell{l, m, font=\bfseries} \hspace{1.2em}时间要求 \\
+
+  \textbf{1} &
+  \SetCell[c=2]{l, m} {\parbox{3.85cm}{\raggedright\linespread{1.05}\fontsize{9pt}{11.0pt}\selectfont 暂无（目前处于文献调研与开源代码摸底阶段）\par}} & &
+  \SetCell{c, m, font=\fontsize{9pt}{11.0pt}\selectfont} 无 &
+  \SetCell{c, m, font=\fontsize{9pt}{11.0pt}\selectfont} 无 \\
+\end{tblr}
+
+% ============================================================================
+% 第二页：周工作计划
+% ============================================================================
+\clearpage
+\newgeometry{
+  top=1.6cm,
+  bottom=1.4cm,
+  left=1.32cm,
+  right=1.32cm
+}
+\setlength{\paperwidth}{297mm}
+\setlength{\paperheight}{210mm}
+\setlength{\pdfpagewidth}{297mm}
+\setlength{\pdfpageheight}{210mm}
+\setlength{\textwidth}{27.05cm}
+\setlength{\hsize}{\textwidth}
+\setlength{\linewidth}{\textwidth}
+
+\noindent
+\begin{tblr}{
+  width = \textwidth,
+  colspec = {
+    X[1.211, l, m, fg=planTextBlue]
+    X[1.253, l, m, fg=planTextBlue]
+    X[4.637, l, m, fg=planTextBlue]
+    X[0.949, c, m, fg=planTextBlue]
+    X[2.149, l, m, fg=planTextBlue]
+    X[1.347, c, m, fg=planTextBlue]
+    X[1.208, c, m, fg=planTextBlue]
+    X[1.339, c, m, fg=planTextBlue]
+    X[1.245, l, m, fg=planTextBlue]
+  },
+  hlines = {0.5pt, solid, planBorder},
+  vlines = {0.5pt, solid, planBorder},
+  hline{1-4} = {1pt, solid, planBorder},
+  vline{1,10} = {1pt, solid, planBorder},
+  rowsep = 4pt,
+  colsep = 5.4pt,
+  row{1} = {ht=1.04cm, bg=planHeaderBg, fg=planTextBlue, font=\heiti\bfseries\zihao{2}},
+  row{2,3} = {ht=1.45cm, bg=planHeaderBg, fg=planTextBlue, font=\heiti\bfseries\zihao{-4}},
+  row{even[4]} = {bg=planBandBg},
+  row{4,5,6} = {ht=2.6cm, font=\small},
+}
+  \SetCell[c=9]{c, m} 周工作计划(\PlanDateRange) & & & & & & & & \\
+
+  \SetCell[c=6]{c, m} 工作计划 & & & & & &
+  \SetCell[c=3]{c, m} 进度总结 & & \\
+
+  \SetCell{c, m} 项目名称 &
+  \SetCell{c, m} 工作事项 &
+  \SetCell{c, m} 工作内容 &
+  \SetCell{c, m} 执行人 &
+  \SetCell{c, m} 执行日期 &
+  \SetCell{c, m} 里程节点 &
+  \SetCell{c, m} 完成进度 &
+  \SetCell{c, m} 任务状态 &
+  \SetCell{c, m} 问题需求 \\
+
+  \SetCell{fg=black, font=\bfseries} 全身运动与交互预研 &
+  1. 跑通开源基线代码 &
+  {1. 拉取 Kimodo 和 RoboGesture 的开源代码与预训练权重，配置本地运行环境。\\
+  2. 跑通自带测试样例，实测在单张显卡上的实际推理耗时与显存占用。} &
+  谭为 &
+  {2026-11-09 至\\2026-11-10\\（下周一至周二）} &
+  本地跑通两套基线演示并记录耗时数据 & & & \\
+
+  \SetCell{fg=black, font=\bfseries} 全身运动与交互预研 &
+  2. 数据集与重定向工具测试 &
+  {1. 下载英伟达开源的动作数据集（含宇树 G1 数据），熟悉通用运动重定向工具的转换流程。\\
+  2. 在 MuJoCo 仿真器中回放转换后的 G1 动作，检验脚底打滑情况与骨盆轨迹平滑效果。} &
+  谭为 &
+  {2026-11-11 至\\2026-11-12\\（下周三至周四）} &
+  跑通动作重定向到 MuJoCo 回放的流程 & & & \\
+
+  \SetCell{fg=black, font=\bfseries} 全身运动与交互预研 &
+  3. 整理初步技术方案 &
+  {1. 结合代码测试情况，将讨论的“显式骨盆 + 分包潜空间流匹配”网络结构梳理成技术文档。\\
+  2. 明确后续需要修改的网络模块与上下半身数据拼接方式。} &
+  谭为 &
+  {2026-11-13\\（下周五）} &
+  输出方案设计初稿 & & & \\
+\end{tblr}
+
+% ============================================================================
+% 第三页：技术附录（一、二、三）
+% ============================================================================
+\clearpage
+\newgeometry{
+  top=1.3cm,
+  bottom=1.2cm,
+  left=1.8cm,
+  right=1.8cm
+}
+\setlength{\paperwidth}{210mm}
+\setlength{\paperheight}{297mm}
+\setlength{\pdfpagewidth}{210mm}
+\setlength{\pdfpageheight}{297mm}
+\setlength{\textwidth}{17.4cm}
+\setlength{\hsize}{\textwidth}
+\setlength{\linewidth}{\textwidth}
+
+\begin{center}
+  {\zihao{-3}\bfseries 附录：本周文献调研与技术方案讨论详情}\hfill{\zihao{-5}\hyperlink{summary:top}{\textbf{[返回本周工作总结]}}}
+\end{center}
+\vspace{-0.3em}
+
+{\linespread{1.08}\fontsize{8.8pt}{10.4pt}\selectfont
+
+\noindent\hypertarget{app:item1}{\textbf{\zihao{-4}\color{planTextBlue} 附录一：“大语言模型+离散动作编码”路线总结（MotionMaster / UniAct）}}\hfill\hyperlink{summary:top}{\textbf{[返回总结]}}\par
+\vspace{0.10em}
+\noindent\textbf{1. 问题背景与原方案做法}\par
+\noindent 传统动作生成模型从头训练时，难以理解复杂的长句子指令。北大团队这两篇论文的做法是：使用有限标量量化将连续动作四舍五入编码为 \textbf{15360 个离散编号}，替换掉千问大模型（Qwen2.5）词表中不常用的生僻字，微调大语言模型按自回归方式逐个预测动作编号，再通过局域网流式发送给底层强化学习控制器执行。\par
+\vspace{0.10em}
+\noindent\textbf{2. 核心机制与我们的评估结论}\par
+\noindent $\bullet$ \textbf{原论文机制}：为减小人体到机器人的在线转换误差，论文提前在离线阶段将真人动作数据重定向为宇树 G1 的 29 个关节角；同时利用有限的离散词表将超出训练分布的异常抖动动作拉回正常范围（跟踪成功率提升 19\% 至 83.1\%）。\par
+\noindent $\bullet$ \textbf{我们的评估看法}：该路线在工程落地上存在三项明显短板，\textbf{不适合作为我们的主线方案}：一是将连续物理关节角强行截断为整数编号存在量化精度损失，若后续加入双手 12 自由度灵巧手，词表规模将发生组合爆炸；二是离散词表无法直接做精确的三维空间坐标控制；三是运行 30 亿参数大模型计算开销过大，必须依赖远端服务器并通过局域网发给机器人，端到端响应延迟过高。\par
+\vspace{0.12em}
+
+\noindent
+\begin{tblr}{
+  width = \textwidth,
+  colspec = { Q[l, m, wd=2.8cm, font=\bfseries] Q[c, m, wd=3.6cm] X[1.2, c, m] Q[c, m, wd=3.6cm] },
+  hlines = {0.5pt, solid, planBorder},
+  vlines = {0.5pt, solid, planBorder},
+  cells = {font = \linespread{1.05}\fontsize{8.2pt}{9.6pt}\selectfont},
+  row{1} = {bg=planHeaderBg, fg=planTextBlue, font=\bfseries},
+  row{even[2]} = {bg=planBandBg},
+  rowsep = 1.8pt,
+  colsep = 5pt,
+}
+  评估维度 & MotionMaster（虚拟人生成） & UniAct（宇树 G1 真机控制） & 工程评估备注 \\
+  基座模型 & Qwen2.5-VL & Qwen2.5-3B（30 亿参数） & 需在远端服务器端运行 \\
+  动作表示方式 & 离散编号（基于人体网格） & 15360 个离散编号（对应 G1 的 29 个关节角） & 存在量化损失，难扩展灵巧手 \\
+  延迟表现（RTX 4090） & 离线生成 & 模型生成 26.2 毫秒 + 解码 1.2 毫秒 + 跟踪 7.1 毫秒 + \textbf{网络传输 33.5 毫秒}（总响应延迟 \textbf{264--461 毫秒}） & 切换指令时缓存排队延迟大 \\
+\end{tblr}
+
+\vspace{0.35em}
+\noindent\hypertarget{app:item2}{\textbf{\zihao{-4}\color{planTextBlue} 附录二：英伟达“连续扩散与混合潜空间”方案总结（Kimodo/ARDY/MotionBricks）}}\hfill\hyperlink{summary:top}{\textbf{[返回总结]}}\par
+\vspace{0.10em}
+\noindent\textbf{1. 问题背景与原方案痛点}\par
+\noindent 用单一扩散模型同时预测“人在房间里的全局位置”与“全身四肢动作”时，一旦强行修改行走路径，极易出现脚底打滑或肢体变形；此外，在 200 余维的原始特征空间中做 50 步去噪耗时达秒级，无法满足实时交互控制。\par
+\vspace{0.10em}
+\noindent\textbf{2. 核心机制与演进改进点}\par
+\noindent $\bullet$ \textbf{两阶段解耦与平滑骨盆（Kimodo）}：先对真人走路左右摇摆的骨盆轨迹做平滑滤波（便于直接画路径控制）；第一阶段先去噪生成平滑骨盆轨迹，转换到骨盆局部坐标系后，第二阶段再根据移动速度生成四肢动作，从结构上消除滑步；空间位置约束通过直接覆写对应帧坐标并拼接 0/1 掩码实现。\par
+\noindent $\bullet$ \textbf{混合表征与潜空间加速（ARDY）}：为实现实时响应，将需要精确控制走位的骨盆保留在原始坐标空间，而将复杂的全身四肢压缩到连续潜空间中去噪；每次滚动生成未来一小段动作，去噪步数减至 \textbf{4 步}，单次延迟降至 \textbf{33 毫秒}。\par
+\noindent $\bullet$ \textbf{无文本极速姿态补间（MotionBricks）}：去掉占显存和耗时的文本编码器，仅输入过去 4 帧与未来 4 帧目标姿势，在连续潜空间内直接补全中间过渡动作，单次延迟仅 \textbf{2 毫秒（15000 帧/秒）}。\par
+\vspace{0.12em}
+
+\noindent
+\begin{tblr}{
+  width = \textwidth,
+  colspec = { Q[l, m, wd=2.5cm, font=\bfseries] X[1.0, c, m] X[1.05, c, m] X[1.05, c, m] },
+  hlines = {0.5pt, solid, planBorder},
+  vlines = {0.5pt, solid, planBorder},
+  cells = {font = \linespread{1.05}\fontsize{8.2pt}{9.6pt}\selectfont},
+  row{1} = {bg=planHeaderBg, fg=planTextBlue, font=\bfseries},
+  row{even[2]} = {bg=planBandBg},
+  rowsep = 1.8pt,
+  colsep = 5pt,
+}
+  对比维度 & Kimodo（离线强约束） & ARDY（实时混合扩散） & MotionBricks（极速姿态补间） \\
+  动作表示方式 & 200 余维原始坐标与旋转 & \textbf{显式平滑骨盆 + 连续潜空间身体} & 连续潜空间编码 \\
+  空间控制方式 & 原始特征直接覆写 + 0/1 掩码 & 骨盆直接改坐标 + 身体靠条件特征引导 & 输入目标关键帧潜码做过渡补间 \\
+  去噪步数与延迟 & 50 步去噪 / 秒级 & \textbf{4 步去噪 / 33 毫秒} & \textbf{潜空间直出 / 2 毫秒（15000 帧/秒）} \\
+  开源情况 & 开源推理代码、G1 权重与 288 小时数据 & 开源推理代码与 G1 权重 & 开源推理与训练代码（已并入 GR00T） \\
+\end{tblr}
+
+\vspace{0.35em}
+\noindent\hypertarget{app:item3}{\textbf{\zihao{-4}\color{planTextBlue} 附录三：语音伴生手势（RoboGesture）总结与改进构想}}\hfill\hyperlink{summary:top}{\textbf{[返回总结]}}\par
+\vspace{0.10em}
+\noindent\textbf{1. 问题背景与原方案局限}\par
+\noindent 机器人边说话边打手势时，若同时输入“历史动作”与“实时语音”，由于历史动作惯性过强，网络训练时会顺着历史动作往下走而忽略语音信号，导致机器人机械重复摆手。此外，RoboGesture 原方案仅支持原地站立动上半身（无法边走边聊），无法准确指向空间中的具体物体，且为防止 41 自由度手臂撞击胸口，必须在外部挂载一个在线模型预测控制（MPC）滤波器实时计算防撞。\par
+\vspace{0.10em}
+\noindent\textbf{2. 原论文做法与我们的改进构想}\par
+\noindent $\bullet$ \textbf{原论文做法}：直接从语音流提取节拍与 300 类语义特征，在条件流匹配训练和推理时加入\textbf{“反惯性掩码”}（随机遮蔽一部分历史动作帧），迫使网络听从实时语音信号生成丰富手势。\par
+\noindent $\bullet$ \textbf{我们的改造构想}：（1）结合 ARDY 思路，设计\textbf{“显式骨盆 + 32 维连续潜空间全身姿态”}的两阶段 2 步条件流匹配架构（总参数量控制在 1 亿以内，端侧耗时预计小于 10 毫秒），使机器人能边走边聊；（2）将 32 维潜空间按部位分包（双腿 8 维、左臂含手 12 维、右臂含手 12 维），在注意力层做掩码隔离：\textbf{腿部保留历史惯性}以保证步伐平稳，\textbf{左臂遮蔽部分历史惯性}以随语音自然比划，\textbf{右臂在需要指物时接入局部坐标系下的三维目标点}；（3）在训练潜空间解码器时直接加入连杆自碰撞距离惩罚，使解码出的姿态天然不自撞，省去外挂的在线 MPC 防撞滤波器。\par
+\vspace{0.12em}
+
+\noindent
+\begin{tblr}{
+  width = \textwidth,
+  colspec = { Q[l, m, wd=2.5cm, font=\bfseries] X[0.95, c, m] X[0.95, c, m] X[1.2, c, m] },
+  hlines = {0.5pt, solid, planBorder},
+  vlines = {0.5pt, solid, planBorder},
+  cells = {font = \linespread{1.05}\fontsize{8.2pt}{9.6pt}\selectfont},
+  row{1} = {bg=planHeaderBg, fg=planTextBlue, font=\bfseries},
+  row{even[2]} = {bg=planBandBg},
+  rowsep = 1.8pt,
+  colsep = 5pt,
+}
+  对比维度 & 原版 RoboGesture & 离散大模型方案（UniAct） & \textbf{我们的改进构想} \\
+  功能范围 & 原地站立上半身手势（41 自由度） & 全身移动（29 自由度，无灵巧手与语音） & \textbf{全身移动 + 41 自由度语音手势 + 空间指物} \\
+  生成方法 & 条件流匹配 & 30 亿参数大模型自回归 & \textbf{两阶段（显式骨盆 + 分包潜空间）2 步条件流匹配} \\
+  防自撞方式 & 外挂在线 MPC 实时滤波 & 靠离散词表截断 & \textbf{解码器训练时加入防撞惩罚（免在线 MPC）} \\
+  上下半身协调 & 下半身不动，靠反惯性掩码防机械摆手 & 全身绑在同一编号内，未解耦 & \textbf{注意力掩码隔离：腿部保惯性、手部破惯性} \\
+\end{tblr}
+
+}
+
+\end{document}

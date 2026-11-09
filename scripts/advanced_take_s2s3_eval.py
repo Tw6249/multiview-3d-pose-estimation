@@ -78,7 +78,11 @@ def track_take(take, P, use_consensus=True, shifts=None, ref_lag=0):
         reproj[k] = r.reprojection_errors_px
         if r.point_covariances_m2 is not None:
             cov[k] = r.point_covariances_m2
-        smooth[k] = flt.process_frame(r.points_3d_m).points_3d_smooth_m
+        smooth[k] = flt.process_frame(
+            r.points_3d_m,
+            timestamp_s=float(grid[k] * bvh["frame_time_s"]),
+            covariance_m2=r.point_covariances_m2,
+        ).points_3d_smooth_m
     ref = bvh["motion_world_m"][:, [bvh["name_to_idx"][n] for n in ae.BVH12]]
     rg = grid + int(ref_lag)           # BVH samples read `ref_lag` * 8.33 ms later than the legacy mapping
     ref12 = np.full((T, 12, 3), np.nan)

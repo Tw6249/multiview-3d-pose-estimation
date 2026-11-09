@@ -1,0 +1,35 @@
+{
+  "status": "exploratory G1 kinematic retargeting and SONIC simulation, no deployment claim",
+  "takes": ["Take_002", "Take_006", "Take_007", "Take_008", "Take_012"],
+  "variants": ["baseline", "structured", "history", "structured_history"],
+  "evaluation_start_s": 1.2,
+  "control_dt_s": 0.02,
+  "preview_s": 0.0,
+  "observation_monitor": {
+    "length_ratio_min": 0.55,
+    "length_ratio_max": 1.45,
+    "min_calibration_samples": 3,
+    "swivel_min_sin_bend": 0.25
+  },
+  "geometry": {
+    "direction_cost": 1.0,
+    "bend_cosine_cost": 0.2,
+    "wrist_torso_position_cost": 0.5,
+    "min_segment_m": 0.00001,
+    "chains": {
+      "left_arm": ["left_shoulder_pitch_link", "left_elbow_link", "left_wrist_roll_link"],
+      "right_arm": ["right_shoulder_pitch_link", "right_elbow_link", "right_wrist_roll_link"],
+      "left_leg": ["left_hip_pitch_link", "left_knee_link", "left_ankle_pitch_link"],
+      "right_leg": ["right_hip_pitch_link", "right_knee_link", "right_ankle_pitch_link"]
+    }
+  },
+  "history": {
+    "velocity_limit_rad_s": 8.0,
+    "acceleration_limit_rad_s2": 60.0,
+    "position_prior_cost": 0.1,
+    "velocity_decay_tau_s": 0.1,
+    "reset_gap_s": 0.15,
+    "notes": "Experimental joint limits only, not certified G1 motor limits. Constraints activate after original startup blend; reset on whole-trunk loss or long timestamp gap. Root is not rate-limited."
+  },
+  "notes": "Weights fixed before this experiment. All clips previously inspected. Same input, root target, foot tasks, physics, controller and scoring. No new perception, learned model, foot contact estimator or SEW rotation measurement."
+}

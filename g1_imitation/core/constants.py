@@ -105,7 +105,65 @@ SDK_JOINT_NAMES: tuple[str, ...] = (
 )
 G1_29_JOINTS: tuple[str, ...] = SDK_JOINT_NAMES
 
+# Leju Roban 2.2 (biped_s17 / roban_s17) 21-DoF body joint ordering in the MuJoCo kinematic tree
+# (left leg 6 + right leg 6 + waist 1 + left arm 4 + right arm 4; excludes the 2 head joints zhead_1/2_joint).
+ROBAN_21_JOINTS: tuple[str, ...] = (
+    "leg_l1_joint",
+    "leg_l2_joint",
+    "leg_l3_joint",
+    "leg_l4_joint",
+    "leg_l5_joint",
+    "leg_l6_joint",
+    "leg_r1_joint",
+    "leg_r2_joint",
+    "leg_r3_joint",
+    "leg_r4_joint",
+    "leg_r5_joint",
+    "leg_r6_joint",
+    "waist_yaw_joint",
+    "zarm_l1_joint",
+    "zarm_l2_joint",
+    "zarm_l3_joint",
+    "zarm_l4_joint",
+    "zarm_r1_joint",
+    "zarm_r2_joint",
+    "zarm_r3_joint",
+    "zarm_r4_joint",
+)
+
+# Leju Roban 2.2 HEFT policy & deploy CSV / DDS joint ordering (waist_yaw_joint first, then legs and arms).
+ROBAN_HEFT_21_JOINTS: tuple[str, ...] = (
+    "waist_yaw_joint",
+    "leg_l1_joint",
+    "leg_l2_joint",
+    "leg_l3_joint",
+    "leg_l4_joint",
+    "leg_l5_joint",
+    "leg_l6_joint",
+    "leg_r1_joint",
+    "leg_r2_joint",
+    "leg_r3_joint",
+    "leg_r4_joint",
+    "leg_r5_joint",
+    "leg_r6_joint",
+    "zarm_l1_joint",
+    "zarm_l2_joint",
+    "zarm_l3_joint",
+    "zarm_l4_joint",
+    "zarm_r1_joint",
+    "zarm_r2_joint",
+    "zarm_r3_joint",
+    "zarm_r4_joint",
+)
+
+SUPPORTED_ROBOTS: tuple[str, ...] = ("unitree_g1", "roban_s17")
+ROBOT_JOINTS: dict[str, tuple[str, ...]] = {
+    "unitree_g1": G1_29_JOINTS,
+    "roban_s17": ROBAN_21_JOINTS,
+}
+
 
 def load_config(path: Path | None = None) -> dict[str, Any]:
     target = path or CONFIG_PATH
     return json.loads(target.read_text(encoding="utf-8"))
+

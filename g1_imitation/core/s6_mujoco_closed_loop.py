@@ -34,14 +34,21 @@ import numpy as np
 import onnxruntime as ort
 from scipy.spatial.transform import Rotation, Slerp
 
-from .constants import G1_29_JOINTS, load_config
+from .constants import (
+    G1_29_JOINTS,
+    ROBAN_21_JOINTS,
+    ROBAN_HEFT_21_JOINTS,
+    ROBOT_JOINTS,
+    SUPPORTED_ROBOTS,
+    load_config,
+)
 from .s45_gmr_retarget import resample_points, retarget_trajectory_from_3d
 from .s45c_keypoint_ik import KeypointIKRetargeter, causal_upsample, retarget_sequence
 from .synthetic_human import synthesize_human_27_pose
 
 
 # Plant constants shared by every controller (so controllers stay comparable):
-#   COMMON_DEFAULT_Q_29: initial standing posture of the plant (the pinned G1 sim2sim default).
+#   COMMON_DEFAULT_Q_29: initial standing posture of the G1 plant (the pinned G1 sim2sim default).
 #   COMMON_TORQUE_KP_29: per-joint PD-gain table that bounds the motor torque envelope, as in the pinned plant
 #                        (effort = min(kp, actuator force range)). It is NOT the controller's PD gain:
 #                        the controller supplies its own trained Kp/Kd (see `SonicPolicy.kp/.kd`).
@@ -68,6 +75,34 @@ COMMON_TORQUE_KP_29 = np.array(
 )
 
 DEFAULT_HEIGHT_M = 0.793
+
+# Leju Roban 2.2 (roban_s17 / biped_s17) 21-DoF plant constants (ROBAN_21_JOINTS order:
+# left leg 6, right leg 6, waist_yaw 1, left arm 4, right arm 4).
+# Note: leg_l1_joint axis is [0, +0.7071, -0.7071] and leg_r1_joint axis is [0, -0.7071, -0.7071],
+# so symmetric hip flexion has opposite signs (-0.2 on left, +0.2 on right).
+COMMON_DEFAULT_Q_ROBAN_21 = np.array(
+    [
+        -0.2, 0.0, 0.0, 0.4, -0.2, 0.0,
+        0.2, 0.0, 0.0, 0.4, -0.2, 0.0,
+        0.0,
+        0.0, 0.05, 0.0, -0.2,
+        0.0, -0.05, 0.0, -0.2,
+    ],
+    dtype=np.float64,
+)
+
+COMMON_TORQUE_KP_ROBAN_21 = np.array(
+    [
+        90.1792, 150.0984, 40.1792, 150.0984, 34.2506, 34.2506,
+        90.1792, 150.0984, 40.1792, 150.0984, 34.2506, 34.2506,
+        40.1792,
+        14.2506, 14.2506, 14.2506, 14.2506,
+        14.2506, 14.2506, 14.2506, 14.2506,
+    ],
+    dtype=np.float64,
+)
+
+DEFAULT_ROBAN_HEIGHT_M = 0.75
 
 
 @dataclass(frozen=True)
@@ -118,6 +153,12 @@ def compute_tilt_deg_from_quat_wxyz(quat_wxyz: np.ndarray) -> float:
 def _rotation6(matrix: np.ndarray) -> np.ndarray:
     """First two matrix columns, row-major flattening (the official SONIC layout, not column stacking)."""
     return np.asarray(matrix)[..., :, :2].reshape(-1)
+
+
+def _rotation6_col_major(matrix: np.ndarray) -> np.ndarray:
+    """First two matrix columns, column-major flattening (the LejuLab HEFT layout: R[:,0] followed by R[:,1])."""
+    m = np.asarray(matrix, dtype=np.float64)
+    return np.r_[m[:, 0], m[:, 1]]
 
 
 def _sha256(path: Path) -> str:
@@ -252,14 +293,225 @@ class SonicPolicy:
         return self.default_q + self.scale * action[self.inverse]
 
 
-def build_body_kinematic_model(mjcf_path: str | Path) -> mujoco.MjModel:
-    """Floating base + the 29 G1 body joints only (nq 36, nv 35, SDK joint order), from the same MJCF as the plant.
+class HeftPolicy:
+    """Self-contained Leju Roban S17 HEFT student whole-body tracker: ONNX policy, 50 Hz, CPU.
 
-    Finger bodies, finger actuators and sensors are removed; link geometry and joint ranges are unchanged. Used for
-    FK/IK/rendering of 36-dimensional configurations, never for dynamics.
+    Ported from Leek-LYK/lejulab_platform@3d904079c17c1406ba997b1a829a3f3f83ac8189 (`HeftRLController`).
+    Input per tick (`step` / `step_window`):
+      - Reference joint angles in ROBAN_21_JOINTS order (21,) or (S, 21) (rad), joint velocities (rad/s),
+        root orientations (scipy Rotation, world), and optional root positions (3,) or (S, 3) (m).
+      - Measured plant state `(q_21, dq_21, quat_wxyz, omega_body)` from `RobanPhysicsPlant.state()`.
+    Output: 21 joint position targets (rad, ROBAN_21_JOINTS order). `kp`/`kd` are the controller's trained PD gains.
+    Failure: non-finite reference or action, wrong ONNX widths or a hash mismatch raise ValueError.
     """
+
+    name = "heft_roban_s17"
+
+    def __init__(self, cfg: dict | None = None, *, align_initial_yaw: bool = True) -> None:
+        full = load_config()
+        self.cfg = cfg or full["s6_closed_loop"]["heft_roban_s17"]
+        assets_root = Path(full["runtime"]["robot_assets_root"])
+        onnx_path = assets_root / self.cfg["policy_onnx_relative_path"]
+        if _sha256(onnx_path) != self.cfg["policy_onnx_sha256"]:
+            raise ValueError(f"HEFT asset fingerprint mismatch: {onnx_path.name}")
+        opts = ort.SessionOptions()
+        opts.intra_op_num_threads = 1
+        opts.inter_op_num_threads = 1
+        opts.log_severity_level = 3
+        self.session = ort.InferenceSession(str(onnx_path), sess_options=opts, providers=["CPUExecutionProvider"])
+        self.input_name = str(self.cfg.get("input_name", "policy"))
+        self.output_name = str(self.cfg.get("output_name", "action"))
+        self.expected_obs_dim = int(self.cfg["expected_obs_dim"])
+        self.future_steps = [int(x) for x in self.cfg["future_steps"]]
+        self.history_taps = [int(x) for x in self.cfg["history_steps"]]
+        self.prev_action_steps = int(self.cfg["prev_action_steps"])
+        self.boot_indicator_max = float(self.cfg["boot_indicator_max"])
+        self.action_clip = float(self.cfg["action_clip"])
+        self.action_alpha = float(self.cfg["action_alpha"])
+        self.reference_step_s = float(self.cfg["reference_step_s"])
+        self.WINDOW = len(self.future_steps)
+        self.align_initial_yaw = bool(align_initial_yaw)
+
+        S = len(self.future_steps)
+        H = len(self.history_taps)
+        J = 21
+        computed_dim = 1 + 3 * (S - 1) + 6 * S + 2 * J * S + S + 3 * S + 2 * 3 * H + 2 * J * H + J * self.prev_action_steps
+        if computed_dim != self.expected_obs_dim or self.session.get_inputs()[0].shape != [1, self.expected_obs_dim]:
+            raise ValueError(f"Unexpected HEFT observation layout: computed {computed_dim}, expected {self.expected_obs_dim}")
+        out_names = {o.name: o.shape for o in self.session.get_outputs()}
+        if self.output_name not in out_names or out_names[self.output_name] != [1, 21]:
+            raise ValueError("Unexpected HEFT action output layout")
+
+        self.order = np.array([ROBAN_21_JOINTS.index(n) for n in self.cfg["policy_joint_names"]], dtype=np.int32)
+        if sorted(self.order.tolist()) != list(range(21)):
+            raise ValueError("HEFT joint mapping is not bijective")
+        self.inverse = np.argsort(self.order)
+        self.joint_direction_heft = np.array(self.cfg["joint_direction_heft_order"], dtype=np.float64)
+        self.action_scale_heft = np.array(self.cfg["action_scale_heft_order"], dtype=np.float64)
+        self.kp = np.array(self.cfg["kp_sdk_order"], dtype=np.float64)
+        self.kd = np.array(self.cfg["kd_sdk_order"], dtype=np.float64)
+        self.default_q = np.array(self.cfg["default_q_sdk_order"], dtype=np.float64)
+        if not (self.joint_direction_heft.shape == self.action_scale_heft.shape == self.kp.shape
+                == self.kd.shape == self.default_q.shape == (21,)):
+            raise ValueError("HEFT configuration vectors must have 21 entries")
+        self._cap = max(self.history_taps) + 1
+        self.reset()
+
+    def reset(self) -> None:
+        self._angvel_buf = [np.zeros(3, dtype=np.float64) for _ in range(self._cap)]
+        self._projg_buf = [np.zeros(3, dtype=np.float64) for _ in range(self._cap)]
+        self._jpos_buf = [np.zeros(21, dtype=np.float64) for _ in range(self._cap)]
+        self._jvel_buf = [np.zeros(21, dtype=np.float64) for _ in range(self._cap)]
+        self._action_buf = [np.zeros(21, dtype=np.float64) for _ in range(max(1, self.prev_action_steps))]
+        self._boot_counter = float(self.boot_indicator_max)
+        self._history_primed = False
+        self._filtered_action: np.ndarray | None = None
+        self.last_action = np.zeros(21, dtype=np.float64)
+        self._dummy_yaw: float | None = None
+
+    def step(
+        self,
+        ref_q_21: np.ndarray,
+        ref_dq_21: np.ndarray,
+        ref_rotation: Rotation,
+        q_21: np.ndarray,
+        dq_21: np.ndarray,
+        quat_wxyz: np.ndarray,
+        omega_body: np.ndarray,
+        *,
+        ref_pos: np.ndarray | None = None,
+    ) -> np.ndarray:
+        ref_q = np.asarray(ref_q_21, dtype=np.float64)
+        ref_dq = np.asarray(ref_dq_21, dtype=np.float64)
+        if ref_q.shape != (21,) or ref_dq.shape != (21,) or not ref_rotation.single:
+            raise ValueError("Require a single 21-joint HEFT reference sample")
+        pos = np.array([0.0, 0.0, DEFAULT_ROBAN_HEIGHT_M], dtype=np.float64) if ref_pos is None else np.asarray(ref_pos, dtype=np.float64)
+        if pos.shape != (3,):
+            raise ValueError("ref_pos must have shape (3,)")
+        rots = Rotation.concatenate([ref_rotation] * self.WINDOW)
+        return self.step_window(
+            np.tile(ref_q, (self.WINDOW, 1)),
+            np.tile(ref_dq, (self.WINDOW, 1)),
+            rots,
+            q_21,
+            dq_21,
+            quat_wxyz,
+            omega_body,
+            ref_pos_win=np.tile(pos, (self.WINDOW, 1)),
+        )
+
+    def step_window(
+        self,
+        ref_q_win: np.ndarray,
+        ref_dq_win: np.ndarray,
+        ref_rotations: Rotation,
+        q_21: np.ndarray,
+        dq_21: np.ndarray,
+        quat_wxyz: np.ndarray,
+        omega_body: np.ndarray,
+        *,
+        ref_pos_win: np.ndarray | None = None,
+    ) -> np.ndarray:
+        ref_q = np.asarray(ref_q_win, dtype=np.float64)
+        ref_dq = np.asarray(ref_dq_win, dtype=np.float64)
+        if ref_pos_win is None:
+            f_pos = np.tile(np.array([0.0, 0.0, DEFAULT_ROBAN_HEIGHT_M], dtype=np.float64), (self.WINDOW, 1))
+        else:
+            f_pos = np.asarray(ref_pos_win, dtype=np.float64)
+        if (ref_q.shape != (self.WINDOW, 21) or ref_dq.shape != (self.WINDOW, 21)
+                or f_pos.shape != (self.WINDOW, 3) or ref_rotations.single or len(ref_rotations) != self.WINDOW
+                or not np.isfinite(np.r_[ref_q.ravel(), ref_dq.ravel(), f_pos.ravel(), ref_rotations.as_quat().ravel()]).all()):
+            raise ValueError("Require a finite S-sample 21-joint HEFT reference window")
+
+        r_base = Rotation.from_quat(np.asarray(quat_wxyz, dtype=np.float64)[[1, 2, 3, 0]])
+        if self._dummy_yaw is None:
+            if self.align_initial_yaw:
+                r_bt = ref_rotations[0] * r_base.inv()
+                rv = r_bt.as_rotvec()
+                ang = float(np.linalg.norm(rv))
+                self._dummy_yaw = -ang if (ang > 1e-8 and rv[2] > 0.0) else ang
+            else:
+                self._dummy_yaw = 0.0
+        rq_aligned = Rotation.from_euler("z", self._dummy_yaw).inv() * r_base
+
+        omega = np.asarray(omega_body, dtype=np.float64).copy()
+        proj_g = r_base.inv().apply([0.0, 0.0, -1.0])
+        n_g = float(np.linalg.norm(proj_g))
+        if n_g > 1e-12:
+            proj_g = proj_g / n_g
+        q_heft = self.joint_direction_heft * np.asarray(q_21, dtype=np.float64)[self.order]
+        v_heft = self.joint_direction_heft * np.asarray(dq_21, dtype=np.float64)[self.order]
+
+        if not self._history_primed:
+            self._angvel_buf = [omega.copy() for _ in range(self._cap)]
+            self._projg_buf = [proj_g.copy() for _ in range(self._cap)]
+            self._jpos_buf = [q_heft.copy() for _ in range(self._cap)]
+            self._jvel_buf = [v_heft.copy() for _ in range(self._cap)]
+            self._action_buf = [np.zeros(21, dtype=np.float64) for _ in range(max(1, self.prev_action_steps))]
+            self._history_primed = True
+
+        self._angvel_buf = [omega.copy()] + self._angvel_buf[:-1]
+        self._projg_buf = [proj_g.copy()] + self._projg_buf[:-1]
+        self._jpos_buf = [q_heft.copy()] + self._jpos_buf[:-1]
+        self._jvel_buf = [v_heft.copy()] + self._jvel_buf[:-1]
+        self._action_buf = [self.last_action.copy()] + self._action_buf[:-1]
+
+        f_jpos = ref_q[:, self.order] * self.joint_direction_heft
+        S = self.WINDOW
+        obs_parts: list[np.ndarray] = [np.array([self._boot_counter / self.boot_indicator_max], dtype=np.float64)]
+        r0_inv = ref_rotations[0].inv()
+        for i in range(1, S):
+            obs_parts.append(r0_inv.apply(f_pos[i] - f_pos[0]))
+        rel_mats = (rq_aligned.inv() * ref_rotations).as_matrix()
+        for i in range(S):
+            obs_parts.append(_rotation6_col_major(rel_mats[i]))
+        for i in range(S):
+            obs_parts.append(f_jpos[i])
+        for i in range(S):
+            obs_parts.append(f_jpos[i] - q_heft)
+        obs_parts.append(f_pos[:, 2])
+        for i in range(S):
+            obs_parts.append(ref_rotations[i].inv().apply([0.0, 0.0, -1.0]))
+        obs_parts.append(np.concatenate([self._angvel_buf[k] for k in self.history_taps]))
+        obs_parts.append(np.concatenate([self._projg_buf[k] for k in self.history_taps]))
+        obs_parts.append(np.concatenate([self._jpos_buf[k] for k in self.history_taps]))
+        obs_parts.append(np.concatenate([self._jvel_buf[k] for k in self.history_taps]))
+        obs_parts.append(np.concatenate([self._action_buf[k] for k in range(self.prev_action_steps)]))
+
+        obs = np.concatenate(obs_parts).astype(np.float32)[None]
+        self._boot_counter = max(self._boot_counter - 1.0, 0.0)
+
+        raw_action = self.session.run([self.output_name], {self.input_name: obs})[0].reshape(21).astype(np.float64)
+        if not np.isfinite(raw_action).all():
+            raise ValueError("Nonfinite HEFT action; terminate trial")
+        raw_action = np.clip(raw_action, -self.action_clip, self.action_clip)
+        self.last_action = raw_action.copy()
+        if self._filtered_action is None or self.action_alpha >= 1.0:
+            self._filtered_action = raw_action.copy()
+        else:
+            self._filtered_action = (1.0 - self.action_alpha) * self._filtered_action + self.action_alpha * raw_action
+
+        q_target_heft = self.joint_direction_heft * (self._filtered_action * self.action_scale_heft)
+        return self.default_q + q_target_heft[self.inverse]
+
+
+def build_body_kinematic_model(mjcf_path: str | Path, robot: str = "unitree_g1") -> mujoco.MjModel:
+    """Floating base + body joints only (`unitree_g1`: 29 DoF, nq 36; `roban_s17`: 21 DoF, nq 28).
+
+    Non-body peripheral subtrees (G1: Dex3 fingers; Roban S17: 2-DoF head `zhead_1_link`), their actuators and sensors
+    are removed; link geometry and joint ranges are unchanged. Used for FK/IK/rendering, never for dynamics.
+    """
+    if robot not in SUPPORTED_ROBOTS:
+        raise ValueError(f"Unsupported robot {robot!r}; expected one of {SUPPORTED_ROBOTS}")
     spec = mujoco.MjSpec.from_file(str(mjcf_path))
-    roots = [spec.body(f"{s}_hand_{f}_0_link") for s in ("left", "right") for f in ("thumb", "middle", "index")]
+    if robot == "unitree_g1":
+        roots = [spec.body(f"{s}_hand_{f}_0_link") for s in ("left", "right") for f in ("thumb", "middle", "index")]
+        expected_joints = list(G1_29_JOINTS)
+        expected_nq = 36
+    else:
+        roots = [spec.body("zhead_1_link")]
+        expected_joints = list(ROBAN_21_JOINTS)
+        expected_nq = 28
     dead = {j.name for r in roots for j in _subtree_joints(r)}
     for a in [a for a in spec.actuators if a.target in dead]:
         spec.delete(a)
@@ -269,8 +521,8 @@ def build_body_kinematic_model(mjcf_path: str | Path) -> mujoco.MjModel:
         spec.delete(r)
     model = spec.compile()
     names = [model.joint(i).name for i in range(1, model.njnt)]
-    if model.nq != 36 or names != list(G1_29_JOINTS):
-        raise ValueError(f"Kinematic model is not the 29-joint G1: nq={model.nq}")
+    if model.nq != expected_nq or names != expected_joints:
+        raise ValueError(f"Kinematic model is not the {len(expected_joints)}-joint {robot}: nq={model.nq}")
     return model
 
 
@@ -347,6 +599,7 @@ class G1PhysicsPlant:
 
     def reset(self, q_joints_init: np.ndarray | None = None) -> None:
         q_j = COMMON_DEFAULT_Q_29 if q_joints_init is None else np.asarray(q_joints_init, dtype=np.float64)
+        mujoco.mj_resetData(self.model, self.data)
         self.data.qpos[:] = self.model.qpos0
         self.data.qpos[:7] = [0.0, 0.0, DEFAULT_HEIGHT_M, 1.0, 0.0, 0.0, 0.0]
         self.data.qpos[self.qadr] = q_j
@@ -368,6 +621,28 @@ class G1PhysicsPlant:
     def set_qpos36(self, q36: np.ndarray) -> None:
         self.data.qpos[:7] = q36[:7]
         self.data.qpos[self.qadr] = q36[7:]
+
+    @property
+    def nq_body(self) -> int:
+        return 36
+
+    @property
+    def nv_body(self) -> int:
+        return 35
+
+    @property
+    def nj_body(self) -> int:
+        return 29
+
+    @property
+    def default_q(self) -> np.ndarray:
+        return COMMON_DEFAULT_Q_29
+
+    def qpos_body(self) -> np.ndarray:
+        return self.qpos36()
+
+    def set_qpos_body(self, q: np.ndarray) -> None:
+        self.set_qpos36(q)
 
     def state(self) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         return (
@@ -411,34 +686,228 @@ class G1PhysicsPlant:
         return fz_left, fz_right
 
 
+class RobanPhysicsPlant:
+    """Self-contained Leju Roban 2.2 (roban_s17 / biped_s17) 21-DoF MuJoCo plant (physics step and torque limits from
+    config, 50 Hz PD decimation).
+
+    The 21 body joints (`ROBAN_21_JOINTS`) and their actuators are looked up by name; the 2 non-policy head joints
+    (`zhead_1_joint`, `zhead_2_joint`) are held at zero with `kp=100, kd=10` as in `GenericRLController::updateRobotCmd`.
+    """
+
+    robot = "roban_s17"
+
+    def __init__(self, mjcf_path: str | Path | None = None, physics_dt: float | None = None,
+                 effort_limit: str | None = None) -> None:
+        cfg = load_config()
+        s6 = cfg["s6_closed_loop"]
+        rcfg = s6["robots"]["roban_s17"]
+        physics_dt = rcfg["physics_dt_s"] if physics_dt is None else physics_dt
+        effort_limit = rcfg["effort_limit"] if effort_limit is None else effort_limit
+        if mjcf_path is None:
+            assets_root = Path(cfg["runtime"]["robot_assets_root"])
+            mjcf_path = assets_root / rcfg["mjcf_relative_path"]
+        self.mjcf_path = Path(mjcf_path).resolve()
+        self.model = mujoco.MjModel.from_xml_path(str(self.mjcf_path))
+        self._kin_model: mujoco.MjModel | None = None
+        self.model.opt.timestep = float(physics_dt)
+        self.data = mujoco.MjData(self.model)
+
+        self.joint_ids = np.array([self.model.joint(n).id for n in ROBAN_21_JOINTS], dtype=np.int32)
+        if self.model.jnt_type[0] != mujoco.mjtJoint.mjJNT_FREE or self.model.jnt_qposadr[0] != 0:
+            raise ValueError("Expected a floating base as the first joint")
+        self.qadr = self.model.jnt_qposadr[self.joint_ids].copy()
+        self.vadr = self.model.jnt_dofadr[self.joint_ids].copy()
+        act_of_joint = {int(self.model.actuator_trnid[a, 0]): a for a in range(self.model.nu)
+                        if self.model.actuator_trntype[a] == mujoco.mjtTrn.mjTRN_JOINT}
+        if any(int(j) not in act_of_joint for j in self.joint_ids):
+            raise ValueError("Every Roban S17 body joint needs a joint actuator")
+        self.act_ids = np.array([act_of_joint[int(j)] for j in self.joint_ids], dtype=np.int32)
+        if not np.allclose(self.model.actuator_gear[self.act_ids, 0], 1.0):
+            raise ValueError("Expected unit-gear torque actuators")
+        self.limits = self.model.jnt_range[self.joint_ids].copy()
+        act_range = self.model.jnt_actfrcrange[self.joint_ids, 1].copy()
+        if effort_limit == "common_kp_capped":
+            self.effort = np.minimum(COMMON_TORQUE_KP_ROBAN_21, act_range)
+        elif effort_limit == "actuator_range":
+            self.effort = act_range.copy()
+        else:
+            raise ValueError(f"Unknown effort_limit {effort_limit!r}")
+        if not np.all(self.effort > 0.0):
+            raise ValueError("Actuator force ranges must be positive")
+
+        # Non-policy head joints (held at 0 with kp=100, kd=10 as in C++ GenericRLController)
+        head_jids = [self.model.joint(n).id for n in ("zhead_1_joint", "zhead_2_joint")
+                     if mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, n) >= 0]
+        self._head_qadr = self.model.jnt_qposadr[head_jids].copy() if head_jids else np.empty(0, dtype=np.int32)
+        self._head_vadr = self.model.jnt_dofadr[head_jids].copy() if head_jids else np.empty(0, dtype=np.int32)
+        self._head_act_ids = (
+            np.array([act_of_joint[int(j)] for j in head_jids], dtype=np.int32)
+            if head_jids else np.empty(0, dtype=np.int32)
+        )
+        self._head_effort = (
+            self.model.actuator_ctrlrange[self._head_act_ids, 1].copy()
+            if head_jids else np.empty(0, dtype=np.float64)
+        )
+
+        self.left_ankle_body_id = self.model.body(rcfg["left_foot_body"]).id
+        self.right_ankle_body_id = self.model.body(rcfg["right_foot_body"]).id
+        self.left_foot_geoms = set(
+            range(
+                int(self.model.body_geomadr[self.left_ankle_body_id]),
+                int(self.model.body_geomadr[self.left_ankle_body_id] + self.model.body_geomnum[self.left_ankle_body_id]),
+            )
+        )
+        self.right_foot_geoms = set(
+            range(
+                int(self.model.body_geomadr[self.right_ankle_body_id]),
+                int(self.model.body_geomadr[self.right_ankle_body_id] + self.model.body_geomnum[self.right_ankle_body_id]),
+            )
+        )
+        self.reset()
+
+    def reset(self, q_joints_init: np.ndarray | None = None) -> None:
+        q_j = COMMON_DEFAULT_Q_ROBAN_21 if q_joints_init is None else np.asarray(q_joints_init, dtype=np.float64)
+        mujoco.mj_resetData(self.model, self.data)
+        self.data.qpos[:] = self.model.qpos0
+        self.data.qpos[:7] = [0.0, 0.0, DEFAULT_ROBAN_HEIGHT_M, 1.0, 0.0, 0.0, 0.0]
+        self.data.qpos[self.qadr] = q_j
+        self.data.qvel[:] = 0.0
+        self.data.ctrl[:] = 0.0
+        mujoco.mj_forward(self.model, self.data)
+
+    @property
+    def kin_model(self) -> mujoco.MjModel:
+        """21-joint (nq 28) kinematic twin of the Roban S17 plant model."""
+        if self._kin_model is None:
+            self._kin_model = build_body_kinematic_model(self.mjcf_path, robot="roban_s17")
+        return self._kin_model
+
+    @property
+    def nq_body(self) -> int:
+        return 28
+
+    @property
+    def nv_body(self) -> int:
+        return 27
+
+    @property
+    def nj_body(self) -> int:
+        return 21
+
+    @property
+    def default_q(self) -> np.ndarray:
+        return COMMON_DEFAULT_Q_ROBAN_21
+
+    def qpos28(self) -> np.ndarray:
+        """[base_link xyz, wxyz, 21 body joints in ROBAN_21_JOINTS order]."""
+        return np.r_[self.data.qpos[:7], self.data.qpos[self.qadr]]
+
+    def set_qpos28(self, q28: np.ndarray) -> None:
+        self.data.qpos[:7] = q28[:7]
+        self.data.qpos[self.qadr] = q28[7:]
+
+    def qpos_body(self) -> np.ndarray:
+        return self.qpos28()
+
+    def set_qpos_body(self, q: np.ndarray) -> None:
+        self.set_qpos28(q)
+
+    def state(self) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        return (
+            self.data.qpos[self.qadr].copy(),
+            self.data.qvel[self.vadr].copy(),
+            self.data.qpos[3:7].copy(),
+            self.data.qvel[3:6].copy(),
+        )
+
+    def step_pd(self, q_des_21: np.ndarray, kp: np.ndarray, kd: np.ndarray, control_dt: float = 0.02) -> np.ndarray:
+        """Execute `round(control_dt / physics_dt)` PD sub-steps with the controller's Kp/Kd (ROBAN_21_JOINTS order)."""
+        kp = np.asarray(kp, dtype=np.float64)
+        kd = np.asarray(kd, dtype=np.float64)
+        if kp.shape != (21,) or kd.shape != (21,):
+            raise ValueError("kp and kd must have 21 entries")
+        target = np.clip(np.asarray(q_des_21, dtype=np.float64), self.limits[:, 0], self.limits[:, 1])
+        substeps = max(1, round(float(control_dt) / float(self.model.opt.timestep)))
+        last_tau = np.zeros(21, dtype=np.float64)
+        for _ in range(substeps):
+            q = self.data.qpos[self.qadr]
+            dq = self.data.qvel[self.vadr]
+            tau = np.clip(kp * (target - q) - kd * dq, -self.effort, self.effort)
+            self.data.ctrl[self.act_ids] = tau
+            if self._head_act_ids.size > 0:
+                hq = self.data.qpos[self._head_qadr]
+                hdq = self.data.qvel[self._head_vadr]
+                self.data.ctrl[self._head_act_ids] = np.clip(
+                    -100.0 * hq - 10.0 * hdq, -self._head_effort, self._head_effort
+                )
+            mujoco.mj_step(self.model, self.data)
+            last_tau = tau.copy()
+        return last_tau
+
+    def measure_foot_vertical_forces_n(self) -> tuple[float, float]:
+        """Compute exact vertical ground reaction forces (F_z in Newtons) on left and right feet."""
+        fz_left = 0.0
+        fz_right = 0.0
+        cf = np.zeros(6, dtype=np.float64)
+        for i in range(self.data.ncon):
+            con = self.data.contact[i]
+            mujoco.mj_contactForce(self.model, self.data, i, cf)
+            f_world = con.frame.reshape(3, 3).T @ cf[:3]
+            if con.geom1 in self.left_foot_geoms or con.geom2 in self.left_foot_geoms:
+                fz_left += abs(float(f_world[2]))
+            if con.geom1 in self.right_foot_geoms or con.geom2 in self.right_foot_geoms:
+                fz_right += abs(float(f_world[2]))
+        return fz_left, fz_right
+
+
 class MuJoCoClosedLoopVerifier:
-    """Module S6 implementation: runs Stage 6A (Kinematic) and Stage 6B (Physics RL Closed-Loop)."""
+    """Module S6 implementation: runs Stage 6A (Kinematic) and Stage 6B (Physics RL Closed-Loop) for G1 or Roban S17."""
 
     def __init__(
         self,
         mjcf_path: str | Path | None = None,
-        policy: SonicPolicy | None = None,
+        policy: SonicPolicy | HeftPolicy | None = None,
         support_fz_threshold_n: float = 20.0,
         survival_min_pelvis_z_m: float = 0.45,
         survival_max_tilt_deg: float = 45.0,
         physics_dt: float | None = None,
         effort_limit: str | None = None,
+        *,
+        robot: str | None = None,
     ) -> None:
-        self.plant = G1PhysicsPlant(mjcf_path=mjcf_path, physics_dt=physics_dt, effort_limit=effort_limit)
-        self.policy = policy or SonicPolicy()
+        if robot is None:
+            if isinstance(policy, HeftPolicy):
+                robot = "roban_s17"
+            elif isinstance(policy, SonicPolicy):
+                robot = "unitree_g1"
+            else:
+                robot = load_config().get("default_robot", "unitree_g1")
+        if robot not in SUPPORTED_ROBOTS:
+            raise ValueError(f"Unsupported robot {robot!r}; expected one of {SUPPORTED_ROBOTS}")
+        self.robot = robot
+        if self.robot == "unitree_g1":
+            self.plant: G1PhysicsPlant | RobanPhysicsPlant = G1PhysicsPlant(
+                mjcf_path=mjcf_path, physics_dt=physics_dt, effort_limit=effort_limit
+            )
+            self.policy: SonicPolicy | HeftPolicy = policy or SonicPolicy()
+        else:
+            self.plant = RobanPhysicsPlant(
+                mjcf_path=mjcf_path, physics_dt=physics_dt, effort_limit=effort_limit
+            )
+            self.policy = policy or HeftPolicy()
         self.support_fz_threshold_n = float(support_fz_threshold_n)
         self.survival_min_pelvis_z_m = float(survival_min_pelvis_z_m)
         self.survival_max_tilt_deg = float(survival_max_tilt_deg)
 
     @staticmethod
-    def split_reference(q_ik_36: np.ndarray, dq_ik_35: np.ndarray) -> tuple[np.ndarray, np.ndarray, Rotation]:
-        """Module S4+S5 (GMR) output (q in R^36, dq in R^35) -> SONIC reference (q[29], dq[29], root orientation).
+    def split_reference(q_ik: np.ndarray, dq_ik: np.ndarray) -> tuple[np.ndarray, np.ndarray, Rotation]:
+        """Module S4+S5 output (q in R^(7+nj), dq in R^(6+nj)) -> controller reference (q[nj], dq[nj], root orientation).
 
         No clipping, rate limiting or smoothing is applied here; the policy sees exactly what the retargeter produced.
         """
-        q_ik = np.asarray(q_ik_36, dtype=np.float64)
-        dq_ik = np.asarray(dq_ik_35, dtype=np.float64)
-        return q_ik[7:].copy(), dq_ik[6:].copy(), Rotation.from_quat(q_ik[[4, 5, 6, 3]])
+        q = np.asarray(q_ik, dtype=np.float64)
+        dq = np.asarray(dq_ik, dtype=np.float64)
+        return q[7:].copy(), dq[6:].copy(), Rotation.from_quat(q[[4, 5, 6, 3]])
 
     def run_stage_6a_kinematic(
         self,
@@ -447,8 +916,9 @@ class MuJoCoClosedLoopVerifier:
     ) -> Stage6AKinematicReport:
         """Stage 6A: Pure kinematic replay (`d.qpos[:] = q_t^{IK}`, `mj_forward`)."""
         q_traj = np.asarray(q_ik_traj, dtype=np.float64)
-        if q_traj.ndim != 2 or q_traj.shape[1] != 36:
-            raise ValueError(f"Expected q_ik_traj of shape (T, 36), got {q_traj.shape}")
+        nq = self.plant.nq_body
+        if q_traj.ndim != 2 or q_traj.shape[1] != nq:
+            raise ValueError(f"Expected q_ik_traj of shape (T, {nq}), got {q_traj.shape}")
 
         m = self.plant.model
         d = mujoco.MjData(m)
@@ -468,7 +938,7 @@ class MuJoCoClosedLoopVerifier:
 
         for t_idx in range(q_traj.shape[0]):
             q_t = q_traj[t_idx]
-            self.plant.set_qpos36(q_t)
+            self.plant.set_qpos_body(q_t)
             mujoco.mj_forward(m, d)
 
             q_j = q_t[7:]
@@ -519,21 +989,30 @@ class MuJoCoClosedLoopVerifier:
         `preview_s` = how far ahead of the tracked sample the policy may see. In a causal deployment this equals an
         added human->robot delay: the robot tracks the sample received `preview_s` ago, so window slots at offsets
         <= preview_s hold real (already received) samples and later slots repeat the newest received one.
-        0 (default) = current sample repeated. Slots past the clip end hold its last sample. Joint RMSE is scored
+        0 (default) = current sample repeated for future slots (past reference taps `< 0` in HEFT remain causal and
+        always read already received past frames). Slots past the clip bounds clamp to `[0, T-1]`. Joint RMSE is scored
         against the tracked (delayed) sample, i.e. the delay itself is not counted as tracking error.
         """
         q_traj = np.asarray(q_ik_traj, dtype=np.float64)
         dq_traj = np.asarray(dq_ik_traj, dtype=np.float64)
-        if q_traj.ndim != 2 or q_traj.shape[1] != 36:
-            raise ValueError(f"Expected q_ik_traj of shape (T, 36), got {q_traj.shape}")
-        if dq_traj.shape != (q_traj.shape[0], 35):
-            raise ValueError(f"Expected dq_ik_traj of shape ({q_traj.shape[0]}, 35), got {dq_traj.shape}")
+        nq = self.plant.nq_body
+        nv = self.plant.nv_body
+        nj = self.plant.nj_body
+        if q_traj.ndim != 2 or q_traj.shape[1] != nq:
+            raise ValueError(f"Expected q_ik_traj of shape (T, {nq}), got {q_traj.shape}")
+        if dq_traj.shape != (q_traj.shape[0], nv):
+            raise ValueError(f"Expected dq_ik_traj of shape ({q_traj.shape[0]}, {nv}), got {dq_traj.shape}")
 
         stride = max(1, round(float(control_dt) / float(ik_dt)))
         if preview_s < 0.0:
             raise ValueError("preview_s must be >= 0")
-        offsets = np.round(np.minimum(np.arange(self.policy.WINDOW) * self.policy.reference_step_s, preview_s)
-                           / float(ik_dt)).astype(int)
+        if hasattr(self.policy, "future_steps"):
+            raw_taps = np.asarray(self.policy.future_steps, dtype=np.float64) * float(self.policy.reference_step_s)
+            clamped_taps = np.where(raw_taps >= 0.0, np.minimum(raw_taps, preview_s), raw_taps)
+            offsets = np.round(clamped_taps / float(ik_dt)).astype(int)
+        else:
+            offsets = np.round(np.minimum(np.arange(self.policy.WINDOW) * self.policy.reference_step_s, preview_s)
+                               / float(ik_dt)).astype(int)
         indices = list(range(0, q_traj.shape[0], stride))
         n_steps = len(indices)
 
@@ -541,19 +1020,25 @@ class MuJoCoClosedLoopVerifier:
         self.policy.reset()
 
         # Smoothly settle from default posture to the initial frame's reference over `settle_steps`
-        q0, _, rot0 = self.split_reference(q_traj[0], np.zeros(35, dtype=np.float64))
+        q0, _, rot0 = self.split_reference(q_traj[0], np.zeros(nv, dtype=np.float64))
         slerp = Slerp([0.0, 1.0], Rotation.concatenate([Rotation.identity(), rot0]))
+        default_q = self.plant.default_q
+        default_pos = np.array([0.0, 0.0, float(self.plant.data.qpos[2])], dtype=np.float64)
         for s in range(settle_steps):
             alpha = float(s + 1) / float(max(1, settle_steps))
-            q_s = (1.0 - alpha) * COMMON_DEFAULT_Q_29 + alpha * q0
+            q_s = (1.0 - alpha) * default_q + alpha * q0
             q_cur, dq_cur, quat_cur, omega_cur = self.plant.state()
-            q_des = self.policy.step(q_s, np.zeros(29), slerp(alpha), q_cur, dq_cur, quat_cur, omega_cur)
+            if isinstance(self.policy, HeftPolicy):
+                pos_s = (1.0 - alpha) * default_pos + alpha * q_traj[0, :3]
+                q_des = self.policy.step(q_s, np.zeros(nj), slerp(alpha), q_cur, dq_cur, quat_cur, omega_cur, ref_pos=pos_s)
+            else:
+                q_des = self.policy.step(q_s, np.zeros(nj), slerp(alpha), q_cur, dq_cur, quat_cur, omega_cur)
             self.plant.step_pd(q_des, self.policy.kp, self.policy.kd, control_dt=control_dt)
 
-        qpos_hist = np.zeros((n_steps, 36), dtype=np.float64)
-        q_joints_phys_hist = np.zeros((n_steps, 29), dtype=np.float64)
-        q_joints_ref_hist = np.zeros((n_steps, 29), dtype=np.float64)
-        torques_hist = np.zeros((n_steps, 29), dtype=np.float64)
+        qpos_hist = np.zeros((n_steps, nq), dtype=np.float64)
+        q_joints_phys_hist = np.zeros((n_steps, nj), dtype=np.float64)
+        q_joints_ref_hist = np.zeros((n_steps, nj), dtype=np.float64)
+        torques_hist = np.zeros((n_steps, nj), dtype=np.float64)
         left_fz_hist = np.zeros(n_steps, dtype=np.float64)
         right_fz_hist = np.zeros(n_steps, dtype=np.float64)
         left_speed_hist = np.zeros(n_steps, dtype=np.float64)
@@ -572,16 +1057,33 @@ class MuJoCoClosedLoopVerifier:
         for step_idx, frame_idx in enumerate(indices):
             q_ik = q_traj[frame_idx]
             dq_ik = dq_traj[frame_idx]
-            ref_q, ref_dq, ref_rot = self.split_reference(q_ik, dq_ik)
 
-            win = np.minimum(frame_idx + offsets, q_traj.shape[0] - 1)
+            win = np.clip(frame_idx + offsets, 0, q_traj.shape[0] - 1)
             q_cur, dq_cur, quat_cur, omega_cur = self.plant.state()
-            q_des = self.policy.step_window(q_traj[win, 7:], dq_traj[win, 6:],
-                                            Rotation.from_quat(q_traj[win][:, [4, 5, 6, 3]]),
-                                            q_cur, dq_cur, quat_cur, omega_cur)
+            if isinstance(self.policy, HeftPolicy):
+                q_des = self.policy.step_window(
+                    q_traj[win, 7:],
+                    dq_traj[win, 6:],
+                    Rotation.from_quat(q_traj[win][:, [4, 5, 6, 3]]),
+                    q_cur,
+                    dq_cur,
+                    quat_cur,
+                    omega_cur,
+                    ref_pos_win=q_traj[win, :3],
+                )
+            else:
+                q_des = self.policy.step_window(
+                    q_traj[win, 7:],
+                    dq_traj[win, 6:],
+                    Rotation.from_quat(q_traj[win][:, [4, 5, 6, 3]]),
+                    q_cur,
+                    dq_cur,
+                    quat_cur,
+                    omega_cur,
+                )
             tau = self.plant.step_pd(q_des, self.policy.kp, self.policy.kd, control_dt=control_dt)
 
-            qpos_now = self.plant.qpos36()
+            qpos_now = self.plant.qpos_body()
             qpos_hist[step_idx] = qpos_now
             q_joints_phys_hist[step_idx] = qpos_now[7:]
             q_joints_ref_hist[step_idx] = q_ik[7:]
@@ -640,6 +1142,7 @@ class MuJoCoClosedLoopVerifier:
             right_fz_hist=right_fz_hist,
             left_foot_speed_xy_hist=left_speed_hist,
             right_foot_speed_xy_hist=right_speed_hist,
+            controller=getattr(self.policy, "name", "sonic_v11"),
         )
 
 
@@ -893,20 +1396,23 @@ def solve_ik_trajectory_from_3d(
     dt: float = 0.01,
     slot_hz: float = 30.0,
     retargeter: KeypointIKRetargeter | None = None,
+    *,
+    robot: str | None = None,
 ) -> tuple[np.ndarray, np.ndarray, dict]:
     """Module S4+S5 default (causal keypoint IK, core/s45c_keypoint_ik.py) on a (T, 27, 3) track sampled every `dt` s.
 
     The track is sampled at `slot_hz` camera slots (linear interpolation of the given track, standing in for the
     camera rate), each slot is retargeted when it arrives, and every `dt` tick holds the newest slot (no future
     slot read). The output starts at the first observed slot, i.e. the `calibration_s` start-up stance is not
-    part of the returned reference; the `startup_blend_s` ramp is. Returns (q (T',36), dq (T',35), info).
+    part of the returned reference; the `startup_blend_s` ramp is. Returns (q (T',7+n_dof), dq (T',6+n_dof), info).
     """
     t_slot, pts = resample_points(np.asarray(points_3d_seq, np.float64), 1.0 / dt, slot_hz)
-    rt = retargeter or KeypointIKRetargeter()
+    rt = retargeter or KeypointIKRetargeter(robot=robot)
     out = retarget_sequence(pts, t_slot, rt)
     _, q, dq, _ = causal_upsample(t_slot, out["q"], out["dq"], out["observed"], "hold", rt.lo, rt.hi, dt=dt)
     ms = out["solve_ms"][out["observed"]]
-    return q, dq, dict(retargeter="s45c_keypoint_ik", slot_hz=slot_hz, t_start_s=float(t_slot[np.argmax(out["observed"])]),
+    return q, dq, dict(retargeter="s45c_keypoint_ik", robot=rt.robot, slot_hz=slot_hz,
+                       t_start_s=float(t_slot[np.argmax(out["observed"])]),
                        solve_ms_p50=float(np.median(ms)), solve_ms_max=float(ms.max()))
 
 

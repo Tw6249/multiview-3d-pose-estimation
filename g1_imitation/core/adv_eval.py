@@ -9,6 +9,7 @@ Every function is pure; NaN means "not observed" and is never imputed or clamped
 from __future__ import annotations
 
 import numpy as np
+from scipy.spatial.transform import Rotation, Slerp
 
 JOINTS12 = ["l_shoulder", "r_shoulder", "l_elbow", "r_elbow", "l_wrist", "r_wrist",
             "l_hip", "r_hip", "l_knee", "r_knee", "l_ankle", "r_ankle"]
@@ -154,3 +155,48 @@ def jitter_rms(e: np.ndarray) -> float:
     de = np.diff(e, axis=0)
     de = de[np.isfinite(de).all(-1)]
     return float(np.sqrt(np.mean(np.sum(de ** 2, axis=-1)))) if len(de) else float("nan")
+
+
+def anchor_heading(q: np.ndarray, dq: np.ndarray) -> tuple[np.ndarray, np.ndarray, float]:
+    """Re-express the reference root trajectory in the frame of its first sample's heading and ground position."""
+    yaw0 = Rotation.from_quat(q[0, [4, 5, 6, 3]]).as_euler("zyx")[0]
+    Rz = Rotation.from_euler("z", -yaw0)
+    q, dq = q.copy(), dq.copy()
+    q[:, :2] -= q[0, :2]
+    q[:, :3] = Rz.apply(q[:, :3])
+    q[:, [4, 5, 6, 3]] = (Rz * Rotation.from_quat(q[:, [4, 5, 6, 3]])).as_quat()
+    dq[:, :3] = Rz.apply(dq[:, :3])
+    return q, dq, float(np.degrees(yaw0))
+
+
+def local_path(xy: np.ndarray, yaw0: float) -> np.ndarray:
+    """Project 2D root XY path into the initial heading frame."""
+    return Rotation.from_euler("z", -yaw0).apply(np.c_[xy - xy[0], np.zeros(len(xy))])[:, :2]
+
+
+def yaw(qwxyz: np.ndarray) -> float:
+    """Extract planar heading angle (rad) from wxyz quaternion."""
+    f = Rotation.from_quat(qwxyz[[1, 2, 3, 0]]).apply([1.0, 0.0, 0.0])
+    return float(np.arctan2(f[1], f[0]))
+
+
+def to_50hz(t_s: np.ndarray, qpos: np.ndarray, observed: np.ndarray, dt: float = 0.02):
+    """Resample 30 Hz slot qpos (T,36) to 50 Hz ticks, holding across unobserved gaps."""
+    ok = observed & np.isfinite(qpos).all(1)
+    t, q = t_s[ok], qpos[ok]
+    t50 = np.arange(t[0], t[-1], dt)
+    lo = np.clip(np.searchsorted(t, t50, side="right") - 1, 0, len(t) - 2)
+    w = ((t50 - t[lo]) / (t[lo + 1] - t[lo]))[:, None]
+    out = np.empty((len(t50), 36))
+    out[:, :3] = q[lo, :3] + w * (q[lo + 1, :3] - q[lo, :3])
+    out[:, 7:] = q[lo, 7:] + w * (q[lo + 1, 7:] - q[lo, 7:])
+    rots = Rotation.from_quat(q[:, [4, 5, 6, 3]])
+    out[:, [4, 5, 6, 3]] = Slerp(t, rots)(t50).as_quat()
+    slot_dt = np.median(np.diff(t_s))
+    fresh = (t[lo + 1] - t[lo]) <= 1.5 * slot_dt
+    held = 0
+    for i in range(1, len(out)):
+        if not fresh[i]:
+            out[i] = out[i - 1]
+            held += 1
+    return t50, out, fresh, held

@@ -6,7 +6,7 @@ Cases (`--cases`, default all):
                        target clicked on the first frame (P1 standing / P0 falls).
   advtake_Take_006/007/008  AdvancedTake raw videos, accepted single-person path WITHOUT S1b: the S1 cache (YOLOX + the
                        largest box per camera) -> S2 -> S3 on the 30 Hz slot grid (cameras_rgbonly.json, lag 6).
-  mpi_s1_seq1          MPI-INF-3DHP S1/Seq1, cameras 0/2/5/7, 18-21 s (25 fps, frames resized to the 1024 px
+  mpi_s1_seq1          MPI-INF-3DHP S1/Seq1, cameras 0/2/5/7, 18-26 s (25 fps, frames resized to the 1024 px
                        calibration of data/public_datasets/mpi_benchmark). S1 on every box + S1b (auto selection).
   blender_clutter      outputs/showcase_videos/blender_clutter/session (scripts/blender_clutter_scene.py): synthetic
                        person among clutter. S1 on every box + S1b (auto selection). Truth = SMPL-X joints.
@@ -44,7 +44,7 @@ from g1_imitation.core.s1_vision_tracker import RTMW27VisionTracker  # noqa: E40
 from g1_imitation.core.s1b_person_association import MultiPersonTargetTracker, extract_person_candidates  # noqa: E402
 from g1_imitation.core.s2_triangulation import MultiViewTriangulator  # noqa: E402
 from g1_imitation.core.s3_temporal_filter import TemporalFilter  # noqa: E402
-from g1_imitation.core.s6_mujoco_closed_loop import G1PhysicsPlant  # noqa: E402
+from g1_imitation.core.s6_mujoco_closed_loop import G1PhysicsPlant, RobanPhysicsPlant  # noqa: E402
 
 OUT = ROOT / "outputs" / "showcase_videos"
 C_MIN = 0.35
@@ -164,7 +164,11 @@ def perceive_s1b(src, tracker, click=None) -> dict:
         if tri is not None:
             r2 = tri.process_frame(res.keypoints_2d, src.P)
             out["raw"][k] = r2.points_3d_m
-            out["smooth"][k] = flt.process_frame(r2.points_3d_m, dt=1.0 / src.fps).points_3d_smooth_m
+            out["smooth"][k] = flt.process_frame(
+                r2.points_3d_m,
+                timestamp_s=float(src.t[k]),
+                covariance_m2=r2.point_covariances_m2,
+            ).points_3d_smooth_m
         out["kp2d"][k], out["box"][k] = res.keypoints_2d, res.crop_bboxes_xyxy
         out["cands"].append([c.box_xyxy for c in cands])
         out["status"].append(res.status)
@@ -201,22 +205,37 @@ def perceive_accepted(src: AdvSource) -> dict:
 
 
 # ----------------------------------------------------------------------------------------------- robot
-def robot(t: np.ndarray, smooth: np.ndarray) -> dict:
-    from advanced_take_gmr_control import anchor_heading
+def robot(t: np.ndarray, smooth: np.ndarray, robot_name: str = "unitree_g1", preview_s: float | None = None) -> dict:
+    from g1_imitation.core.adv_eval import anchor_heading
     from g1_imitation.core.s45c_keypoint_ik import KeypointIKRetargeter, causal_upsample, retarget_sequence
-    from g1_imitation.core.s6_mujoco_closed_loop import MuJoCoClosedLoopVerifier, SonicPolicy
+    from g1_imitation.core.s6_mujoco_closed_loop import (
+        HeftPolicy,
+        MuJoCoClosedLoopVerifier,
+        SonicPolicy,
+        compute_tilt_deg_from_quat_wxyz,
+    )
     cfg = load_config()["s6_closed_loop"]
-    policy = cfg["default_policy"]
     first = int(np.argmax(np.isfinite(smooth).all(axis=(1, 2))))
-    rt = KeypointIKRetargeter()
+    rt = KeypointIKRetargeter(robot=robot_name)
     out = retarget_sequence(smooth[first:], t[first:], rt)
     t50, q, dq, _ = causal_upsample(t[first:], out["q"], out["dq"], out["observed"], "hold", rt.lo, rt.hi, dt=0.02)
     q, dq, _ = anchor_heading(q, dq)
-    r = MuJoCoClosedLoopVerifier(policy=SonicPolicy(cfg[policy])).run_stage_6b_physics(
-        q, dq, ik_dt=0.02, control_dt=0.02, settle_steps=25, preview_s=0.0)
-    low = np.flatnonzero(r.qpos_hist[:, 2] < cfg["survival_min_pelvis_z_m"])
-    return dict(t50=t50, q_ref=q, q_phys=r.qpos_hist, policy=policy, survived=bool(r.survived),
-                joint_rmse_deg=float(np.degrees(r.joint_rmse_rad)), max_tilt_deg=float(r.max_tilt_deg),
+    if robot_name == "roban_s17":
+        policy_name = cfg["robots"]["roban_s17"]["default_policy"]
+        p_s = 0.16 if preview_s is None else float(preview_s)
+        verifier = MuJoCoClosedLoopVerifier(policy=HeftPolicy(cfg[policy_name]), robot="roban_s17")
+    else:
+        policy_name = cfg["default_policy"]
+        p_s = 0.0 if preview_s is None else float(preview_s)
+        verifier = MuJoCoClosedLoopVerifier(policy=SonicPolicy(cfg[policy_name]), robot="unitree_g1")
+    r = verifier.run_stage_6b_physics(q, dq, ik_dt=0.02, control_dt=0.02, settle_steps=25, preview_s=p_s)
+    tilts = np.array([compute_tilt_deg_from_quat_wxyz(row[3:7]) for row in r.qpos_hist])
+    low = np.flatnonzero(
+        (r.qpos_hist[:, 2] <= cfg["survival_min_pelvis_z_m"]) | (tilts >= cfg["survival_max_tilt_deg"])
+    )
+    return dict(t50=t50, q_ref=q, q_phys=r.qpos_hist, robot=robot_name, policy=policy_name, preview_s=p_s,
+                survived=bool(r.survived), joint_rmse_deg=float(np.degrees(r.joint_rmse_rad)),
+                max_tilt_deg=float(r.max_tilt_deg),
                 fall_s=None if len(low) == 0 else float(t50[min(low[0], len(t50) - 1)]),
                 ik_solve_ms_p50=float(np.median(out["solve_ms"][out["observed"]])))
 
@@ -239,13 +258,40 @@ def to_tile(uv, tf):
     return uv * s + np.array([x0, y0])
 
 
-def render_case(name: str, src, per: dict, rob: dict, extra: list[str]):
+def _visual_model_and_qsetter(robot_name: str):
+    if robot_name == "roban_s17":
+        plant = RobanPhysicsPlant()
+        model = mujoco.MjModel.from_xml_path(str(plant.mjcf_path))
+        for g in range(model.ngeom):
+            gname = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_GEOM, g)
+            if gname != "floor" and model.geom_type[g] != mujoco.mjtGeom.mjGEOM_MESH:
+                model.geom_group[g] = 3
+            elif model.geom_type[g] == mujoco.mjtGeom.mjGEOM_MESH:
+                model.geom_rgba[g] = [0.88, 0.90, 0.93, 1.0]
+        qadr = plant.qadr
+
+        def set_q(dd: mujoco.MjData, q28: np.ndarray) -> None:
+            dd.qpos[:] = 0.0
+            dd.qpos[:7] = q28[:7]
+            dd.qpos[qadr] = q28[7:]
+
+        return model, set_q, "② 鲁班 S17 重定向参考（运动学）"
+    model = G1PhysicsPlant().kin_model
+
+    def set_q_g1(dd: mujoco.MjData, q36: np.ndarray) -> None:
+        dd.qpos[:] = q36
+
+    return model, set_q_g1, "② G1 重定向参考（运动学）"
+
+
+def render_case(name: str, src, per: dict, rob: dict, extra: list[str], robot_name: str = "unitree_g1"):
     OUT.mkdir(parents=True, exist_ok=True)
-    dest = OUT / f"{name}.mp4"
+    out_stem = name if robot_name == "unitree_g1" else f"{name}_{robot_name}"
+    dest = OUT / f"{out_stem}.mp4"
     ff = subprocess.Popen([FFMPEG, "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}",
                            "-r", f"{src.fps:g}", "-i", "-", "-c:v", "libx264", "-crf", "20", "-pix_fmt", "yuv420p",
                            "-movflags", "+faststart", str(dest)], stdin=subprocess.PIPE)
-    model = G1PhysicsPlant().kin_model
+    model, set_q, panel2_title = _visual_model_and_qsetter(robot_name)
     d_ref, d_phys = mujoco.MjData(model), mujoco.MjData(model)
     rend, cam = g1_renderer(model)
     view = Skel3D()
@@ -277,7 +323,7 @@ def render_case(name: str, src, per: dict, rob: dict, extra: list[str]):
         j = int(np.clip(np.searchsorted(t50, src.t[k]), 0, len(t50) - 1))
         started = src.t[k] >= t50[0] - 0.02
         for dd, q, x0 in ((d_ref, q_ref, PW), (d_phys, q_phys, 2 * PW)):
-            dd.qpos[:] = q[min(j, len(q) - 1)]
+            set_q(dd, q[min(j, len(q) - 1)])
             mujoco.mj_forward(model, dd)
             cam.lookat[:] = [dd.qpos[0], dd.qpos[1], 0.65]
             cam.azimuth = SKEL_VIEW_AZ + view_off
@@ -291,7 +337,7 @@ def render_case(name: str, src, per: dict, rob: dict, extra: list[str]):
                  ((12, y0 + 8), f"① 视觉 3D 骨架（S3 后，观测 {nobs}/27）  t={src.t[k]:5.2f} s  状态 {st}", 18, INK),
                  ((12, y0 + 34), "橙=左  蓝=右  灰线=骨盆轨迹；上方：黄框=所用裁剪" +
                   ("，灰框=全部人体候选" if per["cands"][k] is not None else "（单人路径只保存所选框）"), 16, MUTED),
-                 ((PW + 12, y0 + 8), "② G1 重定向参考（运动学）", 18, (255, 255, 255)),
+                 ((PW + 12, y0 + 8), panel2_title, 18, (255, 255, 255)),
                  ((PW + 12, y0 + 34), "与 ① 同一相对人体的视角" + ("" if started else "（标定/锁定中，显示首帧）"),
                   16, (225, 225, 225)),
                  ((2 * PW + 12, y0 + 8), f"③ 机器人实际跟踪（MuJoCo 物理）· {surv}", 18, (255, 255, 255)),
@@ -302,6 +348,108 @@ def render_case(name: str, src, per: dict, rob: dict, extra: list[str]):
     ff.stdin.close()
     ff.wait()
     rend.close()
+    return dest
+
+
+def render_dual_case(name: str, src, per: dict, rob_g1: dict, rob_roban: dict, extra: list[str]) -> Path:
+    """5-column bottom layout (384x600 each): 3D skeleton | G1 ref | G1 phys | Roban S17 ref | Roban S17 phys."""
+    OUT.mkdir(parents=True, exist_ok=True)
+    dest = OUT / f"{name}_dual_g1_roban.mp4"
+    ff = subprocess.Popen([FFMPEG, "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}",
+                           "-r", f"{src.fps:g}", "-i", "-", "-c:v", "libx264", "-crf", "20", "-pix_fmt", "yuv420p",
+                           "-movflags", "+faststart", str(dest)], stdin=subprocess.PIPE)
+    cw = W // 5  # 384 px per column
+    m_g1, set_q_g1, _ = _visual_model_and_qsetter("unitree_g1")
+    m_rb, set_q_rb, _ = _visual_model_and_qsetter("roban_s17")
+    for m in (m_g1, m_rb):
+        m.vis.global_.offwidth = max(m.vis.global_.offwidth, cw)
+        m.vis.global_.offheight = max(m.vis.global_.offheight, PH)
+    rend_g1 = mujoco.Renderer(m_g1, height=PH, width=cw)
+    rend_rb = mujoco.Renderer(m_rb, height=PH, width=cw)
+    cam_g1, cam_rb = mujoco.MjvCamera(), mujoco.MjvCamera()
+    mujoco.mjv_defaultFreeCamera(m_g1, cam_g1)
+    mujoco.mjv_defaultFreeCamera(m_rb, cam_rb)
+    for c in (cam_g1, cam_rb):
+        c.distance, c.elevation, c.azimuth = 2.45, -22.0, 135.0
+    d_g1_ref, d_g1_phys = mujoco.MjData(m_g1), mujoco.MjData(m_g1)
+    d_rb_ref, d_rb_phys = mujoco.MjData(m_rb), mujoco.MjData(m_rb)
+
+    view = Skel3D(s=200.0)
+    track = per["smooth"]
+    off_g1 = ref_view_offset_deg(track, src.t, rob_g1["t50"], rob_g1["q_ref"])
+    off_rb = ref_view_offset_deg(track, src.t, rob_roban["t50"], rob_roban["q_ref"])
+    pel_xy = 0.5 * (track[:, 11, :2] + track[:, 12, :2])
+    surv_g1 = "未倒地" if rob_g1["survived"] else f"{rob_g1['fall_s']:.1f}s倒地"
+    surv_rb = "未倒地" if rob_roban["survived"] else f"{rob_roban['fall_s']:.1f}s倒地"
+
+    for k, imgs in enumerate(src.images()):
+        canvas = np.full((H, W, 3), BG, np.uint8)
+        labels = []
+        for v, img in enumerate(imgs):
+            tile, tf = fit_tile(img, src.size[v])
+            for b in (per["cands"][k][v] if per["cands"][k] is not None else []):
+                p = to_tile(np.asarray(b, float).reshape(2, 2), tf).astype(int)
+                cv2.rectangle(tile, tuple(p[0]), tuple(p[1]), (170, 170, 170), 1, cv2.LINE_AA)
+            if np.isfinite(per["box"][k, v]).all():
+                p = to_tile(per["box"][k, v].reshape(2, 2), tf).astype(int)
+                cv2.rectangle(tile, tuple(p[0]), tuple(p[1]), (0, 210, 255), 2, cv2.LINE_AA)
+            kp = per["kp2d"][k, v]
+            uv = np.where((kp[:, 2] >= C_MIN)[:, None], kp[:, :2], np.nan)
+            draw27(tile, to_tile(uv, tf), th=2)
+            cv2.rectangle(tile, (0, 0), (170, 24), (0, 0, 0), -1)
+            canvas[HEAD:HEAD + TH, v * TW:(v + 1) * TW] = tile
+            labels.append(((v * TW + 8, HEAD + 2), f"机位 {src.names[v]}" if img is not None else f"{src.names[v]} 无帧",
+                           16, (255, 255, 255)))
+        y0 = HEAD + TH
+        # Col 0: 3D skeleton
+        canvas[y0:y0 + PH, 0:cw] = view.render(track[k], pel_xy[:k + 1], w=cw)
+        # Col 1 & 2: Unitree G1 (ref & phys)
+        j_g1 = int(np.clip(np.searchsorted(rob_g1["t50"], src.t[k]), 0, len(rob_g1["t50"]) - 1))
+        for dd, q, col in ((d_g1_ref, rob_g1["q_ref"], 1), (d_g1_phys, rob_g1["q_phys"], 2)):
+            set_q_g1(dd, q[min(j_g1, len(q) - 1)])
+            mujoco.mj_forward(m_g1, dd)
+            cam_g1.lookat[:] = [dd.qpos[0], dd.qpos[1], 0.65]
+            cam_g1.azimuth = SKEL_VIEW_AZ + off_g1
+            rend_g1.update_scene(dd, camera=cam_g1)
+            canvas[y0:y0 + PH, col * cw:(col + 1) * cw] = cv2.cvtColor(rend_g1.render(), cv2.COLOR_RGB2BGR)
+        # Col 3 & 4: Leju Roban S17 (ref & phys)
+        j_rb = int(np.clip(np.searchsorted(rob_roban["t50"], src.t[k]), 0, len(rob_roban["t50"]) - 1))
+        for dd, q, col in ((d_rb_ref, rob_roban["q_ref"], 3), (d_rb_phys, rob_roban["q_phys"], 4)):
+            set_q_rb(dd, q[min(j_rb, len(q) - 1)])
+            mujoco.mj_forward(m_rb, dd)
+            cam_rb.lookat[:] = [dd.qpos[0], dd.qpos[1], 0.65]
+            cam_rb.azimuth = SKEL_VIEW_AZ + off_rb
+            rend_rb.update_scene(dd, camera=cam_rb)
+            canvas[y0:y0 + PH, col * cw:(col + 1) * cw] = cv2.cvtColor(rend_rb.render(), cv2.COLOR_RGB2BGR)
+
+        for col in range(1, 5):
+            cv2.line(canvas, (col * cw, y0), (col * cw, y0 + PH), (210, 205, 198), 1)
+
+        nobs = int(np.isfinite(track[k]).all(1).sum())
+        st = per["status"][k]
+        pz_g1 = float(rob_g1["q_phys"][min(j_g1, len(rob_g1["q_phys"]) - 1), 2])
+        pz_rb = float(rob_roban["q_phys"][min(j_rb, len(rob_roban["q_phys"]) - 1), 2])
+        items = [
+            ((16, 6), f"{src.title} · 双机型同屏对比（宇树 G1 vs 乐聚鲁班 S17）", 30, INK),
+            ((16, 46), f"{per['mode']} → S2 三角化 → S3 滤波 → 因果关键点 IK → G1 ({rob_g1['policy']}) & 鲁班 S17 ({rob_roban['policy']})", 18, MUTED),
+            ((10, y0 + 8), f"① 视觉 3D 骨架 ({nobs}/27)", 18, INK),
+            ((10, y0 + 34), f"t={src.t[k]:5.2f}s 状态 {st}", 16, MUTED),
+            ((cw + 10, y0 + 8), "② 宇树 G1 重定向参考", 18, (255, 255, 255)),
+            ((cw + 10, y0 + 34), "29 DoF 因果关键点 IK", 16, (220, 220, 220)),
+            ((2 * cw + 10, y0 + 8), f"③ 宇树 G1 物理 · {surv_g1}", 18, (255, 255, 255)),
+            ((2 * cw + 10, y0 + 34), f"z={pz_g1:.2f}m · RMSE {rob_g1['joint_rmse_deg']:.1f}°", 16, (220, 220, 220)),
+            ((3 * cw + 10, y0 + 8), "④ 鲁班 S17 重定向参考", 18, (255, 255, 255)),
+            ((3 * cw + 10, y0 + 34), "21 DoF 因果关键点 IK", 16, (220, 220, 220)),
+            ((4 * cw + 10, y0 + 8), f"⑤ 鲁班 S17 物理 · {surv_rb}", 18, (255, 255, 255)),
+            ((4 * cw + 10, y0 + 34), f"z={pz_rb:.2f}m · RMSE {rob_roban['joint_rmse_deg']:.1f}°", 16, (220, 220, 220)),
+            ((16, H - FOOT + 8), "仿真，非实机。" + "  ".join(extra), 16, MUTED),
+        ]
+        canvas = put_text(canvas, labels + items)
+        ff.stdin.write(canvas.tobytes())
+    ff.stdin.close()
+    ff.wait()
+    rend_g1.close()
+    rend_rb.close()
     return dest
 
 
@@ -318,7 +466,7 @@ def truth_error(per: dict, mesh_npz: Path) -> dict:
                 note="12 body joints, S2 output (unfiltered) vs SMPL-X joint centres; includes landmark-definition offsets")
 
 
-def build(name: str, tracker):
+def build(name: str, tracker, robot_name: str = "unitree_g1", preview_s: float | None = None):
     extra = []
     truth = None
     if name in ("mamma_p1", "mamma_p0"):
@@ -334,7 +482,7 @@ def build(name: str, tracker):
         per = perceive_accepted(src)
         extra.append("RGB 自标定（不用 BVH）；相机同步为末帧对齐假设 + 滞后 6。")
     elif name == "mpi_s1_seq1":
-        src = MpiSource(18.0, 21.0)
+        src = MpiSource(18.0, 26.0)
         per = perceive_s1b(src, tracker)
         dz = ground_from_feet(per, src.fps)
         per["ground_lift_m"] = dz
@@ -347,8 +495,43 @@ def build(name: str, tracker):
         extra.append(f"合成数据，相机标定与同步为真值；S2 对 SMPL-X 关节 MPJPE {truth['mpjpe_mm']:.0f} mm（含关节定义差）。")
     else:
         raise ValueError(name)
-    rob = robot(src.t, per["smooth"])
-    dest = render_case(name, src, per, rob, extra)
+    if robot_name == "both":
+        rob_g1 = robot(src.t, per["smooth"], robot_name="unitree_g1", preview_s=0.0 if preview_s is None else preview_s)
+        rob_rb = robot(src.t, per["smooth"], robot_name="roban_s17", preview_s=0.16 if preview_s is None else preview_s)
+        extra.append(f"G1 游标延迟 {rob_g1['preview_s']:.2f}s；鲁班 S17 因果游标延迟 {rob_rb['preview_s']:.2f}s。")
+        dest = render_dual_case(name, src, per, rob_g1, rob_rb, extra)
+        out_stem = f"{name}_dual_g1_roban"
+        ok = np.isfinite(per["raw"][:, 5:17]).all(axis=(1, 2))
+        feet = per["raw"][:, [15, 16, 17, 18, 19, 20, 21, 22], 2]
+        summary = dict(
+            video=str(dest.relative_to(ROOT)),
+            frames=len(src.t),
+            fps=src.fps,
+            perception=per["mode"],
+            status_counts={s: per["status"].count(s) for s in sorted(set(per["status"]))},
+            frames_with_12_body_joints=int(ok.sum()),
+            foot_z_m_p1_p5=[float(np.nanpercentile(feet, 1)), float(np.nanpercentile(feet, 5))],
+            s1_s1b_ms_p50=float(np.median(per["s1_ms"])) if per["s1_ms"] else None,
+            ground_lift_m=per.get("ground_lift_m"),
+            robot={
+                "survived": bool(rob_g1["survived"] and rob_rb["survived"]),
+                "fall_s": min(
+                    [x for x in (rob_g1["fall_s"], rob_rb["fall_s"]) if x is not None],
+                    default=None,
+                ),
+                "joint_rmse_deg": float(0.5 * (rob_g1["joint_rmse_deg"] + rob_rb["joint_rmse_deg"])),
+                "unitree_g1": {k: v for k, v in rob_g1.items() if k not in ("t50", "q_ref", "q_phys")},
+                "roban_s17": {k: v for k, v in rob_rb.items() if k not in ("t50", "q_ref", "q_phys")},
+            },
+            truth=truth,
+        )
+        (OUT / f"{out_stem}.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False), encoding="utf-8")
+        return summary
+    rob = robot(src.t, per["smooth"], robot_name=robot_name, preview_s=preview_s)
+    if rob["preview_s"] > 0.0:
+        extra.append(f"HEFT 因果游标延迟 {rob['preview_s']:.2f} s。")
+    dest = render_case(name, src, per, rob, extra, robot_name=robot_name)
+    out_stem = name if robot_name == "unitree_g1" else f"{name}_{robot_name}"
     ok = np.isfinite(per["raw"][:, 5:17]).all(axis=(1, 2))
     feet = per["raw"][:, [15, 16, 17, 18, 19, 20, 21, 22], 2]
     summary = dict(video=str(dest.relative_to(ROOT)), frames=len(src.t), fps=src.fps, perception=per["mode"],
@@ -358,18 +541,24 @@ def build(name: str, tracker):
                    s1_s1b_ms_p50=float(np.median(per["s1_ms"])) if per["s1_ms"] else None,
                    ground_lift_m=per.get("ground_lift_m"),
                    robot={k: v for k, v in rob.items() if k not in ("t50", "q_ref", "q_phys")}, truth=truth)
-    (OUT / f"{name}.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False), encoding="utf-8")
+    (OUT / f"{out_stem}.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False), encoding="utf-8")
     return summary
 
 
 def write_index() -> Path:
     """INDEX.md in the output folder from every <case>.json present."""
-    rows = ["| 视频 | 帧数 / fps | 感知 | 状态 | 机器人（" + load_config()["s6_closed_loop"]["default_policy"] + "） | 备注 |",
+    rows = ["| 视频 | 帧数 / fps | 感知 | 状态 | 机器人闭环表现 | 备注 |",
             "|---|---|---|---|---|---|"]
     for p in sorted(OUT.glob("*.json")):
         s = json.loads(p.read_text(encoding="utf-8"))
         r = s["robot"]
-        rob = ("未倒地" if r["survived"] else f"{r['fall_s']:.1f} s 倒地") + f"，关节 RMSE {r['joint_rmse_deg']:.1f}°"
+        if "unitree_g1" in r and "roban_s17" in r:
+            g1, rb = r["unitree_g1"], r["roban_s17"]
+            g1_s = ("未倒地" if g1["survived"] else f"{g1['fall_s']:.1f} s 倒地") + f" (RMSE {g1['joint_rmse_deg']:.1f}°)"
+            rb_s = ("未倒地" if rb["survived"] else f"{rb['fall_s']:.1f} s 倒地") + f" (RMSE {rb['joint_rmse_deg']:.1f}°)"
+            rob = f"G1: {g1_s}；鲁班 S17: {rb_s}"
+        else:
+            rob = ("未倒地" if r["survived"] else f"{r['fall_s']:.1f} s 倒地") + f"，关节 RMSE {r['joint_rmse_deg']:.1f}°"
         note = []
         if s.get("ground_lift_m"):
             note.append(f"地面配准 +{s['ground_lift_m'] * 100:.1f} cm")
@@ -379,7 +568,7 @@ def write_index() -> Path:
         rows.append(f"| `{Path(s['video']).name}` | {s['frames']} / {s['fps']:g} | {s['perception']} | {st} | {rob} | {'；'.join(note)} |")
     dest = OUT / "INDEX.md"
     dest.write_text("# 渲染视频索引（scripts/render_showcase_videos.py 生成）\n\n每个视频：上排四路原始画面 + 我们的 2D 骨架；"
-                    "下排 ① 视觉 3D 骨架（S3 后）② G1 重定向参考 ③ MuJoCo 物理跟踪。仿真，非实机。\n\n"
+                    "下排包含视觉 3D 骨架（S3 后）、重定向参考与 MuJoCo 物理跟踪（单机型 3 栏或 G1+鲁班 S17 双机型 5 栏）。仿真，非实机。\n\n"
                     + "\n".join(rows) + "\n", encoding="utf-8")
     return dest
 
@@ -388,15 +577,18 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--cases", nargs="+", default=["mamma_p1", "mamma_p0", "advtake_Take_006", "advtake_Take_007",
                                                    "advtake_Take_008", "mpi_s1_seq1", "blender_clutter"])
+    ap.add_argument("--robot", choices=["unitree_g1", "roban_s17", "both"], default="unitree_g1")
+    ap.add_argument("--preview-s", type=float, default=None)
     ap.add_argument("--index-only", action="store_true")
     a = ap.parse_args()
     if a.index_only:
         print(write_index())
         return
-    tracker = RTMW27VisionTracker(use_detector_every_frame=True)
+    needs_s1 = any(not c.startswith("advtake_") for c in a.cases)
+    tracker = RTMW27VisionTracker(use_detector_every_frame=True) if needs_s1 else None
     for name in a.cases:
         t0 = time.perf_counter()
-        s = build(name, tracker)
+        s = build(name, tracker, robot_name=a.robot, preview_s=a.preview_s)
         print(name, f"{time.perf_counter() - t0:.0f}s", json.dumps({k: s[k] for k in ("status_counts", "foot_z_m_p1_p5")},
               ensure_ascii=False), json.dumps(s["robot"]), json.dumps(s["truth"]) if s["truth"] else "", flush=True)
     print(write_index())
