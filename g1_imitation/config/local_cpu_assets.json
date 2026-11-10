@@ -1,0 +1,393 @@
+{
+  "robot_commit": "45c03facbf848e0c743091b7d9c17952096ff908",
+  "mamma_calibration_commit": "588492f18876e2ed6888b2d26929047cb6b575e7",
+  "robot_files": [
+    {
+      "path": "robot-assets\\sonic_official_g1\\g1_29dof_with_hand.xml",
+      "sha256": "58c82f77753db54f8a6ca0a8e020e142b015d8587db6cfc442f9a75f2bc444c6",
+      "git_blob": "76110b566c95e820ce430a489555b26e2391741a"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\head_link.STL",
+      "sha256": "005fb67fbd3eff94aa8bf4a6e83238174e9f91b6721f7111594322f223724411",
+      "git_blob": "401f822751c33dab53c6cee77eb62890aca5cd8f"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_ankle_pitch_link.STL",
+      "sha256": "d49e3abc6f5b12e532062cd575b87b5ef40cd2a3fc18f54a1ca5bba4f773d51d",
+      "git_blob": "7cd705218062fc63478e2ad98418eaaf021f25c7"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_ankle_roll_link.STL",
+      "sha256": "c4092af943141d4d9f74232f3cfa345afc6565f46a077793b8ae0e68b39dc33f",
+      "git_blob": "cb69f65c6a8059fc6720cb393540f579b4d0c26e"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_elbow_link.STL",
+      "sha256": "fa752198accd104d5c4c3a01382e45165b944fbbc5acce085059223324e5bed3",
+      "git_blob": "7fa05272ef8e4c48ba57532175c7388784414369"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_elbow_link_merge.STL",
+      "sha256": "73c8adc6346b900eb6a2ae7159e25dfda1be60cd98affe13536e01ab33a6c1de",
+      "git_blob": "f287918e8b94df6efea3a7d117d854faf878c930"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_hand_index_0_link.STL",
+      "sha256": "6b35f2f77211d5a366f0b9a4e47c4ee35e536731266f1a34e9efa12db579b892",
+      "git_blob": "a87568d6835efb4f38efa6935c6ef30a2af633e0"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_hand_index_1_link.STL",
+      "sha256": "9e315ebc8a7a0cb98e033985b586b20d81cf8aa761181ae61ce56fcb14077a06",
+      "git_blob": "c6c91dd461805b2f0e89a1202e68f5b095b74a41"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_hand_middle_0_link.STL",
+      "sha256": "6b35f2f77211d5a366f0b9a4e47c4ee35e536731266f1a34e9efa12db579b892",
+      "git_blob": "a87568d6835efb4f38efa6935c6ef30a2af633e0"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_hand_middle_1_link.STL",
+      "sha256": "9e315ebc8a7a0cb98e033985b586b20d81cf8aa761181ae61ce56fcb14077a06",
+      "git_blob": "c6c91dd461805b2f0e89a1202e68f5b095b74a41"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_hand_palm_link.STL",
+      "sha256": "23a486b75bd78a9bf03cec25d84d87f97f3dae038cf21a743b6d469b337e4004",
+      "git_blob": "c8fcc3e4c3a864842b002eb94f6b692314ec97b8"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_hand_thumb_0_link.STL",
+      "sha256": "a90c721661c0622685488a3c74d1e122c7da89242d3a1daef75edb83422d05e0",
+      "git_blob": "7fb38c1808273a8a54f80318bce7720c9a7cd3f2"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_hand_thumb_1_link.STL",
+      "sha256": "445c54a45bc13ce36001556f66bc0f49c83cb40321205ae4d676bb2874325684",
+      "git_blob": "54f77542da4eab84d91035acd25405c09fb9d2e8"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_hand_thumb_2_link.STL",
+      "sha256": "3d8dbe5085acfc213d21aa8b0782e89cd79084e9678f3a85fc7b04a86b029db5",
+      "git_blob": "3e4f124f2311fc11c2dcd7cec417da892ffd14c0"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_hip_pitch_link.STL",
+      "sha256": "4725168105ee768ee31638ef22b53f6be2d7641bfd7cfefe803488d884776fa4",
+      "git_blob": "4cf7475bf6bbaef47d5b3f7644a34c73b3d64037"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_hip_roll_link.STL",
+      "sha256": "91f25922ee8a7c3152790051bebad17b4d9cd243569c38fe340285ff93a97acf",
+      "git_blob": "585f6040c38571177d55519417a0f46ca7b29381"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_hip_yaw_link.STL",
+      "sha256": "a16d88aa6ddac8083aa7ad55ed317bea44b1fa003d314fba88965b7ed0f3b55b",
+      "git_blob": "b46a74134f90c568cbdfb8484eeb83a0503b4504"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_knee_link.STL",
+      "sha256": "8d92b9e3d3a636761150bb8025e32514c4602b91c7028d523ee42b3e632de477",
+      "git_blob": "2dcf84e4018ab9e4cff48cecdafe433601c48480"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_rubber_hand.STL",
+      "sha256": "cff2221a690fa69303f61fce68f2d155c1517b52efb6ca9262dd56e0bc6e70fe",
+      "git_blob": "04a2fa22b7f60f2d00c64ec996b33a5219c2b633"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_shoulder_pitch_link.STL",
+      "sha256": "f0d1cfd02fcf0d42f95e678eeca33da3afbcc366ffba5c052847773ec4f31d52",
+      "git_blob": "926d9807f1cbf6ad0d41170904785eb30427c848"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_shoulder_roll_link.STL",
+      "sha256": "fb9df21687773522598dc384f1a2945c7519f11cbc8bd372a49170316d6eee88",
+      "git_blob": "4c6840b93ea15d1ba7b4dac0f18f94655867cab7"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_shoulder_yaw_link.STL",
+      "sha256": "1aa97e9748e924336567992181f78c7cd0652fd52a4afcca3df6b2ef6f9e712e",
+      "git_blob": "89b0e0661275ed832c674a46893239ad2e5bef85"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_wrist_pitch_link.STL",
+      "sha256": "b251d8e05047f695d0f536cd78c11973cfa4e78d08cfe82759336cc3471de3a9",
+      "git_blob": "f9c9e4f6b974a9e46c8f62ec9903f3e34287a335"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_wrist_roll_link.STL",
+      "sha256": "edc387c9a0ba8c2237e9b296d32531426fabeb6f53e58df45c76106bca74148c",
+      "git_blob": "2097ca3e5bbc0af985d150e5dcda4d8ba9bcf43f"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_wrist_roll_rubber_hand.STL",
+      "sha256": "e81030abd023bd9e4a308ef376d814a2c12d684d8a7670c335bbd5cd7809c909",
+      "git_blob": "7c58819795c4cdfe406a008bfdbe7ea19d765497"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\left_wrist_yaw_link.STL",
+      "sha256": "83f8fb3a726bf9613d65dd14f0f447cb918c3c95b3938042a0c9c09749267d3b",
+      "git_blob": "692f4b07105fa0ec4ffd989dc60be9b2a33ac9c3"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\logo_link.STL",
+      "sha256": "8571a0a19bc4916fa55f91449f51d5fdefd751000054865a842449429d5f155b",
+      "git_blob": "6c25961c594c714ada9d32e922250d326c121f4a"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\pelvis.STL",
+      "sha256": "5ba6bbc888e630550140d3c26763f10206da8c8bd30ed886b8ede41c61f57a31",
+      "git_blob": "f98a88dbf6c7698791ba694e16cbcc180c40663c"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\pelvis_contour_link.STL",
+      "sha256": "5cc5c2c7a312329e3feeb2b03d3fc09fc29705bd01864f6767e51be959662420",
+      "git_blob": "8025bc070cd65550f345e9e97bc44a8ff9740dea"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_ankle_pitch_link.STL",
+      "sha256": "15be426539ec1be70246d4d82a168806db64a41301af8b35c197a33348c787a9",
+      "git_blob": "94a586a487180b7e6e5a5a5c1a8abdd3f50f6da3"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_ankle_roll_link.STL",
+      "sha256": "4b66222ea56653e627711b56d0a8949b4920da5df091da0ceb343f54e884e3a5",
+      "git_blob": "3c38507b9060eda2c40e5e2bb1b174ef5bda0390"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_elbow_link.STL",
+      "sha256": "1be925d7aa268bb8fddf5362b9173066890c7d32092c05638608126e59d1e2ab",
+      "git_blob": "52aa0ebf0159aa4e6dd47890ebc8136e039107b1"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_elbow_link_merge.STL",
+      "sha256": "e6def7100e5bbb276c7498c5b7a8c8812f560ca35d6bd09c376ebab93595be7f",
+      "git_blob": "b042703b9ec2622e73b708f10f86ef149643e60f"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_hand_index_0_link.STL",
+      "sha256": "12ab4300c95e437e834f9aef772b3b431c671bf34338930b52ad11aef73bbd0d",
+      "git_blob": "5e2ef477e4666a8a26b9f02f89db5641cbbed0ab"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_hand_index_1_link.STL",
+      "sha256": "c9c34efce4563cacdcfd29fc838a982976d40f5442c71219811dcbbf3923a33d",
+      "git_blob": "8572ae1c90f7c129b2d0a31c1ccfe23e02ed1820"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_hand_middle_0_link.STL",
+      "sha256": "12ab4300c95e437e834f9aef772b3b431c671bf34338930b52ad11aef73bbd0d",
+      "git_blob": "5e2ef477e4666a8a26b9f02f89db5641cbbed0ab"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_hand_middle_1_link.STL",
+      "sha256": "c9c34efce4563cacdcfd29fc838a982976d40f5442c71219811dcbbf3923a33d",
+      "git_blob": "8572ae1c90f7c129b2d0a31c1ccfe23e02ed1820"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_hand_palm_link.STL",
+      "sha256": "86c0b231cc44477d64a6493e5a427ba16617a00738112dd187c652675b086fb9",
+      "git_blob": "fd2f7f0a8a9f75db8c45aef9e1a77c6b6224fd2a"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_hand_thumb_0_link.STL",
+      "sha256": "544298d0ea1088f5b276a10cc6a6a9e533efdd91594955fdc956c46211d07f83",
+      "git_blob": "a385d96acca4aeea51c9bce239a1d3f8ab7a1753"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_hand_thumb_1_link.STL",
+      "sha256": "0a9a820da8dd10f298778b714f1364216e8a5976f4fd3a05689ea26327d44bf6",
+      "git_blob": "c118de720dd2b5a467c397f9287f0ea01b2ad0a9"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_hand_thumb_2_link.STL",
+      "sha256": "3f1bfb37668e8f61801c8d25f171fa1949e08666be86c67acad7e0079937cc45",
+      "git_blob": "0979fb671e215be58c914ce22f03d47bdd0b6bf3"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_hip_pitch_link.STL",
+      "sha256": "e4f3c99d7f4a7d34eadbef9461fc66e3486cb5442db1ec50c86317d459f1a9c6",
+      "git_blob": "064085fca108bfc2a5a365403ceb6cdac4d5cd5f"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_hip_roll_link.STL",
+      "sha256": "4c254ef66a356f492947f360dd931965477b631e3fcc841f91ccc46d945d54f6",
+      "git_blob": "6544025eeb7dc7d09da549746ae28272e5bcf224"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_hip_yaw_link.STL",
+      "sha256": "e479c2936ca2057e9eb2f7dff6c189b7419d7b8484dea0b298cbb36a2a6aa668",
+      "git_blob": "0ad7bee36419f85b490debe929957c6932df393f"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_knee_link.STL",
+      "sha256": "63c4008449c9bbe701a6e2b557b7a252e90cf3a5abcf54cee46862b9a69f8ec8",
+      "git_blob": "65e8a708a7e86f1f242cd32e8959a560ea66c2d7"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_rubber_hand.STL",
+      "sha256": "99533b778bca6246144fa511bb9d4e555e075c641f2a0251e04372869cd99d67",
+      "git_blob": "58148fb9e7307176d43f71da139781a77b63d156"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_shoulder_pitch_link.STL",
+      "sha256": "24cdb387e0128dfe602770a81c56cdce3a0181d34d039a11d1aaf8819b7b8c02",
+      "git_blob": "48a1c46009929341f2c312966acf81c3c733d7ec"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_shoulder_roll_link.STL",
+      "sha256": "962b97c48f9ce9e8399f45dd9522e0865d19aa9fd299406b2d475a8fc4a53e81",
+      "git_blob": "2a5d22f9e17a986ec8c958a6ff7668d65878a907"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_shoulder_yaw_link.STL",
+      "sha256": "a0b76489271da0c72461a344c9ffb0f0c6e64f019ea5014c1624886c442a2fe5",
+      "git_blob": "0882a567fc1a11f0cf821182154551058b0517f3"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_wrist_pitch_link.STL",
+      "sha256": "d22f8f3b3127f15a63e5be1ee273cd5075786c3142f1c3d9f76cbf43d2a26477",
+      "git_blob": "2efd25c443f3233ad4d8eeff94a87ab6f661c79c"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_wrist_roll_link.STL",
+      "sha256": "a7ee9212ff5b94d6cb7f52bb1bbf3f352194d5b598acff74f4c77d340c5b344f",
+      "git_blob": "77d23a77ad6ab659884db4d540e0bd9fd0675d0f"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_wrist_roll_rubber_hand.STL",
+      "sha256": "0729aff1ac4356f9314de13a46906267642e58bc47f0d8a7f17f6590a6242ccf",
+      "git_blob": "6f122afac362873186f291d520a255c575a4bf02"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\right_wrist_yaw_link.STL",
+      "sha256": "bc9dece2d12509707e0057ba2e48df8f3d56db0c79410212963a25e8a50f61a6",
+      "git_blob": "77edbb4135bb5b9b64357a0226431fd665d794b2"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\torso_constraint_L_link.STL",
+      "sha256": "82be7f93e85b3d303a1d1e1847e2c916939bd61c424ed1ebd28691ec33909dd1",
+      "git_blob": "cc2cbbf2ca4c72a20704c70fb61c80b7c4fa52aa"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\torso_constraint_L_rod_link.STL",
+      "sha256": "c10de1effa7ea797ac268006aa2a739036c7e1f326b2012d711ee2c20c5a6e96",
+      "git_blob": "dd439bf092da4fc85416a72dd1899a910d5f423c"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\torso_constraint_R_link.STL",
+      "sha256": "54ded433a3a0c76027365856fdbd55215643de88846f7d436598a4071e682725",
+      "git_blob": "422ffe47ee75c14e5767f96ede5f506118c1054e"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\torso_constraint_R_rod_link.STL",
+      "sha256": "cb83fd38a9f06c99e3f301c70f12d94ae770a8f0cf9501f83580a27f908990b4",
+      "git_blob": "6df46c89d2838b0cc880ab17201a3d614cef812a"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\torso_link.STL",
+      "sha256": "e96d023f0368a4e3450b86ca5d4f10227d8141156a373e7da8cb3c93266523e0",
+      "git_blob": "e4fb87c4cc736c90970bb5f182981f0cf1544038"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\torso_link_rev_1_0.STL",
+      "sha256": "11ddb46f2098efbbd8816b1d65893632d8e78be936376c7cdcd6771899ccc723",
+      "git_blob": "836b9923b3edac7a1c06ecd2f11bfbbc0dedf7e0"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\waist_constraint_L.STL",
+      "sha256": "8ebafdcb4de6871113f0ca2c356618d6e46b1d50f6c0bf9e37f47b9d8e100d99",
+      "git_blob": "6ec689bc8d8ca4a17fa3663f29d546837fef4ee2"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\waist_constraint_R.STL",
+      "sha256": "791902a291ffbd35ab97383b7b44ea5d975de7c80eef838797c970790b382ca9",
+      "git_blob": "69fd76adbd96709fe00b68da0f0da7ef08b03d79"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\waist_roll_link.STL",
+      "sha256": "34f0aa73f41131230be4d25876c944fdf6c24d62553f199ff8b980c15e8913df",
+      "git_blob": "007f56d2cd886565a047df6dc6d6d0ce2952ed80"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\waist_roll_link_rev_1_0.STL",
+      "sha256": "b67c347a05abc3e8ddae600d98a082bee273bb39f8e651647708b0a7140a8a97",
+      "git_blob": "36a5a70ef6704deb82407a42ad908886f2f08147"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\waist_support_link.STL",
+      "sha256": "1fae9e1bb609848a1667d32eed8d6083ae443538a306843056a2a660f1b2926a",
+      "git_blob": "4a50f94fe3e60c6c128874488869779be9fef816"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\waist_yaw_link.STL",
+      "sha256": "2883f20e03f09b669b5b4ce10677ee6b5191c0934b584d7cbaef2d0662856ffb",
+      "git_blob": "c049debc4e0080a06ea95c2e7e9b74613cd42040"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\meshes\\waist_yaw_link_rev_1_0.STL",
+      "sha256": "ec6db442b11f25eed898b5add07940c85d804f300de24dcbd264ccd8be7d554c",
+      "git_blob": "dc628fbdda04129fda29140243d148cbd2c81c83"
+    },
+    {
+      "path": "robot-assets\\sonic_official_g1\\scene_43dof.xml",
+      "sha256": "274e7b3755dc1eedcf210af54d1c97749f31457d77ae2c499ec234e804065b21",
+      "git_blob": "d66b23dce5da38aa29ff78d153ac86bf406740e5"
+    },
+    {
+      "path": "robot-assets\\controller-comparison\\sonic_v11\\model_encoder.onnx",
+      "sha256": "fb97de22819b2057b41459802128d91723d91a25f0ad73e7bfc41a9cf8365bae"
+    },
+    {
+      "path": "robot-assets\\controller-comparison\\sonic_v11\\model_decoder.onnx",
+      "sha256": "34bae8570d4a4421a5391a5c2befd745d4a02d182ec539e5f9da44c091c67509"
+    }
+  ],
+  "vision_and_data": [
+    {
+      "path": "outputs/local_cpu/vision-models/rtmw-dw-l-m_simcc-cocktail14_270e-256x192_20231122.onnx",
+      "sha256": "68db326c5c6f3273456f803eae0faf5440478369f2c3ee67258d2f36512e8d76",
+      "source": "https://download.openmmlab.com/mmpose/v1/projects/rtmw/onnx_sdk/rtmw-dw-l-m_simcc-cocktail14_270e-256x192_20231122.zip",
+      "first_acquisition_verified_upstream_hash": false
+    },
+    {
+      "path": "outputs/local_cpu/vision-models/yolox_tiny_8xb8-300e_humanart-6f3252f9.onnx",
+      "sha256": "ceb11c07298f95c50d7c5abeb906d03340c85f23aa79e3e66966e7fb6c307250",
+      "source": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/onnx_sdk/yolox_tiny_8xb8-300e_humanart-6f3252f9.zip",
+      "first_acquisition_verified_upstream_hash": false
+    },
+    {
+      "path": "data/mamma_cpu_raw/calibration.yaml",
+      "sha256": "6a8043eb8b6a521f7faba8c889e3626ae1161cde0fd4c2d958ffea3622ec514a",
+      "source": "https://raw.githubusercontent.com/cuevhv/mamma/588492f18876e2ed6888b2d26929047cb6b575e7/configs/examples/calib/iphones_outdoors.yaml",
+      "first_acquisition_verified_upstream_hash": false
+    },
+    {
+      "path": "data/mamma_cpu_raw/A001.mp4",
+      "sha256": "550092ac0f82680958aed280222b9746e5700cfcf804759f310fa56291f23d8f",
+      "source": "https://download.is.tue.mpg.de/mamma/assets/download/dataset_examples/pushing_and_lifting_from_ground/videos_light/A001.mp4",
+      "first_acquisition_verified_upstream_hash": false
+    },
+    {
+      "path": "data/mamma_cpu_raw/B001.mp4",
+      "sha256": "ca0bd69c35497c6a44caee77a06cadda537f263d7a1919e3ef18f2076d16cc3b",
+      "source": "https://download.is.tue.mpg.de/mamma/assets/download/dataset_examples/pushing_and_lifting_from_ground/videos_light/B001.mp4",
+      "first_acquisition_verified_upstream_hash": false
+    },
+    {
+      "path": "data/mamma_cpu_raw/C001.mp4",
+      "sha256": "7e540aa89b5a3ed2b754201005f2d100921d83fb659e1897723bfb6cbbbfb14f",
+      "source": "https://download.is.tue.mpg.de/mamma/assets/download/dataset_examples/pushing_and_lifting_from_ground/videos_light/C001.mp4",
+      "first_acquisition_verified_upstream_hash": false
+    },
+    {
+      "path": "data/mamma_cpu_raw/D001.mp4",
+      "sha256": "e2a97406767835caa3ae3c7eae1f882cd3bf77575005abc537946443a3428b20",
+      "source": "https://download.is.tue.mpg.de/mamma/assets/download/dataset_examples/pushing_and_lifting_from_ground/videos_light/D001.mp4",
+      "first_acquisition_verified_upstream_hash": false
+    }
+  ]
+}

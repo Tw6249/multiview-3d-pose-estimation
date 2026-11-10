@@ -19,10 +19,10 @@
     "time_unit": "second"
   },
   "runtime": {
-    "python": "C:\\Users\\TanWei\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\multiview-pose-sim\\venv-py311-standalone\\Scripts\\python.exe",
-    "robot_assets_root": "C:\\Users\\TanWei\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\multiview-pose-sim\\robot-assets",
-    "rtmlib_cache_root": "C:\\Users\\TanWei\\.cache\\rtmlib\\hub\\checkpoints",
-    "reference_repos_root": "C:\\Users\\TanWei\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\multiview-pose-sim\\reference-repos"
+    "python": "C:\\Users\\twmmu\\Desktop\\multiview-3d-pose-estimation\\outputs\\local_cpu\\runtime\\Scripts\\python.exe",
+    "robot_assets_root": "C:\\Users\\twmmu\\Desktop\\multiview-3d-pose-estimation\\outputs\\local_cpu\\robot-assets",
+    "rtmlib_cache_root": "C:\\Users\\twmmu\\Desktop\\multiview-3d-pose-estimation\\outputs\\local_cpu\\vision-models",
+    "reference_repos_root": "C:\\Users\\twmmu\\Desktop\\multiview-3d-pose-estimation\\outputs\\local_cpu\\reference-repos"
   },
   "s1_vision_tracker": {
     "model_variant": "rtmw-m-fp16",
@@ -148,9 +148,17 @@
     "pelvis_trunk_share": 0.5,
     "pelvis_position_cost": 10.0,
     "pelvis_orientation_cost": 10.0,
-    "pelvis_orientation_axis_scale": [1.0, 1.0, 1.0],
+    "pelvis_orientation_axis_scale": [
+      1.0,
+      1.0,
+      1.0
+    ],
     "torso_orientation_cost": 5.0,
-    "torso_orientation_axis_scale": [1.0, 1.0, 1.0],
+    "torso_orientation_axis_scale": [
+      1.0,
+      1.0,
+      1.0
+    ],
     "knee_position_cost": 5.0,
     "foot_position_cost": 10.0,
     "foot_orientation_cost": 2.0,

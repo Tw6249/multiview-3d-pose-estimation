@@ -30,6 +30,7 @@ import cv2
 import numpy as np
 
 from .constants import GOLDEN_27_INDICES, load_config
+from .s2_triangulation import undistort_keypoints_2d
 
 
 def ensure_cuda_dlls_loaded() -> None:
@@ -291,9 +292,11 @@ class RTMW27VisionTracker:
             det_providers = ["CPUExecutionProvider"]
 
         sess_opts = ort.SessionOptions()
-        sess_opts.intra_op_num_threads = 1
+        cpu_threads = max(1, min(8, (os.cpu_count() or 4) // 2))
+        sess_opts.intra_op_num_threads = 1 if self.use_cuda else int(s1_cfg.get("cpu_intra_op_threads", cpu_threads))
         sess_opts.inter_op_num_threads = 1
-        sess_opts.add_session_config_entry("session.intra_op.allow_spinning", "0")
+        if self.use_cuda:
+            sess_opts.add_session_config_entry("session.intra_op.allow_spinning", "0")
         sess_opts.add_session_config_entry("session.inter_op.allow_spinning", "0")
         sess_opts.log_severity_level = 3
         sess_opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL

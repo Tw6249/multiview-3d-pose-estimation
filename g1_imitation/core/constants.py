@@ -8,6 +8,7 @@ Coordinate System Convention:
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -164,6 +165,11 @@ ROBOT_JOINTS: dict[str, tuple[str, ...]] = {
 
 
 def load_config(path: Path | None = None) -> dict[str, Any]:
-    target = path or CONFIG_PATH
+    """Load an explicit config, a process-local config, or the pinned default (in that order).
+
+    G1_IMITATION_CONFIG lets isolated deployments relocate assets without rewriting
+    the original machine's configuration. Invalid/missing overrides fail explicitly.
+    """
+    target = Path(path or os.environ.get("G1_IMITATION_CONFIG") or CONFIG_PATH)
     return json.loads(target.read_text(encoding="utf-8"))
 

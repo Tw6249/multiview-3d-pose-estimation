@@ -21,8 +21,53 @@ from __future__ import annotations
 from dataclasses import dataclass
 import time
 
+import cv2
 from numba import njit
 import numpy as np
+
+
+def undistort_keypoints_2d(
+    keypoints_2d: np.ndarray,
+    K_matrices: np.ndarray | None = None,
+    dist_coeffs: np.ndarray | None = None,
+) -> np.ndarray:
+    """Undistort sparse 2D keypoints `(N_cams, J, 3)` `[u_dist, v_dist, conf]` onto the ideal pinhole plane.
+
+    Input:
+      - `keypoints_2d`: `(N_cams, J, 3)` pixel coordinates and confidence `[0, 1]`.
+      - `K_matrices`: `(N_cams, 3, 3)` camera intrinsics (pixels).
+      - `dist_coeffs`: `(N_cams, D)` OpenCV radial-tangential distortion coefficients (`D` in `{4, 5, 8}`).
+    Output:
+      - `(N_cams, J, 3)` undistorted `[u_rect, v_rect, conf]` in the same pixel frame `P = K_c`.
+    Failure Behavior:
+      - Returns a copy unchanged if `K_matrices` or `dist_coeffs` is `None` or all-zero.
+      - Non-finite points or zero-confidence points stay untouched without crashing.
+    """
+    kp = np.asarray(keypoints_2d, dtype=np.float64).copy()
+    if kp.ndim != 3 or kp.shape[2] != 3:
+        raise ValueError(f"Expected keypoints_2d of shape (N_cams, J, 3), got {kp.shape}")
+    if K_matrices is None or dist_coeffs is None:
+        return kp
+    K_arr = np.asarray(K_matrices, dtype=np.float64)
+    d_arr = np.asarray(dist_coeffs, dtype=np.float64)
+    n_cams = kp.shape[0]
+    if K_arr.shape != (n_cams, 3, 3):
+        raise ValueError(f"Expected K_matrices of shape ({n_cams}, 3, 3), got {K_arr.shape}")
+    if d_arr.ndim != 2 or d_arr.shape[0] != n_cams:
+        raise ValueError(f"Expected dist_coeffs of shape ({n_cams}, D), got {d_arr.shape}")
+    if not np.any(np.abs(d_arr) > 1e-12):
+        return kp
+
+    for c in range(n_cams):
+        if not np.any(np.abs(d_arr[c]) > 1e-12):
+            continue
+        valid = np.all(np.isfinite(kp[c, :, :2]), axis=1) & (kp[c, :, 2] > 0.0)
+        if not np.any(valid):
+            continue
+        pts = np.ascontiguousarray(kp[c, valid, :2].reshape(-1, 1, 2), dtype=np.float64)
+        rect = cv2.undistortPoints(pts, K_arr[c], d_arr[c], P=K_arr[c]).reshape(-1, 2)
+        kp[c, valid, :2] = rect
+    return kp
 
 
 @njit(cache=True, fastmath=True)
@@ -557,8 +602,11 @@ class MultiViewTriangulator:
         proj_matrices: np.ndarray,
         update_history: bool = True,
         dt_s: float | None = None,
+        K_matrices: np.ndarray | None = None,
+        dist_coeffs: np.ndarray | None = None,
     ) -> TriangulationResult:
-        kp2d = np.ascontiguousarray(keypoints_2d, dtype=np.float64)
+        kp_rect = undistort_keypoints_2d(keypoints_2d, K_matrices=K_matrices, dist_coeffs=dist_coeffs)
+        kp2d = np.ascontiguousarray(kp_rect, dtype=np.float64)
         P_mats = np.ascontiguousarray(proj_matrices, dtype=np.float64)
         if kp2d.ndim != 3 or kp2d.shape[1:] != (27, 3):
             raise ValueError(f"Expected keypoints_2d of shape (N_cams, 27, 3), got {kp2d.shape}")
